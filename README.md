@@ -4,18 +4,15 @@ title: terraform_builder
 
 Helps build consistent Terraform configurations
 
-
 ## Build Status
 
 ### GitHub Actions
 
-![Python Test](https://github.com/mrlesmithjr/terraform_builder/workflows/Python%20Test/badge.svg)
+![Python Test](https://github.com/mrlesmithjr/terraform-builder/workflows/Python%20Test/badge.svg)
 
 ### Travis CI
 
-[![Build Status](https://travis-ci.org/mrlesmithjr/terraform_builder.svg?branch=master)](https://travis-ci.org/mrlesmithjr/terraform_builder)
-
-
+[![Build Status](https://travis-ci.org/mrlesmithjr/terraform-builder.svg?branch=master)](https://travis-ci.org/mrlesmithjr/terraform-builder)
 
 ## Requirements
 
