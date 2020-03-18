@@ -13,6 +13,8 @@ def main():
     # Capture CLI arguments
     args = cli_args()
 
+    return args
+
 
 if __name__ == '__main__':
     main()
