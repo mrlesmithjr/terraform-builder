@@ -1,4 +1,4 @@
-"""Console script for terraform_builder."""
+"""terraform_builder/cli.py"""
 
 import argparse
 from terraform_builder.release import __package_name__, __version__

@@ -1,4 +1,5 @@
-"""Main module."""
+"""terraform_builder/__main__.py"""
+
 from terraform_builder.cli import cli_args
 from terraform_builder.logger import setup_logger
 

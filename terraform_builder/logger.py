@@ -1,4 +1,4 @@
-"""Provides main logger function."""
+"""terraform_builder/logger.py"""
 
 import logging
 import os
