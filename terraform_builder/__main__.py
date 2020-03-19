@@ -4,6 +4,7 @@ import json
 from terraform_builder.cli import cli_args
 from terraform_builder.logger import setup_logger
 from terraform_builder.config import Config
+from terraform_builder.build import Build
 
 
 def main():
@@ -17,8 +18,10 @@ def main():
 
     # Parse config in preparation of processing
     config = Config(args)
-    configs = config.parse()
-    print(json.dumps(configs))
+
+    # Build
+    build = Build(args, configs)
+    build.configurations()
 
 
 if __name__ == '__main__':
