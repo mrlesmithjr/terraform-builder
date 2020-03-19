@@ -19,6 +19,8 @@ def important_files(project_root, configs):
         '.gitignore': {},
         'LICENSE.md': {},
         'README.md': configs,
+        'requirements.txt': {},
+        'requirements-dev.txt': {}
     }
 
     # Defines absolute path to templates directory
