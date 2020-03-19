@@ -23,6 +23,13 @@ You can find an example project [here](examples/example_builds/example)
 - [requirements.txt](requirements.txt)
 - [requirements-dev.txt](requirements-dev.txt)
 
+### Terraform Version Manager
+
+Terraform version manager is a tool that I use personally. It assists in easily
+managing different Terraform versions for you to use. Rather than installing a
+version, and then having to do some random things to switch between versions.
+Definitely check it out [here](https://github.com/tfutils/tfenv).
+
 ## Dependencies
 
 ## Usage
