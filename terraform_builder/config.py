@@ -11,8 +11,10 @@ class Config:
     def __init__(self, args):
         """Init a thing."""
 
-        # Define config to load up
+        # Define config to load
         self.config = args.config
+        # Define secrets to load
+        self.secrets = args.secrets
         # Setup logging
         self.logger = logging.getLogger(__name__)
 
@@ -38,7 +40,19 @@ class Config:
             self.logger.error(error)
             sys.exit(1)
 
-        return configs
+        try:
+            # Log secrets path being loaded
+            self.logger.info('Loading secrets: %s', self.secrets)
+
+            with open(self.secrets, 'r') as file:
+                # Load YAML file data and do not log
+                secrets = yaml.load(file, Loader=yaml.FullLoader)
+
+        except FileNotFoundError as error:
+            self.logger.error(error)
+            sys.exit(1)
+
+        return configs, secrets
 
     def parse(self):
         """Parse YAML configuration."""

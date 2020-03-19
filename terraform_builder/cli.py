@@ -19,6 +19,9 @@ def cli_args():
     parser.add_argument('--outputdir', help='Define path to save configs.',
                         default=os.path.join(default_configs_dir,
                                              'example_builds'))
+    parser.add_argument(
+        '--secrets', help='Path to secrets',
+        default=os.path.join(default_configs_dir, 'secrets.yml'))
     parser.add_argument('--version', action='version',
                         version=f'{__package_name__} {__version__}')
     args = parser.parse_args()

@@ -1,6 +1,5 @@
 """terraform_builder/__main__.py"""
 
-import json
 from terraform_builder.cli import cli_args
 from terraform_builder.logger import setup_logger
 from terraform_builder.config import Config
@@ -18,6 +17,7 @@ def main():
 
     # Parse config in preparation of processing
     config = Config(args)
+    configs, secrets = config.parse()
 
     # Build
     build = Build(args, configs)
