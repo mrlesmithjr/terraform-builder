@@ -6,7 +6,7 @@ Helps build consistent Terraform configurations
 
 ## Example Project
 
-You can find an example project [here](examples/example_builds/example/README.md)
+You can find an example project [here](examples/example_builds/example)
 
 ## Build Status
 
