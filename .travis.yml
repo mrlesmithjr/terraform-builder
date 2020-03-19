@@ -4,11 +4,21 @@ language: python
 python:
   - 3.7
 
+env:
+  - TERRAFORM_VERSION="0.12.23"
+  - TFENV_DIR="/opt/tooling/.tfenv"
+
 before_script:
   - python --version
   - pip3 install -r requirements.txt
   - pip3 install flake8 pylint
+  - git clone https://github.com/tfutils/tfenv.git $TFENV_DIR
+  - ln -sf $TFENV_DIR/bin/* /usr/local/bin/
+  - echo $TERRAFORM_VERSION > $HOME/.terraform-version
+  - tfenv install
+  - tfenv list
 
 script:
   - flake8 terraform_builder/
   - pylint terraform_builder/
+  - python -m terraform_builder
