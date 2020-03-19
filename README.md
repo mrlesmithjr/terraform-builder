@@ -4,6 +4,10 @@ title: terraform_builder
 
 Helps build consistent Terraform configurations
 
+## Example Project
+
+You can find an example project [here](examples/example_builds/example/README.md)
+
 ## Build Status
 
 ### GitHub Actions
@@ -20,6 +24,10 @@ Helps build consistent Terraform configurations
 - [requirements-dev.txt](requirements-dev.txt)
 
 ## Dependencies
+
+## Usage
+
+[Usage](docs/USAGE.md)
 
 ## License
 

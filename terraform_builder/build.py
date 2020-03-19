@@ -2,6 +2,7 @@
 
 import logging
 import os
+from terraform_builder.specs.important.files import important_files
 
 
 class Build:
@@ -31,6 +32,7 @@ class Build:
         self.root()
         self.environments()
         self.modules()
+        important_files(self.project_root, self.configs)
 
     def root(self):
         """Configured root environment - Parent directory."""

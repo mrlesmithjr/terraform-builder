@@ -1,0 +1,65 @@
+---
+# This is an example config layout
+
+# Defines project name which becomes parent root directory
+project_name: example
+
+# Defines environments
+environments:
+  development: {}
+  production: {}
+  staging: {}
+
+# Define backends
+backends:
+  local: {}
+  remote: {}
+
+# Define providers
+providers:
+  AzureRM: {}
+  DigitalOcean:
+    api_endpoint: https://api.digitalocean.com
+    locals: {}
+    token: var.do_token
+    resources:
+      droplets:
+        test:
+          count: 1
+          image: ubuntu-18-04-x64
+          private_networking: true
+          region: var.do_region
+          ssh_keys: var.do_ssh_keys
+          size: s-1vcpu-2gb
+          tags:
+            - test
+      projects:
+        TerraformCloud:
+          description: Terraform Cloud Project
+          environment: development
+          purpose: Terraform Cloud Project
+          resources: []
+      tags:
+        - test
+    variables:
+      do_region:
+        type: string
+        description: DigitalOcean region
+        default: nyc1
+      do_ssh_keys:
+        type: string
+        description: DigitalOcean SSH keys to deploy to new droplets
+        default: []
+      do_token:
+        type: string
+        description: DigitialOcean token
+        default:
+  VMware: {}
+
+# Define modules - Structure will be project_name/modules/{module}
+modules:
+  network: {}
+  services: {}
+
+# Define global variables
+global_variables: {}

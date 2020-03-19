@@ -1,0 +1,82 @@
+# Terraform Project - {{ args.project_name }}
+
+Welcome to your `{{ args.project_name }}` project. The following details outline
+this project.
+
+> NOTE: Ensure that you do not put any secret variables anywhere other than
+> in `secrets.yml` and use the `--secrets` argument. The variables in this outline
+> **SHOULD** only contain non-private information.
+
+## Environments
+
+Environments represent such things as: `development`, `staging`, and `production`.
+
+```yaml
+{{ args.environments|to_yaml }}
+```
+
+## Backends
+
+> NOTE: From [https://www.terraform.io/docs/backends/index.html](https://www.terraform.io/docs/backends/index.html)
+
+A `backend` in Terraform determines how state is loaded and how an operation
+such as apply is executed. This abstraction enables non-local file state
+storage, remote execution, etc.
+
+By default, Terraform uses the `local` backend, which is the normal behavior of
+Terraform you're used to.
+
+```yaml
+{{ args.backends|to_yaml }}
+```
+
+## Providers
+
+> NOTE: From [https://www.terraform.io/docs/providers/index.html](https://www.terraform.io/docs/providers/index.html)
+
+Terraform is used to create, manage, and update infrastructure resources such
+as physical machines, VMs, network switches, containers, and more. Almost any
+infrastructure type can be represented as a resource in Terraform. A provider
+is responsible for understanding API interactions and exposing resources.
+Providers generally are an IaaS (e.g. Alibaba Cloud, AWS, GCP, Microsoft Azure,
+OpenStack), PaaS (e.g. Heroku), or SaaS services (e.g. Terraform Cloud,
+DNSimple, Cloudflare).
+
+```yaml
+{{ args.providers|to_yaml }}
+```
+
+## Modules
+
+> NOTE: From [https://www.terraform.io/docs/modules/index.html](https://www.terraform.io/docs/modules/index.html)
+
+A module is a container for multiple resources that are used together. Modules
+can be used to create lightweight abstractions, so that you can describe your
+infrastructure in terms of its architecture, rather than directly in terms of
+physical objects.
+
+```yaml
+{{ args.modules|to_yaml }}
+```
+
+## Global Variables
+
+```yaml
+{{ args.global_variables|to_yaml }}
+```
+
+## Project Structure
+
+```bash
+{{ args.project_name }}
+|__environments
+{%- for item in args.environments %}
+   |__{{ item }}
+{%- endfor %}
+{%- if args.modules != {} %}
+|__modules
+{%- for item in args.modules %}
+   |__{{ item }}
+{%- endfor %}
+{% endif %}
+```
