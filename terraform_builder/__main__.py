@@ -17,7 +17,7 @@ def main():
 
     # Parse config in preparation of processing
     config = Config(args)
-    configs, secrets = config.parse()
+    configs, _secrets = config.parse()
 
     # Build
     build = Build(args, configs)

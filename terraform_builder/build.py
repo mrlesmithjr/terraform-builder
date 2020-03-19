@@ -44,7 +44,7 @@ class Build:
         """Configures environments."""
 
         environments = self.configs['environments']
-        for env, env_config in environments.items():
+        for env, _env_config in environments.items():
             env_dir = os.path.join(self.project_root, 'environments', env)
             if not os.path.isdir(env_dir):
                 self.logger.info('Creating environment: %s', env_dir)
@@ -54,7 +54,7 @@ class Build:
         """Configures modules."""
 
         modules = self.configs['modules']
-        for module, module_config in modules.items():
+        for module, _module_config in modules.items():
             module_dir = os.path.join(self.project_root, 'modules', module)
             if not os.path.isdir(module_dir):
                 self.logger.info('Creating module: %s', module_dir)
