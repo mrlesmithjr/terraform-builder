@@ -40,3 +40,4 @@ jobs:
       - name: Test Terraform Builder
         run: |
           python -m terraform_builder
+          cat logs/terraform_builder.log
