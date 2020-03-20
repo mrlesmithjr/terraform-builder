@@ -2,8 +2,21 @@
 # Module network config
 module "network" {
     source = "../../modules/network"
+    do_api_endpoint = "https://api.digitalocean.com"
+    do_image = "ubuntu-18-04-x64"
+    do_region = "nyc1"
+    do_ssh_keys = "[]"
+    do_token = ""
 }
 # Module services config
 module "services" {
     source = "../../modules/services"
+    vsphere_allow_unverified_ssl = "false"
+    vsphere_compute_cluster = ""
+    vsphere_datacenter = ""
+    vsphere_network = ""
+    vsphere_password = ""
+    vsphere_resource_pool = ""
+    vsphere_server = ""
+    vsphere_username = ""
 }

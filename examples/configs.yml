@@ -116,7 +116,7 @@ resources:
       tags:
         - test
   vms:
-    test-do.example.com:
+    test-do-root:
       count: 1
       memory: 1024
       module: root
@@ -124,7 +124,17 @@ resources:
       provider: DigitalOcean
       tags:
         - test-digitalocean
-    test-vs:
+        - test-digitalocean-root
+    test-do-network:
+      count: 1
+      memory: 1024
+      module: network
+      num_cpus: 1
+      provider: DigitalOcean
+      tags:
+        - test-digitalocean
+        - test-vsphere-network
+    test-vs-root:
       count: 1
       memory: 2048
       module: root
@@ -132,3 +142,13 @@ resources:
       provider: vSphere
       tags:
         - test-vsphere
+        - test-vsphere-root
+    test-vs-services:
+      count: 1
+      memory: 1024
+      module: services
+      num_cpus: 2
+      provider: vSphere
+      tags:
+        - test-vsphere
+        - test-vsphere-services

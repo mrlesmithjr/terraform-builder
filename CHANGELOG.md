@@ -1,3 +1,9 @@
+commit 6b67cf1ba31ddacfaa14854f326aaa439f9dfd62
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 18:56:39 2020 -0400
+
+    Added initial logic to support modules other than root
+
 commit 292438916ed4630a48b44c2a7d632731e417b8a7
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Fri Mar 20 17:04:12 2020 -0400
