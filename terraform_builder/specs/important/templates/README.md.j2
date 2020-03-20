@@ -74,23 +74,43 @@ physical objects.
 |-- LICENSE.md
 |-- README.md
 {%- for item in args.environments %}
+{%-   if not loop.last %}
 |  |-- {{ item }}
 |  |  |-- LICENSE.md
 |  |  |-- README.md
 |  |  |-- main.tf
 |  |  |-- resources.tf
 |  |  |-- variables.tf
+{%-     else %}
+|  |-- {{ item }}
+|     |-- LICENSE.md
+|     |-- README.md
+|     |-- main.tf
+|     |-- resources.tf
+|     |-- variables.tf
+{%-     endif %}
 {%- endfor %}
 |-- main.tf
 {%- if args.modules != {} %}
 |-- modules
 {%- for item in args.modules %}
+{%-   if item|lower != 'root' %}
+{%-      if not loop.last %}
 |  |-- {{ item }}
 |  |  |-- LICENSE.md
 |  |  |-- README.md
 |  |  |-- main.tf
 |  |  |-- resources.tf
 |  |  |-- variables.tf
+{%-     else %}
+|  |-- {{ item }}
+|     |-- LICENSE.md
+|     |-- README.md
+|     |-- main.tf
+|     |-- resources.tf
+|     |-- variables.tf
+{%-     endif %}
+{%-   endif %}
 {%- endfor %}
 |-- requirements-dev.txt
 |-- requirements.txt

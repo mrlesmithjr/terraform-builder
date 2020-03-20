@@ -158,19 +158,13 @@ example
 |  |  |-- resources.tf
 |  |  |-- variables.tf
 |  |-- staging
-|  |  |-- LICENSE.md
-|  |  |-- README.md
-|  |  |-- main.tf
-|  |  |-- resources.tf
-|  |  |-- variables.tf
+|     |-- LICENSE.md
+|     |-- README.md
+|     |-- main.tf
+|     |-- resources.tf
+|     |-- variables.tf
 |-- main.tf
 |-- modules
-|  |-- root
-|  |  |-- LICENSE.md
-|  |  |-- README.md
-|  |  |-- main.tf
-|  |  |-- resources.tf
-|  |  |-- variables.tf
 |  |-- network
 |  |  |-- LICENSE.md
 |  |  |-- README.md
@@ -178,11 +172,11 @@ example
 |  |  |-- resources.tf
 |  |  |-- variables.tf
 |  |-- services
-|  |  |-- LICENSE.md
-|  |  |-- README.md
-|  |  |-- main.tf
-|  |  |-- resources.tf
-|  |  |-- variables.tf
+|     |-- LICENSE.md
+|     |-- README.md
+|     |-- main.tf
+|     |-- resources.tf
+|     |-- variables.tf
 |-- requirements-dev.txt
 |-- requirements.txt
 |-- resources.tf
