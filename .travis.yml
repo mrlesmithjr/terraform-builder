@@ -21,4 +21,8 @@ script:
   - flake8 terraform_builder/
   - pylint terraform_builder/
   - python -m terraform_builder
+  - cd examples/example_builds/example
+  - terraform init
+  - terraform validate
+  - cd -
   - cat logs/terraform_builder.log
