@@ -22,8 +22,4 @@ script:
   - pylint terraform_builder/
   - python -m terraform_builder --version
   - python -m terraform_builder --config examples/configs.yml --outputdir examples/example_builds/ --secrets examples/secrets.yml
-  - cd examples/example_builds/example
-  - terraform init
-  - terraform validate
-  - cd -
   - cat logs/terraform_builder.log
