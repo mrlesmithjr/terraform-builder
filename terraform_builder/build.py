@@ -23,6 +23,8 @@ class Build:
         self.logger.info('project_root: %s', self.project_root)
 
     def template(self, args, module, file):
+        """Renders template and returns the config."""
+
         # Defines absolute path to templates directory
         template_dir = os.path.join(os.path.dirname(
             os.path.abspath(__file__)), 'specs', 'templates')
@@ -31,6 +33,9 @@ class Build:
 
         # Sets Jinja2 template environment
         template_env = jinja2.Environment(loader=template_loader)
+
+        self.logger.info(
+            'Rendering template for module: %s using: %s.tf.j2', module, file)
 
         # Defines which template to get from file including .j2 extension
         template = template_env.get_template(

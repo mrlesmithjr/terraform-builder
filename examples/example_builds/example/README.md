@@ -103,8 +103,8 @@ example
    |__production
    |__staging
 |__modules
-   |__network
    |__root
+   |__network
    |__services
 
 ```

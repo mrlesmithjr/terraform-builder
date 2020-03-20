@@ -1,3 +1,9 @@
+commit b2c12f1205ddb61dbe46b9449786eb7621550201
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Thu Mar 19 23:22:50 2020 -0400
+
+    Initial start of root module configuration
+
 commit 628ab8e3381b12627c59652efdd87e6e376e02da
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Thu Mar 19 21:25:20 2020 -0400
