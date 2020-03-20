@@ -1,3 +1,77 @@
+commit 8240c6c4024544069ec641a65660ba854b782104
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 16:37:28 2020 -0400
+
+    environments were in wrong place for project structure
+
+commit 260e5ad5745e417620277be734deea22757806fa
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 16:36:58 2020 -0400
+
+    Examples cleaned up after using var.var_name
+
+commit fcdd1dab21b2a8e4ce3105162428c7c11bd22977
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 16:36:09 2020 -0400
+
+    Cleaned up to use more var.variable_name for flexibility
+
+commit de8531b817c7df78a5ecdaee68bf77492d4b2676
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 16:35:20 2020 -0400
+
+    Should have been stderr vs. stdout
+
+commit 38474602822872ec9e782171b2f27cfd0eba9c9d
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 13:06:57 2020 -0400
+
+    Fixed representation of project structure
+
+commit b7062355e56fcb4b087d87c0fb935499d177ffbf
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 12:59:12 2020 -0400
+
+    Updated project structure representation
+
+commit a785f023adb4145ea60e5615ae0ac3d9351e4375
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 12:43:49 2020 -0400
+
+    Added initial default configs for modules, etc.
+
+commit aec9a11812455cdab057730372376583972bca05
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 12:29:08 2020 -0400
+
+    Added comment|note about using this builder
+
+commit 318ce201e831662ff37c5e52cd71757e4b221f1b
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 12:09:27 2020 -0400
+
+    Init and validate now part of package
+
+commit 117104fe868d91f12d0f37d3fd62e393343f4586
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 12:05:32 2020 -0400
+
+    Fixed linting issues
+
+commit f1e22d8b02d8108f825045c2f4d963b7b682775b
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 11:56:51 2020 -0400
+
+    Added Terraform init and validation
+    
+    Logs output and displays to screen
+
+commit bfeea7b216757dcc9a44b4503d1edee908cceafe
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 10:23:50 2020 -0400
+
+    Added modules to environments
+
 commit 4b43b93bea96210295a357622630492425ccc191
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Fri Mar 20 09:49:18 2020 -0400
