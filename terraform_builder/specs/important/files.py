@@ -50,6 +50,20 @@ def important_files(project_root, configs):
                     logger.info('Creating important file: %s', file_path)
                     config.write(template)
 
+        for environment in configs['environments']:
+            # Defines path to module directory
+            file_path = os.path.join(
+                project_root, 'environments', environment, file)
+
+            # Defines which template to get from file with .j2 extension
+            template = template_env.get_template(
+                f'{file}.j2').render(args=args, module=environment,
+                                     modules=True)
+
+            with open(file_path, 'w') as config:
+                logger.info('Creating important file: %s', file_path)
+                config.write(template)
+
     # Update files dict to include files that need to be in root module
     files.update({'.gitignore': {}, 'requirements.txt': {},
                   'requirements-dev.txt': {}})

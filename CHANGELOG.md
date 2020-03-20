@@ -1,3 +1,9 @@
+commit 5863b1bc2aa170b8e3664e53c41d0d2d29f46873
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Thu Mar 19 23:41:28 2020 -0400
+
+    Added comments to main and variables templates
+
 commit d063d190763b53fe9bdeaa13228c402db635abaa
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Thu Mar 19 23:30:39 2020 -0400

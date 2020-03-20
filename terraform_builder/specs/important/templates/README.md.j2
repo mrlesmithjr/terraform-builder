@@ -87,7 +87,11 @@ physical objects.
 ## Module Info
 
 ```yaml
-{%- set module_info = {module: args['modules'][module]} %}
+{%  if args['modules'][module] is defined %}
+{%-   set module_info = {module: args['modules'][module]} -%}
+{%  else -%}
+{%-   set module_info = {module: args['environments'][module]} -%}
+{%  endif -%}
 {{ module_info|to_yaml }}
 ```
 {%- endif %}
