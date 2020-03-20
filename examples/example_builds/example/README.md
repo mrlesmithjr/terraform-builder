@@ -142,14 +142,51 @@ services: {}
 
 ```bash
 example
-|__environments
-   |__development
-   |__production
-   |__staging
-|__modules
-   |__root
-   |__network
-   |__services
+|-- environments
+|-- LICENSE.md
+|-- README.md
+|  |-- development
+|  |  |-- LICENSE.md
+|  |  |-- README.md
+|  |  |-- main.tf
+|  |  |-- resources.tf
+|  |  |-- variables.tf
+|  |-- production
+|  |  |-- LICENSE.md
+|  |  |-- README.md
+|  |  |-- main.tf
+|  |  |-- resources.tf
+|  |  |-- variables.tf
+|  |-- staging
+|  |  |-- LICENSE.md
+|  |  |-- README.md
+|  |  |-- main.tf
+|  |  |-- resources.tf
+|  |  |-- variables.tf
+|-- main.tf
+|-- modules
+|  |-- root
+|  |  |-- LICENSE.md
+|  |  |-- README.md
+|  |  |-- main.tf
+|  |  |-- resources.tf
+|  |  |-- variables.tf
+|  |-- network
+|  |  |-- LICENSE.md
+|  |  |-- README.md
+|  |  |-- main.tf
+|  |  |-- resources.tf
+|  |  |-- variables.tf
+|  |-- services
+|  |  |-- LICENSE.md
+|  |  |-- README.md
+|  |  |-- main.tf
+|  |  |-- resources.tf
+|  |  |-- variables.tf
+|-- requirements-dev.txt
+|-- requirements.txt
+|-- resources.tf
+|-- variables.tf
 
 ```
 

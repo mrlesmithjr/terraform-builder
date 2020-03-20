@@ -70,15 +70,32 @@ physical objects.
 
 ```bash
 {{ args.project_name }}
-|__environments
+|-- environments
+|-- LICENSE.md
+|-- README.md
 {%- for item in args.environments %}
-   |__{{ item }}
+|  |-- {{ item }}
+|  |  |-- LICENSE.md
+|  |  |-- README.md
+|  |  |-- main.tf
+|  |  |-- resources.tf
+|  |  |-- variables.tf
 {%- endfor %}
+|-- main.tf
 {%- if args.modules != {} %}
-|__modules
+|-- modules
 {%- for item in args.modules %}
-   |__{{ item }}
+|  |-- {{ item }}
+|  |  |-- LICENSE.md
+|  |  |-- README.md
+|  |  |-- main.tf
+|  |  |-- resources.tf
+|  |  |-- variables.tf
 {%- endfor %}
+|-- requirements-dev.txt
+|-- requirements.txt
+|-- resources.tf
+|-- variables.tf
 {% endif %}
 ```
 {%- else -%}
