@@ -70,9 +70,9 @@ physical objects.
 
 ```bash
 {{ args.project_name }}
-|-- environments
 |-- LICENSE.md
 |-- README.md
+|-- environments
 {%- for item in args.environments %}
 {%-   if not loop.last %}
 |  |-- {{ item }}
