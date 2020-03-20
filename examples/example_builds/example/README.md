@@ -48,7 +48,24 @@ OpenStack), PaaS (e.g. Heroku), or SaaS services (e.g. Terraform Cloud,
 DNSimple, Cloudflare).
 
 ```yaml
-AzureRM: {}
+AzureRM:
+  environment: var.azrm_environment
+  features: {}
+  subscription_id: var.azrm_subscription_id
+  tenant_id: var.azrm_tenant_id
+  variables:
+    azrm_environment:
+      default: public
+      description: AzureRM Environment
+      type: string
+    azrm_subscription_id:
+      default: ''
+      description: AzureRM Subscription ID
+      type: string
+    azrm_tenant_id:
+      default: ''
+      description: AzureRM Tenant ID
+      type: string
 DigitalOcean:
   api_endpoint: https://api.digitalocean.com
   token: var.do_token

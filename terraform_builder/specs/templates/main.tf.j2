@@ -1,11 +1,16 @@
 {%- if module == 'root' %}
 {%-   for provider, config in args.providers.items() %}
-{%-     if config != {} -%}
+{%-     if config != {} %}
 # Provider {{ provider }} config
 provider "{{ provider|lower }}" {
-{%-       if provider|lower == 'digitalocean' %}
+{%-       if provider|lower == 'azurerm' %}
+    environment     = {{ config['environment']|default("public") }}
+    features        = {{ config['features'] }}
+    subscription_id = {{ config['subscription_id']|default("") }}
+    tenant_id       = {{ config['tenant_id']|default("") }}
+{%-       elif provider|lower == 'digitalocean' %}
     api_endpoint = "{{ config['config']|default('https://api.digitalocean.com') }}"
-    token        = {{ config['token'] }}
+    token        = {{ config['token']|default("") }}
 {%-       endif %}
 }
 {%-     endif -%}

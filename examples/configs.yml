@@ -17,7 +17,24 @@ backends:
 
 # Define providers
 providers:
-  AzureRM: {}
+  AzureRM:
+    environment: var.azrm_environment
+    features: {}
+    subscription_id: var.azrm_subscription_id
+    tenant_id: var.azrm_tenant_id
+    variables:
+      azrm_environment:
+        type: string
+        description: AzureRM Environment
+        default: public
+      azrm_subscription_id:
+        type: string
+        description: AzureRM Subscription ID
+        default: ""
+      azrm_tenant_id:
+        type: string
+        description: AzureRM Tenant ID
+        default: ""
   DigitalOcean:
     api_endpoint: https://api.digitalocean.com
     token: var.do_token

@@ -1,3 +1,9 @@
+commit 82ca0934cc2c8278f21078d1fd5c511dc0f67172
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 00:16:37 2020 -0400
+
+    Fixed comment for variables not properly on it's own line
+
 commit 6d6255307edcd2f9ab4d32e4dbd6facaa8641df4
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Fri Mar 20 00:14:58 2020 -0400

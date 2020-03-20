@@ -1,3 +1,11 @@
+
+# Provider AzureRM config
+provider "azurerm" {
+    environment     = var.azrm_environment
+    features        = {}
+    subscription_id = var.azrm_subscription_id
+    tenant_id       = var.azrm_tenant_id
+}
 # Provider DigitalOcean config
 provider "digitalocean" {
     api_endpoint = "https://api.digitalocean.com"
