@@ -2,7 +2,10 @@
 
 import logging
 import os
+import shutil
+import subprocess
 import jinja2
+import sys
 from terraform_builder.specs.important.files import important_files
 
 
@@ -47,6 +50,32 @@ class Build:
         """Generate Terraform configurations."""
 
         self.structure()
+
+        # Ensure Terraform command found
+        terraform_path = shutil.which('terraform')
+
+        # If Terraform command is found, continue
+        if terraform_path is not None:
+            self.logger.info('terraform_path: %s', terraform_path)
+            # Capture current working directory prior to changing to the
+            # project root directory. So, we can change back.
+            current_dir = os.getcwd()
+
+            # Change to project root directory
+            os.chdir(self.project_root)
+
+            # Initialize Terraform configs
+            self.init()
+            # Validate Terraform configs
+            self.validate()
+
+            # Change to project root directory
+            os.chdir(current_dir)
+
+        # If Terraform command not found, log and exit
+        else:
+            self.logger.error('Terraform not found. Please install.')
+            sys.exit(1)
 
     def structure(self):
         """Terraform directory structure."""
@@ -103,3 +132,39 @@ class Build:
                 if not os.path.isdir(module_dir):
                     self.logger.info('Creating module: %s', module_dir)
                     os.makedirs(module_dir)
+
+    def init(self):
+        """Initialize Terraform configs."""
+
+        self.logger.info('Initializing config in: %s', self.project_root)
+        initialize = subprocess.run(
+            ['terraform', 'init'], check=False, capture_output=True)
+
+        if initialize.returncode != 0:
+            self.logger.error('terraform init: %s',
+                              initialize.stdout.decode("utf-8"))
+        else:
+            self.logger.info('terraform init: %s',
+                             initialize.stdout.decode("utf-8"))
+
+        # Display output back to stdout for visibility
+        print(initialize.stdout.decode("utf-8"))
+
+    def validate(self):
+        """Validate Terraform configs."""
+
+        self.logger.info('Validating config in: %s', self.project_root)
+
+        # Validate configuration
+        validation = subprocess.run(
+            ['terraform', 'validate'], check=False, capture_output=True)
+
+        if validation.returncode != 0:
+            self.logger.error('terraform validate: %s',
+                              validation.stdout.decode("utf-8"))
+        else:
+            self.logger.info('terraform validate: %s',
+                             validation.stdout.decode("utf-8"))
+
+        # Display output back to stdout for visibility
+        print(validation.stdout.decode("utf-8"))
