@@ -6,7 +6,11 @@
 # Variable {{ variable }} config
 variable "{{ variable }}" {
 {%-           for key, value in variable_config.items() %}
+{%-             if key|lower == 'type' %}
+    {{ key }} = {{ value }}
+{%-             else %}
     {{ key }} = "{{ value }}"
+{%-             endif %}
 {%-           endfor %}
 }
 {%-         endfor %}
