@@ -11,6 +11,13 @@ provider "digitalocean" {
     api_endpoint = "https://api.digitalocean.com"
     token        = var.do_token
 }
+# Provider vSphere config
+provider "vsphere" {
+    allow_unverified_ssl = var.vsphere_allow_unverified_ssl
+    password = var.vsphere_password
+    user = var.vsphere_username
+    vsphere_server = var.vsphere_server
+}
 # Module development config
 module "development" {
     source = "./environments/development"

@@ -4,16 +4,26 @@
 # Defines project name which becomes parent root directory
 project_name: example
 
+# Define backends
+backends:
+  local: {}
+  remote: {}
+
 # Defines environments
 environments:
   development: {}
   production: {}
   staging: {}
 
-# Define backends
-backends:
-  local: {}
-  remote: {}
+# Define global variables
+global_variables: {}
+
+# Define modules - Structure will be project_name/modules/{module}
+# root needs to always exist
+modules:
+  root: {}
+  network: {}
+  services: {}
 
 # Define providers
 providers:
@@ -51,36 +61,50 @@ providers:
         type: string
         description: DigitialOcean token
         default: ""
-  VMware: {}
+  vSphere:
+    allow_unverified_ssl: var.vsphere_allow_unverified_ssl
+    password: var.vsphere_password
+    user: var.vsphere_username
+    vsphere_server: var.vsphere_server
+    variables:
+      vsphere_allow_unverified_ssl:
+        type: bool
+        description: Boolean that can be set to true to disable SSL certificate verification
+        default: "false"
+      vsphere_password:
+        type: string
+        description: Password for vSphere API operations
+        default: ""
+      vsphere_server:
+        type: string
+        description: vCenter server name for vSphere API operations
+        default: ""
+      vsphere_username:
+        type: string
+        description: Username for vSphere API operations
+        default: ""
 
-# Define modules - Structure will be project_name/modules/{module}
-# root needs to always exist
-modules:
-  root: {}
-  network: {}
-  services:
-    provider: DigitalOcean
-    resources: {}
-
-# Define global variables
-global_variables:
-  {}
-  # resources:
-  #   droplets:
-  #     test:
-  #       count: 1
-  #       image: ubuntu-18-04-x64
-  #       private_networking: true
-  #       region: var.do_region
-  #       ssh_keys: var.do_ssh_keys
-  #       size: s-1vcpu-2gb
-  #       tags:
-  #         - test
-  #   projects:
-  #     TerraformCloud:
-  #       description: Terraform Cloud Project
-  #       environment: development
-  #       purpose: Terraform Cloud Project
-  #       resources: []
-  #   tags:
-  #     - test
+# Define required resources including provider and module
+resources:
+  projects:
+    TerraformCloud:
+      description: Terraform Cloud Project
+      environment: development
+      module: root
+      provider: DigitalOcean
+      purpose: Terraform Cloud Project
+      resources: []
+      tags:
+        - test
+  vms:
+    test:
+      count: 1
+      image: ubuntu-18-04-x64
+      module: root
+      private_networking: true
+      provider: DigitalOcean
+      region: var.do_region
+      ssh_keys: var.do_ssh_keys
+      size: s-1vcpu-2gb
+      tags:
+        - test

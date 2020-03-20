@@ -35,3 +35,27 @@ variable "do_token" {
     description = "DigitialOcean token"
     default = ""
 }
+# Variable vsphere_allow_unverified_ssl config
+variable "vsphere_allow_unverified_ssl" {
+    type = bool
+    description = "Boolean that can be set to true to disable SSL certificate verification"
+    default = "false"
+}
+# Variable vsphere_password config
+variable "vsphere_password" {
+    type = string
+    description = "Password for vSphere API operations"
+    default = ""
+}
+# Variable vsphere_server config
+variable "vsphere_server" {
+    type = string
+    description = "vCenter server name for vSphere API operations"
+    default = ""
+}
+# Variable vsphere_username config
+variable "vsphere_username" {
+    type = string
+    description = "Username for vSphere API operations"
+    default = ""
+}

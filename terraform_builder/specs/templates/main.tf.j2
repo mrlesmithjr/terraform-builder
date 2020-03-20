@@ -11,6 +11,11 @@ provider "{{ provider|lower }}" {
 {%-       elif provider|lower == 'digitalocean' %}
     api_endpoint = "{{ config['config']|default('https://api.digitalocean.com') }}"
     token        = {{ config['token']|default("") }}
+{%-       elif provider|lower == 'vsphere' %}
+    allow_unverified_ssl = {{ config['allow_unverified_ssl'] }}
+    password = {{ config['password'] }}
+    user = {{ config['user'] }}
+    vsphere_server = {{ config['vsphere_server'] }}
 {%-       endif %}
 }
 {%-     endif -%}

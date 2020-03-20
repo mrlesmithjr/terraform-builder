@@ -3,8 +3,6 @@
 ## Module Info
 
 ```yaml
-services:
-  provider: DigitalOcean
-  resources: {}
+services: {}
 
 ```

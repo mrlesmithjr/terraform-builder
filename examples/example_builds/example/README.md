@@ -82,7 +82,28 @@ DigitalOcean:
       default: ''
       description: DigitialOcean token
       type: string
-VMware: {}
+vSphere:
+  allow_unverified_ssl: var.vsphere_allow_unverified_ssl
+  password: var.vsphere_password
+  user: var.vsphere_username
+  variables:
+    vsphere_allow_unverified_ssl:
+      default: 'false'
+      description: Boolean that can be set to true to disable SSL certificate verification
+      type: bool
+    vsphere_password:
+      default: ''
+      description: Password for vSphere API operations
+      type: string
+    vsphere_server:
+      default: ''
+      description: vCenter server name for vSphere API operations
+      type: string
+    vsphere_username:
+      default: ''
+      description: Username for vSphere API operations
+      type: string
+  vsphere_server: var.vsphere_server
 
 ```
 
@@ -98,9 +119,7 @@ physical objects.
 ```yaml
 network: {}
 root: {}
-services:
-  provider: DigitalOcean
-  resources: {}
+services: {}
 
 ```
 
