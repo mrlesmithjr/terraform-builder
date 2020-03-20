@@ -172,10 +172,10 @@ class Build:
 
         if validation.returncode != 0:
             self.logger.error('terraform validate: %s',
-                              validation.stdout.decode("utf-8"))
+                              validation.stderr.decode("utf-8"))
         else:
             self.logger.info('terraform validate: %s',
                              validation.stdout.decode("utf-8"))
 
-        # Display output back to stdout for visibility
-        print(validation.stdout.decode("utf-8"))
+            # Display output back to stdout for visibility
+            print(validation.stdout.decode("utf-8"))
