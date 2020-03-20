@@ -4,8 +4,8 @@ import logging
 import os
 import shutil
 import subprocess
-import jinja2
 import sys
+import jinja2
 from terraform_builder.specs.important.files import important_files
 
 
