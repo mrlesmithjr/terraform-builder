@@ -8,7 +8,7 @@ provider "azurerm" {
 }
 # Provider DigitalOcean config
 provider "digitalocean" {
-    api_endpoint = "https://api.digitalocean.com"
+    api_endpoint = var.do_api_endpoint
     token        = var.do_token
 }
 # Provider vSphere config

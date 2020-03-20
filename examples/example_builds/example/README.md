@@ -49,10 +49,6 @@ DNSimple, Cloudflare).
 
 ```yaml
 AzureRM:
-  environment: var.azurerm_environment
-  features: var.azurerm_features
-  subscription_id: var.azurerm_subscription_id
-  tenant_id: var.azurerm_tenant_id
   variables:
     azurerm_environment:
       default: public
@@ -70,13 +66,15 @@ AzureRM:
       description: AzureRM Tenant ID
       type: string
 DigitalOcean:
-  api_endpoint: var.do_api_endpoint
-  token: var.do_token
   variables:
     do_api_endpoint:
       default: https://api.digitalocean.com
       description: This can be used to override the base URL for DigitalOcean API
         requests
+      type: string
+    do_image:
+      default: ubuntu-18-04-x64
+      description: Default DigitalOcean droplet image
       type: string
     do_region:
       default: nyc1
@@ -91,17 +89,30 @@ DigitalOcean:
       description: This is the DO API token
       type: string
 vSphere:
-  allow_unverified_ssl: var.vsphere_allow_unverified_ssl
-  password: var.vsphere_password
-  user: var.vsphere_username
   variables:
     vsphere_allow_unverified_ssl:
       default: 'false'
       description: Boolean that can be set to true to disable SSL certificate verification
       type: bool
+    vsphere_compute_cluster:
+      default: ''
+      description: Compute cluster to use by default
+      type: string
+    vsphere_datacenter:
+      default: ''
+      description: Datacenter to use by default
+      type: string
+    vsphere_network:
+      default: ''
+      description: Network to use by default
+      type: string
     vsphere_password:
       default: ''
       description: Password for vSphere API operations
+      type: string
+    vsphere_resource_pool:
+      default: ''
+      description: The resource pool to put virtual machine's in
       type: string
     vsphere_server:
       default: ''
@@ -111,7 +122,6 @@ vSphere:
       default: ''
       description: Username for vSphere API operations
       type: string
-  vsphere_server: var.vsphere_server
 
 ```
 
@@ -142,9 +152,9 @@ services: {}
 
 ```bash
 example
-|-- environments
 |-- LICENSE.md
 |-- README.md
+|-- environments
 |  |-- development
 |  |  |-- LICENSE.md
 |  |  |-- README.md
