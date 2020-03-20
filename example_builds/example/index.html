@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>Terraform Project - example - Terraform Builder</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../../css/theme.css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Terraform Project - example";
+    var mkdocs_page_input_path = "example_builds/example/README.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Terraform Builder</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../..">Terraform Builder</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Example builds</span></p>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="#">Example</a>
+    <ul class="current">
+                <li class="toctree-l2 current"><a class="reference internal current" href="./">Terraform Project - example</a>
+    <ul class="current">
+    <li class="toctree-l3"><a class="reference internal" href="#environments">Environments</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#backends">Backends</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#providers">Providers</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#modules">Modules</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#resources">Resources</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#global-variables">Global Variables</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#project-structure">Project Structure</a>
+    </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="LICENSE/">LICENSE</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="#">Environments</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="#">Development</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="environments/development/">Terraform Project - example - Module development</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="environments/development/LICENSE/">LICENSE</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="#">Production</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="environments/production/">Terraform Project - example - Module production</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="environments/production/LICENSE/">LICENSE</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="#">Staging</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="environments/staging/">Terraform Project - example - Module staging</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="environments/staging/LICENSE/">LICENSE</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="#">Modules</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="#">Network</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="modules/network/">Terraform Project - example - Module network</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="modules/network/LICENSE/">LICENSE</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="#">Services</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="modules/services/">Terraform Project - example - Module services</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="modules/services/LICENSE/">LICENSE</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Terraform Builder</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Example &raquo;</li>
+        
+      
+        
+          <li>Example builds &raquo;</li>
+        
+      
+    
+    <li>Terraform Project - example</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="terraform-project-example">Terraform Project - example</h1>
+<p>Welcome to your <code>example</code> project. The following details outline
+this project.</p>
+<blockquote>
+<p>NOTE: Ensure that you do not put any secret variables anywhere other than
+in <code>secrets.yml</code> and use the <code>--secrets</code> argument. The variables in this outline
+<strong>SHOULD</strong> only contain non-private information.</p>
+</blockquote>
+<h2 id="environments">Environments</h2>
+<p>Environments represent such things as: <code>development</code>, <code>staging</code>, and <code>production</code>.</p>
+<pre><code class="yaml">development: {}
+production: {}
+staging: {}
+
+</code></pre>
+
+<h2 id="backends">Backends</h2>
+<blockquote>
+<p>NOTE: From <a href="https://www.terraform.io/docs/backends/index.html">https://www.terraform.io/docs/backends/index.html</a></p>
+</blockquote>
+<p>A <code>backend</code> in Terraform determines how state is loaded and how an operation
+such as apply is executed. This abstraction enables non-local file state
+storage, remote execution, etc.</p>
+<p>By default, Terraform uses the <code>local</code> backend, which is the normal behavior of
+Terraform you're used to.</p>
+<pre><code class="yaml">local: {}
+remote: {}
+
+</code></pre>
+
+<h2 id="providers">Providers</h2>
+<blockquote>
+<p>NOTE: From <a href="https://www.terraform.io/docs/providers/index.html">https://www.terraform.io/docs/providers/index.html</a></p>
+</blockquote>
+<p>Terraform is used to create, manage, and update infrastructure resources such
+as physical machines, VMs, network switches, containers, and more. Almost any
+infrastructure type can be represented as a resource in Terraform. A provider
+is responsible for understanding API interactions and exposing resources.
+Providers generally are an IaaS (e.g. Alibaba Cloud, AWS, GCP, Microsoft Azure,
+OpenStack), PaaS (e.g. Heroku), or SaaS services (e.g. Terraform Cloud,
+DNSimple, Cloudflare).</p>
+<pre><code class="yaml">AzureRM:
+  variables:
+    azurerm_environment:
+      default: public
+      description: AzureRM Environment
+      type: string
+    azurerm_features:
+      default: {}
+      description: Customize the behaviour of certain Azure Provider resources.
+    azurerm_subscription_id:
+      default: ''
+      description: AzureRM Subscription ID
+      type: string
+    azurerm_tenant_id:
+      default: ''
+      description: AzureRM Tenant ID
+      type: string
+DigitalOcean:
+  variables:
+    do_api_endpoint:
+      default: https://api.digitalocean.com
+      description: This can be used to override the base URL for DigitalOcean API
+        requests
+      type: string
+    do_image:
+      default: ubuntu-18-04-x64
+      description: Default DigitalOcean droplet image
+      type: string
+    do_region:
+      default: nyc1
+      description: DigitalOcean region
+      type: string
+    do_ssh_keys:
+      default: []
+      description: DigitalOcean SSH keys to deploy to new droplets
+      type: string
+    do_token:
+      default: ''
+      description: This is the DO API token
+      type: string
+vSphere:
+  variables:
+    vsphere_allow_unverified_ssl:
+      default: 'false'
+      description: Boolean that can be set to true to disable SSL certificate verification
+      type: bool
+    vsphere_compute_cluster:
+      default: ''
+      description: Compute cluster to use by default
+      type: string
+    vsphere_datacenter:
+      default: ''
+      description: Datacenter to use by default
+      type: string
+    vsphere_network:
+      default: ''
+      description: Network to use by default
+      type: string
+    vsphere_password:
+      default: ''
+      description: Password for vSphere API operations
+      type: string
+    vsphere_resource_pool:
+      default: ''
+      description: The resource pool to put virtual machine's in
+      type: string
+    vsphere_server:
+      default: ''
+      description: vCenter server name for vSphere API operations
+      type: string
+    vsphere_username:
+      default: ''
+      description: Username for vSphere API operations
+      type: string
+
+</code></pre>
+
+<h2 id="modules">Modules</h2>
+<blockquote>
+<p>NOTE: From <a href="https://www.terraform.io/docs/modules/index.html">https://www.terraform.io/docs/modules/index.html</a></p>
+</blockquote>
+<p>A module is a container for multiple resources that are used together. Modules
+can be used to create lightweight abstractions, so that you can describe your
+infrastructure in terms of its architecture, rather than directly in terms of
+physical objects.</p>
+<pre><code class="yaml">network: {}
+root: {}
+services: {}
+
+</code></pre>
+
+<h2 id="resources">Resources</h2>
+<blockquote>
+<p>NOTE: From <a href="https://www.terraform.io/docs/configuration/resources.html">https://www.terraform.io/docs/configuration/resources.html</a></p>
+</blockquote>
+<p>Resources are the most important element in the Terraform language. Each
+resource block describes one or more infrastructure objects, such as
+virtual networks, compute instances, or higher-level components such as DNS
+records.</p>
+<pre><code class="yaml">projects:
+  TerraformCloud:
+    description: Terraform Cloud Project
+    environment: development
+    module: root
+    provider: DigitalOcean
+    purpose: Terraform Cloud Project
+    resources: []
+    tags:
+    - test
+vms:
+  test-do-network:
+    count: 1
+    memory: 1024
+    module: network
+    num_cpus: 1
+    provider: DigitalOcean
+    tags:
+    - test-digitalocean
+    - test-vsphere-network
+  test-do-root:
+    count: 1
+    memory: 1024
+    module: root
+    num_cpus: 1
+    provider: DigitalOcean
+    tags:
+    - test-digitalocean
+    - test-digitalocean-root
+  test-vs-root:
+    count: 1
+    memory: 2048
+    module: root
+    num_cpus: 1
+    provider: vSphere
+    tags:
+    - test-vsphere
+    - test-vsphere-root
+  test-vs-services:
+    count: 1
+    memory: 1024
+    module: services
+    num_cpus: 2
+    provider: vSphere
+    tags:
+    - test-vsphere
+    - test-vsphere-services
+
+</code></pre>
+
+<h2 id="global-variables">Global Variables</h2>
+<pre><code class="yaml">{}
+
+</code></pre>
+
+<h2 id="project-structure">Project Structure</h2>
+<pre><code class="bash">example
+|-- LICENSE.md
+|-- README.md
+|-- environments
+|  |-- development
+|  |  |-- LICENSE.md
+|  |  |-- README.md
+|  |  |-- main.tf
+|  |  |-- resources.tf
+|  |  |-- variables.tf
+|  |-- production
+|  |  |-- LICENSE.md
+|  |  |-- README.md
+|  |  |-- main.tf
+|  |  |-- resources.tf
+|  |  |-- variables.tf
+|  |-- staging
+|     |-- LICENSE.md
+|     |-- README.md
+|     |-- main.tf
+|     |-- resources.tf
+|     |-- variables.tf
+|-- main.tf
+|-- modules
+|  |-- network
+|  |  |-- LICENSE.md
+|  |  |-- README.md
+|  |  |-- main.tf
+|  |  |-- resources.tf
+|  |  |-- variables.tf
+|  |-- services
+|     |-- LICENSE.md
+|     |-- README.md
+|     |-- main.tf
+|     |-- resources.tf
+|     |-- variables.tf
+|-- requirements-dev.txt
+|-- requirements.txt
+|-- resources.tf
+|-- variables.tf
+
+</code></pre>
+
+<blockquote>
+<p>NOTE: Generated using https://github.com/mrlesmithjr/terraform-builder</p>
+</blockquote>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="LICENSE/" class="btn btn-neutral float-right" title="LICENSE">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../.." class="btn btn-neutral" title="Terraform Builder"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../.." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="LICENSE/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
