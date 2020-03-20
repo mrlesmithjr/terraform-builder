@@ -30,4 +30,13 @@ module "{{ environment }}" {
 terraform {
   required_version = ">= 0.12"
 }
+{%- elif module in args.environments %}
+{%-   for module in args.modules %}
+{%-      if module != 'root' %}
+# Module {{ module }} config
+module "{{ module }}" {
+    source = "../../modules/{{ module }}"
+}
+{%-      endif %}
+{%-    endfor -%}
 {% endif %}

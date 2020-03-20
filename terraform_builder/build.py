@@ -85,6 +85,14 @@ class Build:
                 self.logger.info('Creating environment: %s', env_dir)
                 os.makedirs(env_dir)
 
+            for file in ['main', 'variables']:
+                template = self.template(
+                    self.configs, module=env, file=file)
+                file_path = os.path.join(env_dir, f'{file}.tf')
+                with open(file_path, 'w') as config:
+                    self.logger.info('Creating: %s', file_path)
+                    config.write(template)
+
     def modules(self):
         """Configures modules."""
 

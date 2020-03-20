@@ -1,3 +1,33 @@
+commit 4b43b93bea96210295a357622630492425ccc191
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 09:49:18 2020 -0400
+
+    Changed testing to not use default values w/out args
+
+commit ea1c1b1ed3b056670786711dbe8eebaea9871131
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 09:13:47 2020 -0400
+
+    Renamed AzureRM variables, etc.
+
+commit 44b4a38877e3d030f265e73f281212c1ac790345
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 01:42:21 2020 -0400
+
+    Added Terraform init and validate to CI tests
+
+commit 8771e777d9dcaaeb33ee2df9a13e81ea9445034d
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 01:29:26 2020 -0400
+
+    Added initial vSphere provider and reorganized example config
+
+commit 33e2857957f9f3781f8d09841be8c171c855be25
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 00:42:29 2020 -0400
+
+    Added Initial AzureRM provider
+
 commit 82ca0934cc2c8278f21078d1fd5c511dc0f67172
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Fri Mar 20 00:16:37 2020 -0400
