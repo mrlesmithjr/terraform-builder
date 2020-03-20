@@ -1,10 +1,10 @@
 
 # Provider AzureRM config
 provider "azurerm" {
-    environment     = var.azrm_environment
-    features        = {}
-    subscription_id = var.azrm_subscription_id
-    tenant_id       = var.azrm_tenant_id
+    environment     = var.azurerm_environment
+    features        = var.azurerm_features
+    subscription_id = var.azurerm_subscription_id
+    tenant_id       = var.azurerm_tenant_id
 }
 # Provider DigitalOcean config
 provider "digitalocean" {

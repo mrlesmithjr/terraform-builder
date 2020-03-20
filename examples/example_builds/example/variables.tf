@@ -1,21 +1,32 @@
 
-# Variable azrm_environment config
-variable "azrm_environment" {
+# Variable azurerm_environment config
+variable "azurerm_environment" {
     type = string
     description = "AzureRM Environment"
     default = "public"
 }
-# Variable azrm_subscription_id config
-variable "azrm_subscription_id" {
+# Variable azurerm_features config
+variable "azurerm_features" {
+    description = "Customize the behaviour of certain Azure Provider resources."
+    default = "{}"
+}
+# Variable azurerm_subscription_id config
+variable "azurerm_subscription_id" {
     type = string
     description = "AzureRM Subscription ID"
     default = ""
 }
-# Variable azrm_tenant_id config
-variable "azrm_tenant_id" {
+# Variable azurerm_tenant_id config
+variable "azurerm_tenant_id" {
     type = string
     description = "AzureRM Tenant ID"
     default = ""
+}
+# Variable do_api_endpoint config
+variable "do_api_endpoint" {
+    type = string
+    description = "This can be used to override the base URL for DigitalOcean API requests"
+    default = "https://api.digitalocean.com"
 }
 # Variable do_region config
 variable "do_region" {
@@ -32,7 +43,7 @@ variable "do_ssh_keys" {
 # Variable do_token config
 variable "do_token" {
     type = string
-    description = "DigitialOcean token"
+    description = "This is the DO API token"
     default = ""
 }
 # Variable vsphere_allow_unverified_ssl config

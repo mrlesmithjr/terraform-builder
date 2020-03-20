@@ -49,27 +49,35 @@ DNSimple, Cloudflare).
 
 ```yaml
 AzureRM:
-  environment: var.azrm_environment
-  features: {}
-  subscription_id: var.azrm_subscription_id
-  tenant_id: var.azrm_tenant_id
+  environment: var.azurerm_environment
+  features: var.azurerm_features
+  subscription_id: var.azurerm_subscription_id
+  tenant_id: var.azurerm_tenant_id
   variables:
-    azrm_environment:
+    azurerm_environment:
       default: public
       description: AzureRM Environment
       type: string
-    azrm_subscription_id:
+    azurerm_features:
+      default: {}
+      description: Customize the behaviour of certain Azure Provider resources.
+    azurerm_subscription_id:
       default: ''
       description: AzureRM Subscription ID
       type: string
-    azrm_tenant_id:
+    azurerm_tenant_id:
       default: ''
       description: AzureRM Tenant ID
       type: string
 DigitalOcean:
-  api_endpoint: https://api.digitalocean.com
+  api_endpoint: var.do_api_endpoint
   token: var.do_token
   variables:
+    do_api_endpoint:
+      default: https://api.digitalocean.com
+      description: This can be used to override the base URL for DigitalOcean API
+        requests
+      type: string
     do_region:
       default: nyc1
       description: DigitalOcean region
@@ -80,7 +88,7 @@ DigitalOcean:
       type: string
     do_token:
       default: ''
-      description: DigitialOcean token
+      description: This is the DO API token
       type: string
 vSphere:
   allow_unverified_ssl: var.vsphere_allow_unverified_ssl
