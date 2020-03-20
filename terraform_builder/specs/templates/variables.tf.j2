@@ -2,7 +2,7 @@
 {%-   for provider, provider_config in args.providers.items() -%}
 {%-     if config != {} -%}
 {%-       if provider_config['variables'] -%}
-{%-         for variable, variable_config in provider_config['variables'].items() -%}
+{%-         for variable, variable_config in provider_config['variables'].items() %}
 # Variable {{ variable }} config
 variable "{{ variable }}" {
 {%-           for key, value in variable_config.items() %}

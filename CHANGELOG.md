@@ -1,3 +1,15 @@
+commit 6d6255307edcd2f9ab4d32e4dbd6facaa8641df4
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 00:14:58 2020 -0400
+
+    Added check to ensure that variable type is not quoted
+
+commit bcdc0c92566ba25eef226e2aedd3b6adc1cf9ed4
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 00:08:44 2020 -0400
+
+    Added important files for environments
+
 commit 5863b1bc2aa170b8e3664e53c41d0d2d29f46873
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Thu Mar 19 23:41:28 2020 -0400
