@@ -97,7 +97,8 @@ class Build:
             self.logger.info('Creating project_root: %s', self.project_root)
             os.makedirs(self.project_root)
 
-        for file in ['main', 'variables']:
+        # Create Terraform configuration files for root module
+        for file in ['main', 'resources', 'variables']:
             template = self.template(self.configs, module='root', file=file)
             file_path = os.path.join(self.project_root, f'{file}.tf')
             with open(file_path, 'w') as config:
@@ -114,7 +115,7 @@ class Build:
                 self.logger.info('Creating environment: %s', env_dir)
                 os.makedirs(env_dir)
 
-            for file in ['main', 'variables']:
+            for file in ['main', 'resources', 'variables']:
                 template = self.template(
                     self.configs, module=env, file=file)
                 file_path = os.path.join(env_dir, f'{file}.tf')
@@ -132,6 +133,16 @@ class Build:
                 if not os.path.isdir(module_dir):
                     self.logger.info('Creating module: %s', module_dir)
                     os.makedirs(module_dir)
+
+                # Create Terraform configuration files for modules
+                for file in ['main', 'resources', 'variables']:
+                    template = self.template(
+                        self.configs, module=module, file=file)
+                    file_path = os.path.join(
+                        self.project_root, 'modules', module, f'{file}.tf')
+                    with open(file_path, 'w') as config:
+                        self.logger.info('Creating: %s', file_path)
+                        config.write(template)
 
     def init(self):
         """Initialize Terraform configs."""
