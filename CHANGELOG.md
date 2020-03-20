@@ -1,3 +1,9 @@
+commit c3638a956a6857deba8b4232276f4a8262802995
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 19:01:08 2020 -0400
+
+    Testing with vms in different modules and configs
+
 commit 6b67cf1ba31ddacfaa14854f326aaa439f9dfd62
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Fri Mar 20 18:56:39 2020 -0400
