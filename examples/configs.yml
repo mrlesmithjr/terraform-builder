@@ -25,13 +25,9 @@ modules:
   network: {}
   services: {}
 
-# Define providers
+# Define providers and variables
 providers:
   AzureRM:
-    environment: var.azurerm_environment
-    features: var.azurerm_features
-    subscription_id: var.azurerm_subscription_id
-    tenant_id: var.azurerm_tenant_id
     variables:
       azurerm_environment:
         type: string
@@ -49,13 +45,15 @@ providers:
         description: AzureRM Tenant ID
         default: ""
   DigitalOcean:
-    api_endpoint: var.do_api_endpoint
-    token: var.do_token
     variables:
       do_api_endpoint:
         type: string
         description: This can be used to override the base URL for DigitalOcean API requests
         default: https://api.digitalocean.com
+      do_image:
+        type: string
+        description: Default DigitalOcean droplet image
+        default: ubuntu-18-04-x64
       do_region:
         type: string
         description: DigitalOcean region
@@ -69,18 +67,30 @@ providers:
         description: This is the DO API token
         default: ""
   vSphere:
-    allow_unverified_ssl: var.vsphere_allow_unverified_ssl
-    password: var.vsphere_password
-    user: var.vsphere_username
-    vsphere_server: var.vsphere_server
     variables:
       vsphere_allow_unverified_ssl:
         type: bool
         description: Boolean that can be set to true to disable SSL certificate verification
         default: "false"
+      vsphere_compute_cluster:
+        type: string
+        description: Compute cluster to use by default
+        default: ""
+      vsphere_datacenter:
+        type: string
+        description: Datacenter to use by default
+        default: ""
+      vsphere_network:
+        type: string
+        description: Network to use by default
+        default: ""
       vsphere_password:
         type: string
         description: Password for vSphere API operations
+        default: ""
+      vsphere_resource_pool:
+        type: string
+        description: The resource pool to put virtual machine's in
         default: ""
       vsphere_server:
         type: string
@@ -92,6 +102,8 @@ providers:
         default: ""
 
 # Define required resources including provider and module
+# Resources are defined in an agnostic way to ensure portability
+# between providers.
 resources:
   projects:
     TerraformCloud:
@@ -104,14 +116,19 @@ resources:
       tags:
         - test
   vms:
-    test:
+    test-do.example.com:
       count: 1
-      image: ubuntu-18-04-x64
+      memory: 1024
       module: root
-      private_networking: true
+      num_cpus: 1
       provider: DigitalOcean
-      region: var.do_region
-      ssh_keys: var.do_ssh_keys
-      size: s-1vcpu-2gb
       tags:
-        - test
+        - test-digitalocean
+    test-vs:
+      count: 1
+      memory: 2048
+      module: root
+      num_cpus: 1
+      provider: vSphere
+      tags:
+        - test-vsphere

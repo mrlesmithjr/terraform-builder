@@ -1,1 +1,89 @@
 # Generated using https://github.com/mrlesmithjr/terraform-builder
+{%- if args.providers.vSphere is defined %}
+{%-   if module == 'root' %}
+# Consuming existing vSphere datacenter
+data "vsphere_datacenter" "dc" {
+    name = var.vsphere_datacenter
+}
+# Consuming existing vSphere cluster
+data "vsphere_compute_cluster" "cluster" {
+    name = var.vsphere_compute_cluster
+}
+# Consuming existing vSphere network
+data "vsphere_network" "network" {
+    name          = var.vsphere_network
+    datacenter_id = data.vsphere_datacenter.dc.id
+}
+{%-   endif %}
+{%- endif %}
+{%- if args.resources.vms is defined %}
+{%-   set tags = {'digitalocean': [], 'vsphere': []} %}
+{%-   for vm, config in args.resources.vms.items() %}
+{%-     set memory = (config.memory|default(1024)/1024)|round|int|string %}
+{%-     set cpus = (config.num_cpus)|default(1)|string %}
+{%-     if config.module == module %}
+{%-       if config.provider|lower == 'digitalocean' %}
+# Resource {{ config.provider }} droplet
+resource "digitalocean_droplet" "{{ vm.split('.')[0]|replace('-','_') }}" {
+    count  = {{ config.count|default(1) }}
+    name   = format("{{ vm.split('.')[0] }}-%02s", count.index + 1)
+    image  = var.do_image
+    region = var.do_region
+    size   = "{{ 's-'+cpus+'vcpu-'+memory+'gb' }}"
+}
+{%-         if config.tags is defined %}
+{%-           for tag in config.tags %}
+{%-             if tag not in tags.digitalocean %}
+{%-               set _ = tags.digitalocean.append(tag) %}
+{%-             endif %}
+{%-           endfor %}
+{%-         endif %}
+{%-       elif config.provider|lower == 'vsphere' %}
+# Resource {{ config.provider }} virtual machine
+resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
+    count            = {{ config.count|default(1) }}
+    name             = format("{{ vm.split('.')[0] }}-%02s", count.index + 1)
+    num_cpus         = {{ cpus }}
+    memory           = {{ memory }}
+    resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
+    network_interface {
+      network_id = data.vsphere_network.network.id
+    }
+}
+{%-         if config.tags is defined %}
+{%-           for tag in config.tags %}
+{%-             if tag not in tags.vsphere %}
+{%-               set _ = tags.vsphere.append(tag) %}
+{%-             endif %}
+{%-           endfor %}
+{%-         endif %}
+{%-       endif %}
+{%-     endif %}
+{%-   endfor %}
+{%-   for tag in tags.digitalocean %}
+# Resource DigitalOcean tag
+resource "digitalocean_tag" "{{ tag|replace('-', '_') }}" {
+  name = "{{ tag }}"
+}
+{%-   endfor %}
+{%-   if tags.vsphere != [] %}
+# Resource tag category as a default to contain actual vSphere tags
+resource "vsphere_tag_category" "category" {
+  name        = "terraform-test-category"
+  description = "Managed by Terraform"
+  cardinality = "SINGLE"
+
+  associable_types = [
+    "VirtualMachine",
+    "Datastore",
+  ]
+}
+{%-   endif %}
+{%-   for tag in tags.vsphere %}
+# Resource vSphere tag
+resource "vsphere_tag" "{{ tag|replace('-', '_') }}" {
+  name        = "{{ tag }}"
+  category_id = vsphere_tag_category.category.id
+}
+{%-   endfor %}
+{%- endif %}

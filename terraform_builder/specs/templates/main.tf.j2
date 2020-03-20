@@ -5,18 +5,18 @@
 # Provider {{ provider }} config
 provider "{{ provider|lower }}" {
 {%-       if provider|lower == 'azurerm' %}
-    environment     = {{ config['environment']|default("public") }}
-    features        = {{ config['features'] }}
-    subscription_id = {{ config['subscription_id']|default("") }}
-    tenant_id       = {{ config['tenant_id']|default("") }}
+    environment     = var.azurerm_environment
+    features        = var.azurerm_features
+    subscription_id = var.azurerm_subscription_id
+    tenant_id       = var.azurerm_tenant_id
 {%-       elif provider|lower == 'digitalocean' %}
-    api_endpoint = "{{ config['config']|default('https://api.digitalocean.com') }}"
-    token        = {{ config['token']|default("") }}
+    api_endpoint = var.do_api_endpoint
+    token        = var.do_token
 {%-       elif provider|lower == 'vsphere' %}
-    allow_unverified_ssl = {{ config['allow_unverified_ssl'] }}
-    password = {{ config['password'] }}
-    user = {{ config['user'] }}
-    vsphere_server = {{ config['vsphere_server'] }}
+    allow_unverified_ssl = var.vsphere_allow_unverified_ssl
+    password = var.vsphere_password
+    user = var.vsphere_username
+    vsphere_server = var.vsphere_server
 {%-       endif %}
 }
 {%-     endif -%}
