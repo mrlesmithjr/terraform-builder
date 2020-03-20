@@ -4,6 +4,7 @@
 
 ```yaml
 services:
+  provider: DigitalOcean
   resources: {}
 
 ```

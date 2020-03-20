@@ -20,27 +20,7 @@ providers:
   AzureRM: {}
   DigitalOcean:
     api_endpoint: https://api.digitalocean.com
-    locals: {}
     token: var.do_token
-    resources:
-      droplets:
-        test:
-          count: 1
-          image: ubuntu-18-04-x64
-          private_networking: true
-          region: var.do_region
-          ssh_keys: var.do_ssh_keys
-          size: s-1vcpu-2gb
-          tags:
-            - test
-      projects:
-        TerraformCloud:
-          description: Terraform Cloud Project
-          environment: development
-          purpose: Terraform Cloud Project
-          resources: []
-      tags:
-        - test
     variables:
       do_region:
         type: string
@@ -53,14 +33,37 @@ providers:
       do_token:
         type: string
         description: DigitialOcean token
-        default:
+        default: ""
   VMware: {}
 
 # Define modules - Structure will be project_name/modules/{module}
+# root needs to always exist
 modules:
+  root: {}
   network: {}
   services:
+    provider: DigitalOcean
     resources: {}
 
 # Define global variables
-global_variables: {}
+global_variables:
+  {}
+  # resources:
+  #   droplets:
+  #     test:
+  #       count: 1
+  #       image: ubuntu-18-04-x64
+  #       private_networking: true
+  #       region: var.do_region
+  #       ssh_keys: var.do_ssh_keys
+  #       size: s-1vcpu-2gb
+  #       tags:
+  #         - test
+  #   projects:
+  #     TerraformCloud:
+  #       description: Terraform Cloud Project
+  #       environment: development
+  #       purpose: Terraform Cloud Project
+  #       resources: []
+  #   tags:
+  #     - test

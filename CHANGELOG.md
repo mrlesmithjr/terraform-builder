@@ -1,3 +1,55 @@
+commit 628ab8e3381b12627c59652efdd87e6e376e02da
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Thu Mar 19 21:25:20 2020 -0400
+
+    Added initial module important files
+
+commit 25cc35d3934b98eb8e518ef376b964c1498841e1
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Thu Mar 19 17:31:07 2020 -0400
+
+    Added cat log for test run and fixed Travis Env
+
+commit 3bbb97638fb10c7ab75167b742739691ff5edeeb
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Thu Mar 19 17:23:21 2020 -0400
+
+    Trying to fix TFENV install
+    
+    Access denied trying to create symlink to /usr/local/bin
+
+commit 12a419465f481be3f0c4d67433e37f5b0355a839
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Thu Mar 19 17:14:31 2020 -0400
+
+    Added tfenv install, etc. for pipelines in prep of testing
+
+commit 1e6b110e6770274b21ea890e98b9285ad856d7e1
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Thu Mar 19 16:54:30 2020 -0400
+
+    Added Python requirements to important files
+
+commit 6903ad5b211cc5bc0db6efd14e959d782074e326
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Thu Mar 19 16:54:04 2020 -0400
+
+    Added info on using tfenv
+
+commit 9955471331ef83e0afdb7d54d008c02ef21f6307
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Thu Mar 19 16:44:58 2020 -0400
+
+    Changed link to example project
+
+commit 642c45fc2e0fc5d8388c3a650ea2c6c92b47a8ad
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Thu Mar 19 16:40:37 2020 -0400
+
+    Added initial folder structure and critical files
+    
+    This is just the beginning of building out an example Terraform project.
+
 commit 8a732d3bb4adf44f2a0680da35341776566989fa
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Wed Mar 18 23:54:35 2020 -0400

@@ -51,26 +51,6 @@ DNSimple, Cloudflare).
 AzureRM: {}
 DigitalOcean:
   api_endpoint: https://api.digitalocean.com
-  locals: {}
-  resources:
-    droplets:
-      test:
-        count: 1
-        image: ubuntu-18-04-x64
-        private_networking: true
-        region: var.do_region
-        size: s-1vcpu-2gb
-        ssh_keys: var.do_ssh_keys
-        tags:
-        - test
-    projects:
-      TerraformCloud:
-        description: Terraform Cloud Project
-        environment: development
-        purpose: Terraform Cloud Project
-        resources: []
-    tags:
-    - test
   token: var.do_token
   variables:
     do_region:
@@ -82,7 +62,7 @@ DigitalOcean:
       description: DigitalOcean SSH keys to deploy to new droplets
       type: string
     do_token:
-      default: null
+      default: ''
       description: DigitialOcean token
       type: string
 VMware: {}
@@ -100,7 +80,9 @@ physical objects.
 
 ```yaml
 network: {}
+root: {}
 services:
+  provider: DigitalOcean
   resources: {}
 
 ```
@@ -122,6 +104,7 @@ example
    |__staging
 |__modules
    |__network
+   |__root
    |__services
 
 ```

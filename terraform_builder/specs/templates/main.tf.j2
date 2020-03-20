@@ -1,0 +1,17 @@
+{%- if module == 'root' %}
+{%-   for provider, config in args.providers.items() %}
+{%-     if config != {} -%}
+provider "{{ provider|lower }}" {
+{%-       if provider|lower == 'digitalocean' %}
+    api_endpoint = "{{ config['config']|default('https://api.digitalocean.com') }}"
+    token        = {{ config['token'] }}
+{%-       endif %}
+}
+{%-     endif -%}
+{%-   endfor %}
+
+# Setting required Terraform version or greater
+terraform {
+  required_version = ">= 0.12"
+}
+{% endif %}
