@@ -59,7 +59,8 @@ providers:
 # Define modules - Structure will be project_name/modules/{module}
 modules:
   network: {}
-  services: {}
+  services:
+    resources: {}
 
 # Define global variables
 global_variables: {}

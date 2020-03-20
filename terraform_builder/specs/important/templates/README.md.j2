@@ -1,3 +1,4 @@
+{% if not modules -%}
 # Terraform Project - {{ args.project_name }}
 
 Welcome to your `{{ args.project_name }}` project. The following details outline
@@ -80,3 +81,13 @@ physical objects.
 {%- endfor %}
 {% endif %}
 ```
+{%- else -%}
+# Terraform Project - {{ args.project_name }} - Module {{ module }}
+
+## Module Info
+
+```yaml
+{%- set module_info = {module: args['modules'][module]} %}
+{{ module_info|to_yaml }}
+```
+{%- endif %}

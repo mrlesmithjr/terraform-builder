@@ -100,7 +100,8 @@ physical objects.
 
 ```yaml
 network: {}
-services: {}
+services:
+  resources: {}
 
 ```
 
