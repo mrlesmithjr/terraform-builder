@@ -19,6 +19,8 @@ resource "digitalocean_droplet" "test_do" {
     image  = var.do_image
     region = var.do_region
     size   = "s-1vcpu-1gb"
+
+    tags   = [digitalocean_tag.test_digitalocean.id]
 }
 # Resource vSphere virtual machine
 resource "vsphere_virtual_machine" "test_vs" {
@@ -30,6 +32,8 @@ resource "vsphere_virtual_machine" "test_vs" {
     network_interface {
       network_id = data.vsphere_network.network.id
     }
+
+    tags   = [vsphere_tag.test_vsphere.id]
 }
 # Resource DigitalOcean tag
 resource "digitalocean_tag" "test_digitalocean" {

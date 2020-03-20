@@ -30,14 +30,18 @@ resource "digitalocean_droplet" "{{ vm.split('.')[0]|replace('-','_') }}" {
     image  = var.do_image
     region = var.do_region
     size   = "{{ 's-'+cpus+'vcpu-'+memory+'gb' }}"
-}
 {%-         if config.tags is defined %}
+{%-           set vm_tags = [] %}
 {%-           for tag in config.tags %}
+{%-             set tag_id = 'digitalocean_tag.'+tag|replace('-', '_')+'.id' %}
+{%              set _ = vm_tags.append(tag_id) %}
 {%-             if tag not in tags.digitalocean %}
 {%-               set _ = tags.digitalocean.append(tag) %}
 {%-             endif %}
 {%-           endfor %}
 {%-         endif %}
+    tags   = {{ vm_tags|replace("'", "") }}
+}
 {%-       elif config.provider|lower == 'vsphere' %}
 # Resource {{ config.provider }} virtual machine
 resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
@@ -49,13 +53,17 @@ resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
     network_interface {
       network_id = data.vsphere_network.network.id
     }
-}
 {%-         if config.tags is defined %}
+{%-           set vm_tags = [] %}
 {%-           for tag in config.tags %}
+{%-             set tag_id = 'vsphere_tag.'+tag|replace('-', '_')+'.id' %}
+{%              set _ = vm_tags.append(tag_id) %}
 {%-             if tag not in tags.vsphere %}
 {%-               set _ = tags.vsphere.append(tag) %}
 {%-             endif %}
 {%-           endfor %}
+    tags   = {{ vm_tags|replace("'", "") }}
+}
 {%-         endif %}
 {%-       endif %}
 {%-     endif %}
