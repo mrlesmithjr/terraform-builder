@@ -1,7 +1,7 @@
 # Generated using https://github.com/mrlesmithjr/terraform-builder
 {%- if module == 'root' %}
 {%-   for provider, provider_config in args.providers.items() -%}
-{%-     if config != {} -%}
+{%-     if provider_config != {} -%}
 {%-       if provider_config['variables'] -%}
 {%-         for variable, variable_config in provider_config['variables'].items() %}
 # Variable {{ variable }} config
@@ -18,4 +18,25 @@ variable "{{ variable }}" {
 {%-       endif -%}
 {%-     endif -%}
 {%-   endfor %}
+{%- else %}
+{%-   if args.resources.vms is defined %}
+{%-     for vm, config in args.resources.vms.items() %}
+{%-       if config.module == module %}
+{%-         if args.providers[config.provider].variables is defined %}
+{%-           for variable, variable_config in args.providers[config.provider].variables.items() %}
+# Variable {{ variable }} config
+variable "{{ variable }}" {
+{%-             for key, value in variable_config.items() %}
+{%-               if key|lower == 'type' %}
+    {{ key }} = {{ value }}
+{%-               else %}
+    {{ key }} = "{{ value }}"
+{%-               endif %}
+{%-             endfor %}
+}
+{%-           endfor %}
+{%-         endif %}
+{%-       endif %}
+{%-     endfor %}
+{%-   endif %}
 {%- endif %}

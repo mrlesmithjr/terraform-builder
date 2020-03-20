@@ -1,3 +1,15 @@
+commit 292438916ed4630a48b44c2a7d632731e417b8a7
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 17:04:12 2020 -0400
+
+    Added missing tags for vms
+
+commit aa2d86a2142bd4c094aa2437b8fe7d0b27f22fed
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 16:37:38 2020 -0400
+
+    Updated changelog
+
 commit 8240c6c4024544069ec641a65660ba854b782104
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Fri Mar 20 16:37:28 2020 -0400

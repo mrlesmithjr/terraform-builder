@@ -33,11 +33,28 @@ terraform {
 }
 {%- elif module in args.environments %}
 {%-   for module in args.modules %}
-{%-      if module != 'root' %}
+{%-     if module != 'root' %}
 # Module {{ module }} config
 module "{{ module }}" {
     source = "../../modules/{{ module }}"
+{%-         set vm_providers = [] %}
+{%-         for vm, config in args.resources.vms.items() %}
+{%-           if config.module == module %}
+{%-             set _ = vm_providers.append(config.provider) %}
+{%-           endif %}
+{%-         endfor %}
+{%-         for provider, provider_config in args.providers.items() -%}
+{%-           if provider in vm_providers %}
+{%-           if provider_config != {} -%}
+{%-             if provider_config['variables'] -%}
+{%-               for variable, variable_config in provider_config['variables'].items() %}
+    {{ variable }} = "{{ variable_config.default }}"
+{%-               endfor %}
+{%-             endif -%}
+{%-           endif -%}
+{%-           endif %}
+{%-         endfor %}
 }
-{%-      endif %}
-{%-    endfor -%}
+{%-    endif %}
+{%-  endfor -%}
 {% endif %}
