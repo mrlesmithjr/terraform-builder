@@ -1,4 +1,9 @@
 # Generated using https://github.com/mrlesmithjr/terraform-builder
+# Variable environment to use with resources
+variable "environment" {
+  type    = string
+  default = ""
+}
 # Variable azurerm_environment config
 variable "azurerm_environment" {
     type = string
