@@ -55,6 +55,16 @@
     <li class="toctree-l2"><a class="reference internal" href="#problems-that-terraform-builder-solves">Problems That Terraform Builder Solves</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#using-terraform-builder">Using Terraform Builder</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#concepts">Concepts</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#configurations">Configurations</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#example-configuration">Example Configuration</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
     </li>
     </ul>
                     </li>
@@ -154,8 +164,181 @@
 <p>Welcome to Terraform Builder. Terraform builder is based on a similar concept
 of <a href="https://github.com/mrlesmithjr/packer-builder">Packer Builder</a>.</p>
 <h2 id="why-terraform-builder">Why Terraform Builder</h2>
+<p>But, Terraform is simple already right? Of course it it!</p>
+<p>So, why do we need Terraform Builder?</p>
+<p>Simple! To make generating configurations more consumable.</p>
 <h2 id="problems-that-terraform-builder-solves">Problems That Terraform Builder Solves</h2>
+<p>Removing the complexities of Terraform HCL, etc.</p>
 <h2 id="using-terraform-builder">Using Terraform Builder</h2>
+<p>Is using Terraform Builder easy? Of course it is. But first we need to explore
+some of the concepts.</p>
+<h3 id="concepts">Concepts</h3>
+<p>One of the major concepts of Terraform Builder is, to keep configurations as
+agnostic as possible. For example, defining resources should be done in a way
+that is not provider specific. By simply setting a variable to the desired
+provider, the magic happens on the backend for the translation.</p>
+<h3 id="configurations">Configurations</h3>
+<p>Configurations are defined in YAML, and must follow a specific format. By doing
+this, we can ensure that we have consistency in our Terraform configurations. We
+use <code>configs.yml</code> but the filename can be anything you wish. However, if the
+content must be consistent.</p>
+<h4 id="example-configuration">Example Configuration</h4>
+<p>Below is an example of our <code>configs.yml</code>:</p>
+<pre><code class="yaml">---
+# This is an example config layout
+
+# Defines project name which becomes parent root directory
+project_name: example
+
+# Define backends
+backends:
+  local: {}
+  remote: {}
+
+# Defines environments
+environments:
+  development: {}
+  production: {}
+  staging: {}
+
+# Define global variables
+global_variables: {}
+
+# Define modules - Structure will be project_name/modules/{module}
+# root needs to always exist
+modules:
+  root: {}
+  network: {}
+  services: {}
+
+# Define providers and variables
+providers:
+  AzureRM:
+    variables:
+      azurerm_environment:
+        type: string
+        description: AzureRM Environment
+        default: public
+      azurerm_features:
+        description: Customize the behaviour of certain Azure Provider resources.
+        default: {}
+      azurerm_subscription_id:
+        type: string
+        description: AzureRM Subscription ID
+        default: &quot;&quot;
+      azurerm_tenant_id:
+        type: string
+        description: AzureRM Tenant ID
+        default: &quot;&quot;
+  DigitalOcean:
+    variables:
+      do_api_endpoint:
+        type: string
+        description: This can be used to override the base URL for DigitalOcean API requests
+        default: https://api.digitalocean.com
+      do_image:
+        type: string
+        description: Default DigitalOcean droplet image
+        default: ubuntu-18-04-x64
+      do_region:
+        type: string
+        description: DigitalOcean region
+        default: nyc1
+      do_ssh_keys:
+        type: string
+        description: DigitalOcean SSH keys to deploy to new droplets
+        default: []
+      do_token:
+        type: string
+        description: This is the DO API token
+        default: &quot;&quot;
+  vSphere:
+    variables:
+      vsphere_allow_unverified_ssl:
+        type: bool
+        description: Boolean that can be set to true to disable SSL certificate verification
+        default: &quot;false&quot;
+      vsphere_compute_cluster:
+        type: string
+        description: Compute cluster to use by default
+        default: &quot;&quot;
+      vsphere_datacenter:
+        type: string
+        description: Datacenter to use by default
+        default: &quot;&quot;
+      vsphere_network:
+        type: string
+        description: Network to use by default
+        default: &quot;&quot;
+      vsphere_password:
+        type: string
+        description: Password for vSphere API operations
+        default: &quot;&quot;
+      vsphere_resource_pool:
+        type: string
+        description: The resource pool to put virtual machine's in
+        default: &quot;&quot;
+      vsphere_server:
+        type: string
+        description: vCenter server name for vSphere API operations
+        default: &quot;&quot;
+      vsphere_username:
+        type: string
+        description: Username for vSphere API operations
+        default: &quot;&quot;
+
+# Define required resources including provider and module
+# Resources are defined in an agnostic way to ensure portability
+# between providers.
+resources:
+  projects:
+    TerraformCloud:
+      description: Terraform Cloud Project
+      environment: development
+      module: root
+      provider: DigitalOcean
+      purpose: Terraform Cloud Project
+      resources: []
+      tags:
+        - test
+  vms:
+    test-do-root:
+      count: 1
+      memory: 1024
+      module: root
+      num_cpus: 1
+      provider: DigitalOcean
+      tags:
+        - test-digitalocean
+        - test-digitalocean-root
+    test-do-network:
+      count: 1
+      memory: 1024
+      module: network
+      num_cpus: 1
+      provider: DigitalOcean
+      tags:
+        - test-digitalocean
+        - test-vsphere-network
+    test-vs-root:
+      count: 1
+      memory: 2048
+      module: root
+      num_cpus: 1
+      provider: vSphere
+      tags:
+        - test-vsphere
+        - test-vsphere-root
+    test-vs-services:
+      count: 1
+      memory: 1024
+      module: services
+      num_cpus: 2
+      provider: vSphere
+      tags:
+        - test-vsphere
+        - test-vsphere-services
+</code></pre>
               
             </div>
           </div>
@@ -209,5 +392,5 @@ of <a href="https://github.com/mrlesmithjr/packer-builder">Packer Builder</a>.</
 
 <!--
 MkDocs version : 1.1
-Build Date UTC : 2020-03-21 00:14:41
+Build Date UTC : 2020-03-21 01:01:33
 -->
