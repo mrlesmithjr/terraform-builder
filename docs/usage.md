@@ -173,6 +173,23 @@ resources:
         - test-vsphere-services
 ```
 
+To properly secure secrets such as API tokens, usernames, passwords, etc.
+Ensure to define them in `secrets.yml` and not in `configs.yml`. Anything placed in `secrets.yml` will be created in the root module folder as `terraform.tfvars.json`.
+
+Example of `secrets.yml`:
+
+```yaml
+---
+# Define secrets - Use with caution
+secrets:
+  {}
+  # azurerm_subscription_id: SuperSecretSubscriptionID
+  # azurerm_tenant_id: SuperSecretTenantID
+  # do_token: SuperSecretAPItoken
+  # vsphere_password: SuperSecretPass
+  # vsphere_username: SuperSecretUser
+```
+
 ### Help
 
 You can get Terraform Builder help:
