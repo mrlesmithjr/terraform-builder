@@ -32,11 +32,13 @@ terraform {
   required_version = ">= 0.12"
 }
 {%- elif module in args.environments %}
+{%-   set module_env = module %}
 {%-   for module in args.modules %}
 {%-     if module != 'root' %}
 # Module {{ module }} config
 module "{{ module }}" {
-    source = "../../modules/{{ module }}"
+    source      = "../../modules/{{ module }}"
+    environment = "{{ module_env }}"
 {%-         set vm_providers = [] %}
 {%-         for vm, config in args.resources.vms.items() %}
 {%-           if config.module == module %}

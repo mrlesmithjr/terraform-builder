@@ -1,5 +1,10 @@
 # Generated using https://github.com/mrlesmithjr/terraform-builder
 {%- if module == 'root' %}
+# Variable environment to use with resources
+variable "environment" {
+  type    = string
+  default = ""
+}
 {%-   for provider, provider_config in args.providers.items() -%}
 {%-     if provider_config != {} -%}
 {%-       if provider_config['variables'] -%}
@@ -19,6 +24,13 @@ variable "{{ variable }}" {
 {%-     endif -%}
 {%-   endfor %}
 {%- else %}
+{%-   if module not in args.environments %}
+# Variable environment to use with resources
+variable "environment" {
+  type    = string
+  default = ""
+}
+{%-   endif %}
 {%-   if args.resources.vms is defined %}
 {%-     for vm, config in args.resources.vms.items() %}
 {%-       if config.module == module %}

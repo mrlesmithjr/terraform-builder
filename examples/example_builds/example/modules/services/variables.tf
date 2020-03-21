@@ -1,4 +1,9 @@
 # Generated using https://github.com/mrlesmithjr/terraform-builder
+# Variable environment to use with resources
+variable "environment" {
+  type    = string
+  default = ""
+}
 # Variable vsphere_allow_unverified_ssl config
 variable "vsphere_allow_unverified_ssl" {
     type = bool
