@@ -17,10 +17,10 @@ def main():
 
     # Parse config in preparation of processing
     config = Config(args)
-    configs, _secrets = config.parse()
+    configs, secrets = config.parse()
 
     # Build
-    build = Build(args, configs)
+    build = Build(args, configs, secrets)
     build.configurations()
 
 

@@ -12,11 +12,12 @@ from terraform_builder.specs.important.files import important_files
 class Build:
     """Main build class."""
 
-    def __init__(self, args, configs):
+    def __init__(self, args, configs, secrets):
         """Init a thing."""
 
         self.args = args
         self.configs = configs
+        self.secrets = secrets
         # Setup logging
         self.logger = logging.getLogger(__name__)
         # Define project root directory
@@ -25,7 +26,7 @@ class Build:
         # Log project root
         self.logger.info('project_root: %s', self.project_root)
 
-    def template(self, args, module, file):
+    def template(self, args, secrets, module, file):
         """Renders template and returns the config."""
 
         # Defines absolute path to templates directory
@@ -42,7 +43,7 @@ class Build:
 
         # Defines which template to get from file including .j2 extension
         template = template_env.get_template(
-            f'{file}.tf.j2').render(args=args, module=module)
+            f'{file}.j2').render(args=args, secrets=secrets, module=module)
 
         return template
 
@@ -98,9 +99,11 @@ class Build:
             os.makedirs(self.project_root)
 
         # Create Terraform configuration files for root module
-        for file in ['main', 'resources', 'variables']:
-            template = self.template(self.configs, module='root', file=file)
-            file_path = os.path.join(self.project_root, f'{file}.tf')
+        for file in ['main.tf', 'resources.tf', 'terraform.tfvars.json',
+                     'variables.tf']:
+            template = self.template(
+                self.configs, secrets=self.secrets, module='root', file=file)
+            file_path = os.path.join(self.project_root, f'{file}')
             with open(file_path, 'w') as config:
                 self.logger.info('Creating: %s', file_path)
                 config.write(template)
@@ -115,10 +118,10 @@ class Build:
                 self.logger.info('Creating environment: %s', env_dir)
                 os.makedirs(env_dir)
 
-            for file in ['main', 'resources', 'variables']:
+            for file in ['main.tf', 'resources.tf', 'variables.tf']:
                 template = self.template(
-                    self.configs, module=env, file=file)
-                file_path = os.path.join(env_dir, f'{file}.tf')
+                    self.configs, secrets=self.secrets, module=env, file=file)
+                file_path = os.path.join(env_dir, f'{file}')
                 with open(file_path, 'w') as config:
                     self.logger.info('Creating: %s', file_path)
                     config.write(template)
@@ -135,11 +138,12 @@ class Build:
                     os.makedirs(module_dir)
 
                 # Create Terraform configuration files for modules
-                for file in ['main', 'resources', 'variables']:
+                for file in ['main.tf', 'resources.tf', 'variables.tf']:
                     template = self.template(
-                        self.configs, module=module, file=file)
+                        self.configs, secrets=self.secrets, module=module,
+                        file=file)
                     file_path = os.path.join(
-                        self.project_root, 'modules', module, f'{file}.tf')
+                        self.project_root, 'modules', module, f'{file}')
                     with open(file_path, 'w') as config:
                         self.logger.info('Creating: %s', file_path)
                         config.write(template)
