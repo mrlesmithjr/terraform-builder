@@ -15,7 +15,7 @@ data "vsphere_network" "network" {
 # Resource DigitalOcean droplet
 resource "digitalocean_droplet" "test_do_root" {
     count  = 1
-    name   = format("test-do-root-%02s", count.index + 1)
+    name   = format("test-do-root-%02s-%s", count.index + 1, substr(var.environment,0,4))
     image  = var.do_image
     region = var.do_region
     size   = "s-1vcpu-1gb"
@@ -26,7 +26,7 @@ resource "digitalocean_droplet" "test_do_root" {
 # Resource vSphere virtual machine
 resource "vsphere_virtual_machine" "test_vs_root" {
     count            = 1
-    name             = format("test-vs-root-%02s", count.index + 1)
+    name             = format("test-vs-root-%02s-%s", count.index + 1, substr(var.environment,0,4))
     num_cpus         = 1
     memory           = 2
     resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id

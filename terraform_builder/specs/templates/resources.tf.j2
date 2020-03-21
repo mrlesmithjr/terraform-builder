@@ -49,7 +49,7 @@ data "vsphere_network" "network" {
 # Resource {{ config.provider }} droplet
 resource "digitalocean_droplet" "{{ vm.split('.')[0]|replace('-','_') }}" {
     count  = {{ config.count|default(1) }}
-    name   = format("{{ vm.split('.')[0] }}-%02s", count.index + 1)
+    name   = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment,0,4))
     image  = var.do_image
     region = var.do_region
     size   = "{{ 's-'+cpus+'vcpu-'+memory+'gb' }}"
@@ -69,7 +69,7 @@ resource "digitalocean_droplet" "{{ vm.split('.')[0]|replace('-','_') }}" {
 # Resource {{ config.provider }} virtual machine
 resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
     count            = {{ config.count|default(1) }}
-    name             = format("{{ vm.split('.')[0] }}-%02s", count.index + 1)
+    name             = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment,0,4))
     num_cpus         = {{ cpus }}
     memory           = {{ memory }}
     resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id

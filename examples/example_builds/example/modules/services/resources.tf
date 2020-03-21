@@ -15,7 +15,7 @@ data "vsphere_network" "network" {
 # Resource vSphere virtual machine
 resource "vsphere_virtual_machine" "test_vs_services" {
     count            = 1
-    name             = format("test-vs-services-%02s", count.index + 1)
+    name             = format("test-vs-services-%02s-%s", count.index + 1, substr(var.environment,0,4))
     num_cpus         = 2
     memory           = 1
     resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
