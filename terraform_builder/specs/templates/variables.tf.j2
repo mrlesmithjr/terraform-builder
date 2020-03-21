@@ -22,19 +22,21 @@ variable "{{ variable }}" {
 {%-   if args.resources.vms is defined %}
 {%-     for vm, config in args.resources.vms.items() %}
 {%-       if config.module == module %}
-{%-         if args.providers[config.provider].variables is defined %}
-{%-           for variable, variable_config in args.providers[config.provider].variables.items() %}
+{%-         if args.providers[config.provider] %}
+{%-           if args.providers[config.provider].variables is defined %}
+{%-             for variable, variable_config in args.providers[config.provider].variables.items() %}
 # Variable {{ variable }} config
 variable "{{ variable }}" {
-{%-             for key, value in variable_config.items() %}
-{%-               if key|lower == 'type' %}
+{%-               for key, value in variable_config.items() %}
+{%-                 if key|lower == 'type' %}
     {{ key }} = {{ value }}
-{%-               else %}
+{%-                 else %}
     {{ key }} = "{{ value }}"
-{%-               endif %}
-{%-             endfor %}
+{%-                 endif %}
+{%-               endfor %}
 }
-{%-           endfor %}
+{%-             endfor %}
+{%-           endif %}
 {%-         endif %}
 {%-       endif %}
 {%-     endfor %}

@@ -41,10 +41,11 @@ data "vsphere_network" "network" {
 {%- if args.resources.vms is defined %}
 {%-   set tags = {'digitalocean': [], 'vsphere': []} %}
 {%-   for vm, config in args.resources.vms.items() %}
-{%-     set memory = (config.memory|default(1024)/1024)|round|int|string %}
-{%-     set cpus = (config.num_cpus)|default(1)|string %}
-{%-     if config.module == module %}
-{%-       if config.provider|lower == 'digitalocean' %}
+{%-     if args.providers[config.provider] %}
+{%-       set memory = (config.memory|default(1024)/1024)|round|int|string %}
+{%-       set cpus = (config.num_cpus)|default(1)|string %}
+{%-       if config.module == module %}
+{%-         if config.provider|lower == 'digitalocean' %}
 # Resource {{ config.provider }} droplet
 resource "digitalocean_droplet" "{{ vm.split('.')[0]|replace('-','_') }}" {
     count  = {{ config.count|default(1) }}
@@ -52,19 +53,19 @@ resource "digitalocean_droplet" "{{ vm.split('.')[0]|replace('-','_') }}" {
     image  = var.do_image
     region = var.do_region
     size   = "{{ 's-'+cpus+'vcpu-'+memory+'gb' }}"
-{%-         if config.tags is defined %}
-{%-           set vm_tags = [] %}
-{%-           for tag in config.tags %}
-{%-             set tag_id = 'digitalocean_tag.'+tag|replace('-', '_')+'.id' %}
-{%              set _ = vm_tags.append(tag_id) %}
-{%-             if tag not in tags.digitalocean %}
-{%-               set _ = tags.digitalocean.append(tag) %}
-{%-             endif %}
-{%-           endfor %}
-{%-         endif %}
+{%-           if config.tags is defined %}
+{%-             set vm_tags = [] %}
+{%-             for tag in config.tags %}
+{%-               set tag_id = 'digitalocean_tag.'+tag|replace('-', '_')+'.id' %}
+{%                set _ = vm_tags.append(tag_id) %}
+{%-               if tag not in tags.digitalocean %}
+{%-                 set _ = tags.digitalocean.append(tag) %}
+{%-               endif %}
+{%-             endfor %}
+{%-           endif %}
     tags   = {{ vm_tags|replace("'", "") }}
 }
-{%-       elif config.provider|lower == 'vsphere' %}
+{%-         elif config.provider|lower == 'vsphere' %}
 # Resource {{ config.provider }} virtual machine
 resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
     count            = {{ config.count|default(1) }}
@@ -75,17 +76,18 @@ resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
     network_interface {
       network_id = data.vsphere_network.network.id
     }
-{%-         if config.tags is defined %}
-{%-           set vm_tags = [] %}
-{%-           for tag in config.tags %}
-{%-             set tag_id = 'vsphere_tag.'+tag|replace('-', '_')+'.id' %}
-{%              set _ = vm_tags.append(tag_id) %}
-{%-             if tag not in tags.vsphere %}
-{%-               set _ = tags.vsphere.append(tag) %}
-{%-             endif %}
-{%-           endfor %}
+{%-           if config.tags is defined %}
+{%-             set vm_tags = [] %}
+{%-             for tag in config.tags %}
+{%-               set tag_id = 'vsphere_tag.'+tag|replace('-', '_')+'.id' %}
+{%                set _ = vm_tags.append(tag_id) %}
+{%-               if tag not in tags.vsphere %}
+{%-                 set _ = tags.vsphere.append(tag) %}
+{%-               endif %}
+{%-             endfor %}
     tags   = {{ vm_tags|replace("'", "") }}
 }
+{%-           endif %}
 {%-         endif %}
 {%-       endif %}
 {%-     endif %}
