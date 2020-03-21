@@ -12,6 +12,12 @@ So, why do we need Terraform Builder?
 
 Simple! To make generating configurations more consumable.
 
+Terraform Builder also creates some of the documentation, etc. for your
+project by creating `README.md` files where appropriate and other important
+files such as `.gitignore` pre-populated for Terraform usage. Explore the
+[example build](https://github.com/mrlesmithjr/terraform-builder/tree/master/examples/example_builds/example) to see the directory structure that is
+stamped out for you.
+
 ## Problems That Terraform Builder Solves
 
 Removing the complexities of Terraform HCL, etc. Moreover, standardizing
