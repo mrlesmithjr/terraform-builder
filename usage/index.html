@@ -333,6 +333,20 @@ resources:
         - test-vsphere-services
 </code></pre>
 
+<p>To properly secure secrets such as API tokens, usernames, passwords, etc.
+Ensure to define them in <code>secrets.yml</code> and not in <code>configs.yml</code>. Anything placed in <code>secrets.yml</code> will be created in the root module folder as <code>terraform.tfvars.json</code>.</p>
+<p>Example of <code>secrets.yml</code>:</p>
+<pre><code class="yaml">---
+# Define secrets - Use with caution
+secrets:
+  {}
+  # azurerm_subscription_id: SuperSecretSubscriptionID
+  # azurerm_tenant_id: SuperSecretTenantID
+  # do_token: SuperSecretAPItoken
+  # vsphere_password: SuperSecretPass
+  # vsphere_username: SuperSecretUser
+</code></pre>
+
 <h3 id="help">Help</h3>
 <p>You can get Terraform Builder help:</p>
 <pre><code class="bash">python -m terraform_builder -h
