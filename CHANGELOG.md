@@ -1,3 +1,81 @@
+commit 8e65d955d6972e0ba8a2a04fe62f197471e9ad6d
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sat Mar 21 01:33:15 2020 -0400
+
+    Added mkdocs to dev requirements
+    
+    Using mkdocs to generate docs
+
+commit b07cffb927c281cccbe44f3f1523d75e6dee601f
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sat Mar 21 01:32:05 2020 -0400
+
+    Added environment var to append first 4 chars to VM names
+
+commit b1eb3a0b12f1233eafcfb3ca07fff2e3e9bacbc2
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sat Mar 21 01:30:41 2020 -0400
+
+    Added var for environment to use for resources, etc.
+
+commit 1512f919d4054b5cd0bc6a30db59344564f82cb7
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sat Mar 21 00:04:35 2020 -0400
+
+    Added info on using secrets.yml
+
+commit 95d1aedd97bbaba6cbf55317fc8a20b74df364f0
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sat Mar 21 00:00:43 2020 -0400
+
+    Added examples to secrets.yml
+
+commit 92c602562fc5627eb8746f5f2801bed506c1abb8
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 23:51:39 2020 -0400
+
+    Added initial secrets functionality
+
+commit 6507cef8aa49fdbc4e961974d1c2428867670146
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 23:50:18 2020 -0400
+
+    Added check to ensure provider is defined
+    
+    If resources were configured to use a provider that was not defined caused a failure
+
+commit 00d3d9698c66ade24c421956cc5ab7839c7b07ff
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 22:26:30 2020 -0400
+
+    Added info on doc generation
+
+commit 94f7bf38a6ae530d675d188e0ceb476e9053f946
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 22:20:19 2020 -0400
+
+    Reorganizing documentation and more content
+
+commit 750f7e8348e4bb5737e9e8600e0046887c689fbe
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 21:27:55 2020 -0400
+
+    Updated docs with some usage info
+
+commit e209bea9b0e35e244afc321a453d7c404322f7ce
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 20:14:34 2020 -0400
+
+    Updated docs, etc.
+    
+    Added info to read documentation
+
+commit 3b5abe4bae64352a21c6c0a15b119f3691e5f024
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 20 19:09:27 2020 -0400
+
+    Added missing resources from root README
+
 commit c3638a956a6857deba8b4232276f4a8262802995
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Fri Mar 20 19:01:08 2020 -0400
