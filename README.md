@@ -1,12 +1,6 @@
----
-title: terraform_builder
----
+# Terraform Builder
 
 Helps build consistent Terraform configurations
-
-## Example Project
-
-You can find an example project [here](examples/example_builds/example)
 
 ## Build Status
 
@@ -29,6 +23,14 @@ Terraform version manager is a tool that I use personally. It assists in easily
 managing different Terraform versions for you to use. Rather than installing a
 version, and then having to do some random things to switch between versions.
 Definitely check it out [here](https://github.com/tfutils/tfenv).
+
+## Example Project
+
+You can find an example project [here](examples/example_builds/example)
+
+## Documentation
+
+You may find documentation for this project [here](https://mrlesmithjr.github.io/terraform-builder).
 
 ## Dependencies
 
