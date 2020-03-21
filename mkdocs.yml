@@ -1,2 +1,7 @@
 site_name: Terraform Builder
 theme: readthedocs
+# nav:
+#   - Home: index.md
+#   - About Terraform Builder: about.md
+#   - Terraform Builder Usage: usage.md
+#   - Terraform Builder Examples: example_builds/example
