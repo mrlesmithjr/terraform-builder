@@ -71,8 +71,15 @@ class Build:
             self.init()
             # Validate Terraform configs
             self.validate()
-            # Generate Terraform graph to display in project markdown
-            self.graph()
+
+            # Check for dot command path
+            dot_path = shutil.which('dot')
+            # Log dot path
+            self.logger.info('dot_path: %s', dot_path)
+            # If graphviz dot command found, generate graph
+            if dot_path is not None:
+                # Generate Terraform graph to display in project markdown
+                self.graph()
 
             # Change to project root directory
             os.chdir(current_dir)
