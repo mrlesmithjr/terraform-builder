@@ -1,3 +1,30 @@
+commit 0fcb1b9cb7e2ca9039eb8252e232e5a3b7da2e0c
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sun Mar 22 18:05:36 2020 -0400
+
+    Added check for graphviz dot command
+
+commit 36625604ef912244f94136405bb3aac055cb5e6c
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sun Mar 22 17:45:02 2020 -0400
+
+    Fixed link to graph
+
+commit c6d74d529b4a1e2c21c27770d7c77bb8830ed104
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sun Mar 22 17:42:10 2020 -0400
+
+    Added graphviz to consume terraform graph
+    
+    Using terraform graph, we can capture the output
+    Using the output, pipe it through graphviz to save image to project README
+
+commit 0e841d6753a49b10b17148a2320e6942aebea52f
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sat Mar 21 01:33:34 2020 -0400
+
+    Updated: changelog
+
 commit 8e65d955d6972e0ba8a2a04fe62f197471e9ad6d
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Sat Mar 21 01:33:15 2020 -0400

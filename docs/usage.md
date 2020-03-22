@@ -1,5 +1,34 @@
 # Terraform Builder Usage
 
+## Requirements
+
+### Clone Project
+
+To obtain the project simply clone it down:
+
+```bash
+git clone https://github.com/mrlesmithjr/terraform-builder
+```
+
+### Python Packages
+
+Install required Python packages included in the project you cloned from above.
+
+```bash
+pip3 install -r requirements.txt
+```
+
+### Terraform Version Manager
+
+Terraform version manager is a tool that I use personally. It assists in easily
+managing different Terraform versions for you to use. Rather than installing a
+version, and then having to do some random things to switch between versions.
+Definitely check it out [here](https://github.com/tfutils/tfenv).
+
+### Graphviz
+
+It is recommended that you install [Graphviz](https://graphviz.gitlab.io/download/) to get a visible graph in your project README.
+
 ## Using Terraform Builder
 
 Is using Terraform Builder easy? Of course it is. But first we need to explore

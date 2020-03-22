@@ -24,6 +24,10 @@ managing different Terraform versions for you to use. Rather than installing a
 version, and then having to do some random things to switch between versions.
 Definitely check it out [here](https://github.com/tfutils/tfenv).
 
+### Graphviz
+
+It is recommended that you install [Graphviz](https://graphviz.gitlab.io/download/) to get a visible graph in your project README.
+
 ## Example Project
 
 You can find an example project [here](examples/example_builds/example)
@@ -33,10 +37,6 @@ You can find an example project [here](examples/example_builds/example)
 You may find documentation for this project [here](https://mrlesmithjr.github.io/terraform-builder).
 
 ## Dependencies
-
-## Usage
-
-[Usage](docs/USAGE.md)
 
 ## License
 
