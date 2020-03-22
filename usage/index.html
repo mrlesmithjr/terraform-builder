@@ -58,6 +58,18 @@
                 <ul class="current">
                     <li class="toctree-l1 current"><a class="reference internal current" href="./">Terraform Builder Usage</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#clone-project">Clone Project</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#python-packages">Python Packages</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#terraform-version-manager">Terraform Version Manager</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#graphviz">Graphviz</a>
+    </li>
+        </ul>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#using-terraform-builder">Using Terraform Builder</a>
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#configurations">Configurations</a>
@@ -167,6 +179,24 @@
             <div class="section">
               
                 <h1 id="terraform-builder-usage">Terraform Builder Usage</h1>
+<h2 id="requirements">Requirements</h2>
+<h3 id="clone-project">Clone Project</h3>
+<p>To obtain the project simply clone it down:</p>
+<pre><code class="bash">git clone https://github.com/mrlesmithjr/terraform-builder
+</code></pre>
+
+<h3 id="python-packages">Python Packages</h3>
+<p>Install required Python packages included in the project you cloned from above.</p>
+<pre><code class="bash">pip3 install -r requirements.txt
+</code></pre>
+
+<h3 id="terraform-version-manager">Terraform Version Manager</h3>
+<p>Terraform version manager is a tool that I use personally. It assists in easily
+managing different Terraform versions for you to use. Rather than installing a
+version, and then having to do some random things to switch between versions.
+Definitely check it out <a href="https://github.com/tfutils/tfenv">here</a>.</p>
+<h3 id="graphviz">Graphviz</h3>
+<p>It is recommended that you install <a href="https://graphviz.gitlab.io/download/">Graphviz</a> to get a visible graph in your project README.</p>
 <h2 id="using-terraform-builder">Using Terraform Builder</h2>
 <p>Is using Terraform Builder easy? Of course it is. But first we need to explore
 some of the concepts.</p>
