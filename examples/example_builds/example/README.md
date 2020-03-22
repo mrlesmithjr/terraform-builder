@@ -253,5 +253,10 @@ example
 |-- variables.tf
 
 ```
+## Terraform Graph
+
+Below is a graph of your Terraform configuration.
+
+![example - Graph]('./example.jpg')
 
 > NOTE: Generated using https://github.com/mrlesmithjr/terraform-builder

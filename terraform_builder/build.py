@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import sys
 import jinja2
+from graphviz import Source
 from terraform_builder.specs.important.files import important_files
 
 
@@ -20,6 +21,7 @@ class Build:
         self.secrets = secrets
         # Setup logging
         self.logger = logging.getLogger(__name__)
+        self.project_name = self.configs['project_name']
         # Define project root directory
         self.project_root = os.path.join(
             self.args.outputdir, self.configs['project_name'])
@@ -69,6 +71,8 @@ class Build:
             self.init()
             # Validate Terraform configs
             self.validate()
+            # Generate Terraform graph to display in project markdown
+            self.graph()
 
             # Change to project root directory
             os.chdir(current_dir)
@@ -183,3 +187,21 @@ class Build:
 
             # Display output back to stdout for visibility
             print(validation.stdout.decode("utf-8"))
+
+    def graph(self):
+        """Generate graph image from terraform graph - Graphviz."""
+
+        # Defines output format for graph
+        output_format = 'jpg'
+        # Defines output file to save graph
+        output_file = f'{self.project_name}'
+
+        # Execute terraform graph to capture dot source
+        terraform_graph = subprocess.run(
+            ['terraform', 'graph'], check=False,
+            stdout=subprocess.PIPE)
+
+        # Extract terraform graph source
+        source = Source(terraform_graph.stdout.decode('utf-8'))
+        # Render terraform graph source and save
+        source.render(filename=output_file, format=output_format, cleanup=True)
