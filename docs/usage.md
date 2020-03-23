@@ -41,9 +41,55 @@ this, we can ensure that we have consistency in our Terraform configurations. We
 use `configs.yml` but the filename can be anything you wish. However, if the
 content must be consistent.
 
+#### Providers
+
+We can configure specific providers in our `configs.yml`.
+
+##### Resources
+
+Resources are where we can defined things such as VMs, resource groups, etc. For
+example, VMs are defined in an agnostic way in which you can cut/paste VM resources
+between providers. When doing this, the backend configurations are handled for
+us to translate to the specific provider.
+
+For some resources, we can define `create: true` or `create: false`. By doing
+this, we define the resource to be created or consume an existing resource. An
+example of this is for the `AzureRM` provider. In which we would like to define
+resource groups in a way similar to:
+
+```yaml
+providers:
+  AzureRM:
+    resources:
+      resource_groups:
+        default:
+          create: false
+          module: root
+        example:
+          create: true
+          module: services
+```
+
+If we were to use the above configuration, we would end up with configurations
+that look similar to:
+
+```json
+# Data AzureRM resource group
+data "azurerm_resource_group" "default" {
+        name     = "default"
+}
+# Resource AzureRM resource group
+resource "azurerm_resource_group" "example" {
+        name     = "example"
+        location = var.azurerm_location
+}
+```
+
 #### Example Configuration
 
 Below is an example of our `configs.yml`:
+
+> NOTE: You can always find an updated example [here](https://raw.githubusercontent.com/mrlesmithjr/terraform-builder/master/examples/configs.yml)
 
 ```yaml
 ---
@@ -76,7 +122,25 @@ modules:
 # Define providers and variables
 providers:
   AzureRM:
-    resources: {}
+    resources:
+      resource_groups:
+        {}
+        # default:
+        #   create: false
+        #   module: root
+        # example:
+        #   create: true
+        #   module: services
+      vms:
+        {}
+        # test-az-root:
+        #   count: 1
+        #   memory: 1024
+        #   module: services
+        #   num_cpus: 1
+        #   tags:
+        #     - test-azurerm
+        #     - test-azurerm-root
     variables:
       azurerm_domain:
         type: string
@@ -90,13 +154,13 @@ providers:
         description: Customize the behaviour of certain Azure Provider resources.
         default: {}
       azurerm_location:
-        description: Default AzureRM location
         type: string
-        default: ""
+        description: Default AzureRM location/region
+        default: East US
       azurerm_resource_group:
-        description: Default AzureRM resource group
         type: string
-        default: ""
+        description: Default AzureRM resource group
+        default: example
       azurerm_subscription_id:
         type: string
         description: AzureRM Subscription ID

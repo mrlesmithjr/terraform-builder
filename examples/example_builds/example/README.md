@@ -59,6 +59,7 @@ records.
 ```yaml
 AzureRM:
   resources:
+    resource_groups: {}
     vms: {}
   variables:
     azurerm_domain:
@@ -73,11 +74,11 @@ AzureRM:
       default: {}
       description: Customize the behaviour of certain Azure Provider resources.
     azurerm_location:
-      default: ''
-      description: Default AzureRM location
+      default: East US
+      description: Default AzureRM location/region
       type: string
     azurerm_resource_group:
-      default: default
+      default: example
       description: Default AzureRM resource group
       type: string
     azurerm_subscription_id:

@@ -1,3 +1,22 @@
+commit 9fb9754a6705c4f7e94ed9d14435925f3c18635c
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Mon Mar 23 16:12:58 2020 -0400
+
+    Initial AzureRM virtual machine resources
+    
+    Because of the many additional resources required to properly configure
+    a vm. We will need to evaluate these constructs to abstract them the
+    most effective way across providers.
+    
+    The following are required for an AzureRM virtual machine:
+    - azurerm_resource_group
+    - azurerm_virtual_network
+    - azurerm_subnet
+    - azurerm_network_interface
+    
+    vSphere will also require more abstraction based on what we find with
+    AzureRM resources.
+
 commit 51ac7e3d913567a129fdd20ccd75a8884b0f18e6
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Mon Mar 23 10:29:09 2020 -0400

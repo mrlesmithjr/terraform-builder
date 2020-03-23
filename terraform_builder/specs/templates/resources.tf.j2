@@ -1,6 +1,26 @@
 # Generated using https://github.com/mrlesmithjr/terraform-builder
 {%- for provider, provider_config in args.providers.items() %}
 {%-   if provider_config.resources %}
+{%-     if provider == 'AzureRM' %}
+{%-       if provider_config.resources.resource_groups %}
+{%-         for rg, rg_config in provider_config.resources.resource_groups.items() %}
+{%-           if rg_config.module == module %}
+{%-             if rg_config.create %}
+# Resource AzureRM resource group
+resource "azurerm_resource_group" "{{ rg }}" {
+        name     = "{{ rg }}"
+        location = var.azurerm_location
+}
+{%-             else %}
+# Data AzureRM resource group
+data "azurerm_resource_group" "{{ rg }}" {
+        name     = "{{ rg }}"
+}
+{%-             endif %}
+{%-           endif %}
+{%-         endfor %}
+{%-       endif %}
+{%-     endif %}
 {%-     if provider_config.resources.vms %}
 {%-       set module_vms = [] %}
 {%-       for vm, vm_config in provider_config.resources.vms.items() %}
@@ -104,12 +124,6 @@ resource "vsphere_tag" "{{ tag|replace('-', '_') }}" {
 {%-         endif %}
 {%-       endfor %}
 {%-       if 'AzureRM' in module_vms %}
-{%-         set rg = args.providers.AzureRM.variables.azurerm_resource_group.default %}
-# Resource AzureRM resource group
-resource "azurerm_resource_group" "{{ rg }}" {
-        name     = "{{ rg }}"
-        location = var.azurerm_location
-}
 {%-       elif 'vSphere' in module_vms %}
 # Consuming existing vSphere datacenter
 data "vsphere_datacenter" "dc" {

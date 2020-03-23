@@ -29,12 +29,20 @@ modules:
 providers:
   AzureRM:
     resources:
+      resource_groups:
+        {}
+        # default:
+        #   create: false
+        #   module: root
+        # example:
+        #   create: true
+        #   module: services
       vms:
         {}
         # test-az-root:
         #   count: 1
         #   memory: 1024
-        #   module: root
+        #   module: services
         #   num_cpus: 1
         #   tags:
         #     - test-azurerm
@@ -53,12 +61,12 @@ providers:
         default: {}
       azurerm_location:
         type: string
-        description: Default AzureRM location
-        default: ""
+        description: Default AzureRM location/region
+        default: East US
       azurerm_resource_group:
         type: string
         description: Default AzureRM resource group
-        default: default
+        default: example
       azurerm_subscription_id:
         type: string
         description: AzureRM Subscription ID
