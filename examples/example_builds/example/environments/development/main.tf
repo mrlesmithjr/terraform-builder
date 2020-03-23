@@ -4,6 +4,7 @@ module "network" {
     source      = "../../modules/network"
     environment = "development"
     do_api_endpoint = "https://api.digitalocean.com"
+    do_domain = ""
     do_image = "ubuntu-18-04-x64"
     do_region = "nyc1"
     do_ssh_keys = "[]"

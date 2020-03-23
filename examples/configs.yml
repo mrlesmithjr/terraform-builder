@@ -29,6 +29,10 @@ modules:
 providers:
   AzureRM:
     variables:
+      azurerm_domain:
+        type: string
+        description: Default AzureRM domain for resources
+        default: ""
       azurerm_environment:
         type: string
         description: AzureRM Environment
@@ -36,6 +40,14 @@ providers:
       azurerm_features:
         description: Customize the behaviour of certain Azure Provider resources.
         default: {}
+      azurerm_location:
+        description: Default AzureRM location
+        type: string
+        default: ""
+      azurerm_resource_group:
+        description: Default AzureRM resource group
+        type: string
+        default: ""
       azurerm_subscription_id:
         type: string
         description: AzureRM Subscription ID
@@ -50,6 +62,10 @@ providers:
         type: string
         description: This can be used to override the base URL for DigitalOcean API requests
         default: https://api.digitalocean.com
+      do_domain:
+        type: string
+        description: Default DigitalOcean domain for resources
+        default: ""
       do_image:
         type: string
         description: Default DigitalOcean droplet image
@@ -105,6 +121,13 @@ providers:
 # Resources are defined in an agnostic way to ensure portability
 # between providers.
 resources:
+  dns: {}
+  # example.org:
+  #   provider: DigitalOcean
+  #   module: root
+  # example.com:
+  #   provider: AzureRM
+  #   module: services
   projects:
     TerraformCloud:
       description: Terraform Cloud Project

@@ -4,6 +4,12 @@ variable "environment" {
   type    = string
   default = ""
 }
+# Variable azurerm_domain config
+variable "azurerm_domain" {
+    type = string
+    description = "Default AzureRM domain for resources"
+    default = ""
+}
 # Variable azurerm_environment config
 variable "azurerm_environment" {
     type = string
@@ -14,6 +20,18 @@ variable "azurerm_environment" {
 variable "azurerm_features" {
     description = "Customize the behaviour of certain Azure Provider resources."
     default = "{}"
+}
+# Variable azurerm_location config
+variable "azurerm_location" {
+    description = "Default AzureRM location"
+    type = string
+    default = ""
+}
+# Variable azurerm_resource_group config
+variable "azurerm_resource_group" {
+    description = "Default AzureRM resource group"
+    type = string
+    default = ""
 }
 # Variable azurerm_subscription_id config
 variable "azurerm_subscription_id" {
@@ -32,6 +50,12 @@ variable "do_api_endpoint" {
     type = string
     description = "This can be used to override the base URL for DigitalOcean API requests"
     default = "https://api.digitalocean.com"
+}
+# Variable do_domain config
+variable "do_domain" {
+    type = string
+    description = "Default DigitalOcean domain for resources"
+    default = ""
 }
 # Variable do_image config
 variable "do_image" {

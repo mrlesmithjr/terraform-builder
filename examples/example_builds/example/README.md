@@ -50,6 +50,10 @@ DNSimple, Cloudflare).
 ```yaml
 AzureRM:
   variables:
+    azurerm_domain:
+      default: ''
+      description: Default AzureRM domain for resources
+      type: string
     azurerm_environment:
       default: public
       description: AzureRM Environment
@@ -57,6 +61,14 @@ AzureRM:
     azurerm_features:
       default: {}
       description: Customize the behaviour of certain Azure Provider resources.
+    azurerm_location:
+      default: ''
+      description: Default AzureRM location
+      type: string
+    azurerm_resource_group:
+      default: ''
+      description: Default AzureRM resource group
+      type: string
     azurerm_subscription_id:
       default: ''
       description: AzureRM Subscription ID
@@ -71,6 +83,10 @@ DigitalOcean:
       default: https://api.digitalocean.com
       description: This can be used to override the base URL for DigitalOcean API
         requests
+      type: string
+    do_domain:
+      default: ''
+      description: Default DigitalOcean domain for resources
       type: string
     do_image:
       default: ubuntu-18-04-x64
@@ -151,6 +167,7 @@ virtual networks, compute instances, or higher-level components such as DNS
 records.
 
 ```yaml
+dns: {}
 projects:
   TerraformCloud:
     description: Terraform Cloud Project
