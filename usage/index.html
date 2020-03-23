@@ -74,6 +74,8 @@
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#configurations">Configurations</a>
         <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#providers">Providers</a>
+    </li>
     <li class="toctree-l4"><a class="reference internal" href="#example-configuration">Example Configuration</a>
     </li>
         </ul>
@@ -205,8 +207,47 @@ some of the concepts.</p>
 this, we can ensure that we have consistency in our Terraform configurations. We
 use <code>configs.yml</code> but the filename can be anything you wish. However, if the
 content must be consistent.</p>
+<h4 id="providers">Providers</h4>
+<p>We can configure specific providers in our <code>configs.yml</code>.</p>
+<h5 id="resources">Resources</h5>
+<p>Resources are where we can defined things such as VMs, resource groups, etc. For
+example, VMs are defined in an agnostic way in which you can cut/paste VM resources
+between providers. When doing this, the backend configurations are handled for
+us to translate to the specific provider.</p>
+<p>For some resources, we can define <code>create: true</code> or <code>create: false</code>. By doing
+this, we define the resource to be created or consume an existing resource. An
+example of this is for the <code>AzureRM</code> provider. In which we would like to define
+resource groups in a way similar to:</p>
+<pre><code class="yaml">providers:
+  AzureRM:
+    resources:
+      resource_groups:
+        default:
+          create: false
+          module: root
+        example:
+          create: true
+          module: services
+</code></pre>
+
+<p>If we were to use the above configuration, we would end up with configurations
+that look similar to:</p>
+<pre><code class="json"># Data AzureRM resource group
+data &quot;azurerm_resource_group&quot; &quot;default&quot; {
+        name     = &quot;default&quot;
+}
+# Resource AzureRM resource group
+resource &quot;azurerm_resource_group&quot; &quot;example&quot; {
+        name     = &quot;example&quot;
+        location = var.azurerm_location
+}
+</code></pre>
+
 <h4 id="example-configuration">Example Configuration</h4>
 <p>Below is an example of our <code>configs.yml</code>:</p>
+<blockquote>
+<p>NOTE: You can always find an updated example <a href="https://raw.githubusercontent.com/mrlesmithjr/terraform-builder/master/examples/configs.yml">here</a></p>
+</blockquote>
 <pre><code class="yaml">---
 # This is an example config layout
 
@@ -237,7 +278,25 @@ modules:
 # Define providers and variables
 providers:
   AzureRM:
-    resources: {}
+    resources:
+      resource_groups:
+        {}
+        # default:
+        #   create: false
+        #   module: root
+        # example:
+        #   create: true
+        #   module: services
+      vms:
+        {}
+        # test-az-root:
+        #   count: 1
+        #   memory: 1024
+        #   module: services
+        #   num_cpus: 1
+        #   tags:
+        #     - test-azurerm
+        #     - test-azurerm-root
     variables:
       azurerm_domain:
         type: string
@@ -251,13 +310,13 @@ providers:
         description: Customize the behaviour of certain Azure Provider resources.
         default: {}
       azurerm_location:
-        description: Default AzureRM location
         type: string
-        default: &quot;&quot;
+        description: Default AzureRM location/region
+        default: East US
       azurerm_resource_group:
-        description: Default AzureRM resource group
         type: string
-        default: &quot;&quot;
+        description: Default AzureRM resource group
+        default: example
       azurerm_subscription_id:
         type: string
         description: AzureRM Subscription ID

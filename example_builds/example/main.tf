@@ -8,7 +8,7 @@ terraform {
 # Provider AzureRM config
 provider "azurerm" {
     environment     = var.azurerm_environment
-    features        = var.azurerm_features
+    features        {}
     subscription_id = var.azurerm_subscription_id
     tenant_id       = var.azurerm_tenant_id
 }

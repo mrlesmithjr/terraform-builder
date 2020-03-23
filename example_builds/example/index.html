@@ -228,7 +228,9 @@ resource block describes one or more infrastructure objects, such as
 virtual networks, compute instances, or higher-level components such as DNS
 records.</p>
 <pre><code class="yaml">AzureRM:
-  resources: {}
+  resources:
+    resource_groups: {}
+    vms: {}
   variables:
     azurerm_domain:
       default: ''
@@ -242,11 +244,11 @@ records.</p>
       default: {}
       description: Customize the behaviour of certain Azure Provider resources.
     azurerm_location:
-      default: ''
-      description: Default AzureRM location
+      default: East US
+      description: Default AzureRM location/region
       type: string
     azurerm_resource_group:
-      default: ''
+      default: example
       description: Default AzureRM resource group
       type: string
     azurerm_subscription_id:
