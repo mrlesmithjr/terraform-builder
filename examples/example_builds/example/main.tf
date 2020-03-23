@@ -1,4 +1,10 @@
 # Generated using https://github.com/mrlesmithjr/terraform-builder
+# Backend local config
+terraform {
+    backend "local" {
+        path = "terraform.tfstate"
+    }
+}
 # Provider AzureRM config
 provider "azurerm" {
     environment     = var.azurerm_environment

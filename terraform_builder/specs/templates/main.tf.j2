@@ -1,5 +1,13 @@
 # Generated using https://github.com/mrlesmithjr/terraform-builder
 {%- if module == 'root' %}
+{%-   if args.backends.remote is not defined or (args.backends.remote is defined and args.backends.remote == {}) %}
+# Backend local config
+terraform {
+    backend "local" {
+        path = "terraform.tfstate"
+    }
+}
+{%-   endif %}
 {%-   for provider, config in args.providers.items() %}
 {%-     if config != {} %}
 # Provider {{ provider }} config
