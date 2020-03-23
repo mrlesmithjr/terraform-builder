@@ -47,8 +47,18 @@ Providers generally are an IaaS (e.g. Alibaba Cloud, AWS, GCP, Microsoft Azure,
 OpenStack), PaaS (e.g. Heroku), or SaaS services (e.g. Terraform Cloud,
 DNSimple, Cloudflare).
 
+### Resources
+
+> NOTE: From [https://www.terraform.io/docs/configuration/resources.html](https://www.terraform.io/docs/configuration/resources.html)
+
+Resources are the most important element in the Terraform language. Each
+resource block describes one or more infrastructure objects, such as
+virtual networks, compute instances, or higher-level components such as DNS
+records.
+
 ```yaml
 AzureRM:
+  resources: {}
   variables:
     azurerm_domain:
       default: ''
@@ -78,6 +88,24 @@ AzureRM:
       description: AzureRM Tenant ID
       type: string
 DigitalOcean:
+  resources:
+    vms:
+      test-do-network:
+        count: 1
+        memory: 1024
+        module: network
+        num_cpus: 1
+        tags:
+        - test-digitalocean
+        - test-digitalocean-network
+      test-do-root:
+        count: 1
+        memory: 1024
+        module: root
+        num_cpus: 1
+        tags:
+        - test-digitalocean
+        - test-digitalocean-root
   variables:
     do_api_endpoint:
       default: https://api.digitalocean.com
@@ -105,6 +133,24 @@ DigitalOcean:
       description: This is the DO API token
       type: string
 vSphere:
+  resources:
+    vms:
+      test-vs-root:
+        count: 1
+        memory: 2048
+        module: root
+        num_cpus: 1
+        tags:
+        - test-vsphere
+        - test-vsphere-root
+      test-vs-services:
+        count: 1
+        memory: 1024
+        module: services
+        num_cpus: 2
+        tags:
+        - test-vsphere
+        - test-vsphere-services
   variables:
     vsphere_allow_unverified_ssl:
       default: 'false'
@@ -154,67 +200,6 @@ physical objects.
 network: {}
 root: {}
 services: {}
-
-```
-
-## Resources
-
-> NOTE: From [https://www.terraform.io/docs/configuration/resources.html](https://www.terraform.io/docs/configuration/resources.html)
-
-Resources are the most important element in the Terraform language. Each
-resource block describes one or more infrastructure objects, such as
-virtual networks, compute instances, or higher-level components such as DNS
-records.
-
-```yaml
-dns: {}
-projects:
-  TerraformCloud:
-    description: Terraform Cloud Project
-    environment: development
-    module: root
-    provider: DigitalOcean
-    purpose: Terraform Cloud Project
-    resources: []
-    tags:
-    - test
-vms:
-  test-do-network:
-    count: 1
-    memory: 1024
-    module: network
-    num_cpus: 1
-    provider: DigitalOcean
-    tags:
-    - test-digitalocean
-    - test-vsphere-network
-  test-do-root:
-    count: 1
-    memory: 1024
-    module: root
-    num_cpus: 1
-    provider: DigitalOcean
-    tags:
-    - test-digitalocean
-    - test-digitalocean-root
-  test-vs-root:
-    count: 1
-    memory: 2048
-    module: root
-    num_cpus: 1
-    provider: vSphere
-    tags:
-    - test-vsphere
-    - test-vsphere-root
-  test-vs-services:
-    count: 1
-    memory: 1024
-    module: services
-    num_cpus: 2
-    provider: vSphere
-    tags:
-    - test-vsphere
-    - test-vsphere-services
 
 ```
 
@@ -270,6 +255,7 @@ example
 |-- variables.tf
 
 ```
+
 ## Terraform Graph
 
 Below is a graph of your Terraform configuration.

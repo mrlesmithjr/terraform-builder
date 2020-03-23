@@ -1,18 +1,5 @@
 # Generated using https://github.com/mrlesmithjr/terraform-builder
-# Consuming existing vSphere datacenter
-data "vsphere_datacenter" "dc" {
-    name = var.vsphere_datacenter
-}
-# Consuming existing vSphere cluster
-data "vsphere_compute_cluster" "cluster" {
-    name = var.vsphere_compute_cluster
-}
-# Consuming existing vSphere network
-data "vsphere_network" "network" {
-    name          = var.vsphere_network
-    datacenter_id = data.vsphere_datacenter.dc.id
-}
-# Resource DigitalOcean droplet
+# Resource DigitalOcean virtual machine
 resource "digitalocean_droplet" "test_do_root" {
     count  = 1
     name   = format("test-do-root-%02s-%s", count.index + 1, substr(var.environment,0,4))
@@ -22,6 +9,14 @@ resource "digitalocean_droplet" "test_do_root" {
 
 
     tags   = [digitalocean_tag.test_digitalocean.id, digitalocean_tag.test_digitalocean_root.id]
+}
+# Resource DigitalOcean tag
+resource "digitalocean_tag" "test_digitalocean" {
+  name = "test-digitalocean"
+}
+# Resource DigitalOcean tag
+resource "digitalocean_tag" "test_digitalocean_root" {
+  name = "test-digitalocean-root"
 }
 # Resource vSphere virtual machine
 resource "vsphere_virtual_machine" "test_vs_root" {
@@ -36,14 +31,6 @@ resource "vsphere_virtual_machine" "test_vs_root" {
 
 
     tags   = [vsphere_tag.test_vsphere.id, vsphere_tag.test_vsphere_root.id]
-}
-# Resource DigitalOcean tag
-resource "digitalocean_tag" "test_digitalocean" {
-  name = "test-digitalocean"
-}
-# Resource DigitalOcean tag
-resource "digitalocean_tag" "test_digitalocean_root" {
-  name = "test-digitalocean-root"
 }
 # Resource tag category as a default to contain actual vSphere tags
 resource "vsphere_tag_category" "category" {
@@ -65,4 +52,17 @@ resource "vsphere_tag" "test_vsphere" {
 resource "vsphere_tag" "test_vsphere_root" {
   name        = "test-vsphere-root"
   category_id = vsphere_tag_category.category.id
+}
+# Consuming existing vSphere datacenter
+data "vsphere_datacenter" "dc" {
+    name = var.vsphere_datacenter
+}
+# Consuming existing vSphere cluster
+data "vsphere_compute_cluster" "cluster" {
+    name = var.vsphere_compute_cluster
+}
+# Consuming existing vSphere network
+data "vsphere_network" "network" {
+    name          = var.vsphere_network
+    datacenter_id = data.vsphere_datacenter.dc.id
 }

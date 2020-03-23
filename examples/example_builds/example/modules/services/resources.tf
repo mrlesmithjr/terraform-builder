@@ -1,17 +1,4 @@
 # Generated using https://github.com/mrlesmithjr/terraform-builder
-# Consuming existing vSphere datacenter
-data "vsphere_datacenter" "dc" {
-    name = var.vsphere_datacenter
-}
-# Consuming existing vSphere cluster
-data "vsphere_compute_cluster" "cluster" {
-    name = var.vsphere_compute_cluster
-}
-# Consuming existing vSphere network
-data "vsphere_network" "network" {
-    name          = var.vsphere_network
-    datacenter_id = data.vsphere_datacenter.dc.id
-}
 # Resource vSphere virtual machine
 resource "vsphere_virtual_machine" "test_vs_services" {
     count            = 1
@@ -46,4 +33,17 @@ resource "vsphere_tag" "test_vsphere" {
 resource "vsphere_tag" "test_vsphere_services" {
   name        = "test-vsphere-services"
   category_id = vsphere_tag_category.category.id
+}
+# Consuming existing vSphere datacenter
+data "vsphere_datacenter" "dc" {
+    name = var.vsphere_datacenter
+}
+# Consuming existing vSphere cluster
+data "vsphere_compute_cluster" "cluster" {
+    name = var.vsphere_compute_cluster
+}
+# Consuming existing vSphere network
+data "vsphere_network" "network" {
+    name          = var.vsphere_network
+    datacenter_id = data.vsphere_datacenter.dc.id
 }

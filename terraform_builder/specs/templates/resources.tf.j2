@@ -1,74 +1,42 @@
 # Generated using https://github.com/mrlesmithjr/terraform-builder
-{%- if args.providers.vSphere is defined %}
-{%-   if module == 'root' %}
-# Consuming existing vSphere datacenter
-data "vsphere_datacenter" "dc" {
-    name = var.vsphere_datacenter
-}
-# Consuming existing vSphere cluster
-data "vsphere_compute_cluster" "cluster" {
-    name = var.vsphere_compute_cluster
-}
-# Consuming existing vSphere network
-data "vsphere_network" "network" {
-    name          = var.vsphere_network
-    datacenter_id = data.vsphere_datacenter.dc.id
-}
-{%-   else %}
-{%-     set vm_providers = [] %}
-{%-       for vm, config in args.resources.vms.items() %}
-{%-         if config.module == module %}
-{%-           set _ = vm_providers.append(config.provider) %}
-{%-         endif %}
-{%-       endfor %}
-{%-       if 'vSphere' in vm_providers %}
-# Consuming existing vSphere datacenter
-data "vsphere_datacenter" "dc" {
-    name = var.vsphere_datacenter
-}
-# Consuming existing vSphere cluster
-data "vsphere_compute_cluster" "cluster" {
-    name = var.vsphere_compute_cluster
-}
-# Consuming existing vSphere network
-data "vsphere_network" "network" {
-    name          = var.vsphere_network
-    datacenter_id = data.vsphere_datacenter.dc.id
-}
+{%- for provider, provider_config in args.providers.items() %}
+{%-   if provider_config.resources %}
+{%-     if provider_config.resources.vms %}
+{%-       if provider == 'vSphere' %}
+{%-         set module_vms = [] %}
 {%-       endif %}
-{%-   endif %}
-{%- endif %}
-{%- if args.resources.vms is defined %}
-{%-   set tags = {'digitalocean': [], 'vsphere': []} %}
-{%-   for vm, config in args.resources.vms.items() %}
-{%-     if args.providers[config.provider] %}
-{%-       set memory = (config.memory|default(1024)/1024)|round|int|string %}
-{%-       set cpus = (config.num_cpus)|default(1)|string %}
-{%-       if config.module == module %}
-{%-         if config.provider|lower == 'digitalocean' %}
-# Resource {{ config.provider }} droplet
+{%-       for vm, vm_config in provider_config.resources.vms.items() %}
+{%-         if vm_config.module == module %}
+{%-           set tags = {'digitalocean': [], 'vsphere': []} %}
+{%-           if provider == 'vSphere' %}
+{%-             set _ = module_vms.append(vm) %}
+{%-           endif %}
+{%-           set memory = (vm_config.memory|default(1024)/1024)|round|int|string %}
+{%-           set cpus = (vm_config.num_cpus)|default(1)|string %}
+{%-           if provider == 'DigitalOcean' %}
+# Resource {{ provider }} virtual machine
 resource "digitalocean_droplet" "{{ vm.split('.')[0]|replace('-','_') }}" {
-    count  = {{ config.count|default(1) }}
+    count  = {{ vm_config.count|default(1) }}
     name   = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment,0,4))
     image  = var.do_image
     region = var.do_region
     size   = "{{ 's-'+cpus+'vcpu-'+memory+'gb' }}"
-{%-           if config.tags is defined %}
-{%-             set vm_tags = [] %}
-{%-             for tag in config.tags %}
-{%-               set tag_id = 'digitalocean_tag.'+tag|replace('-', '_')+'.id' %}
-{%                set _ = vm_tags.append(tag_id) %}
-{%-               if tag not in tags.digitalocean %}
-{%-                 set _ = tags.digitalocean.append(tag) %}
-{%-               endif %}
-{%-             endfor %}
-{%-           endif %}
+{%-             if vm_config.tags %}
+{%-               set vm_tags = [] %}
+{%-               for tag in vm_config.tags %}
+{%-                 set tag_id = 'digitalocean_tag.'+tag|replace('-', '_')+'.id' %}
+{%                  set _ = vm_tags.append(tag_id) %}
+{%-                 if tag not in tags.digitalocean %}
+{%-                   set _ = tags.digitalocean.append(tag) %}
+{%-                 endif %}
+{%-               endfor %}
     tags   = {{ vm_tags|replace("'", "") }}
+{%-             endif %}
 }
-{%-         elif config.provider|lower == 'vsphere' %}
-# Resource {{ config.provider }} virtual machine
+{%-           elif provider == 'vSphere' %}
+# Resource {{ provider }} virtual machine
 resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
-    count            = {{ config.count|default(1) }}
+    count            = {{ vm_config.count|default(1) }}
     name             = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment,0,4))
     num_cpus         = {{ cpus }}
     memory           = {{ memory }}
@@ -76,29 +44,26 @@ resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
     network_interface {
       network_id = data.vsphere_network.network.id
     }
-{%-           if config.tags is defined %}
-{%-             set vm_tags = [] %}
-{%-             for tag in config.tags %}
-{%-               set tag_id = 'vsphere_tag.'+tag|replace('-', '_')+'.id' %}
-{%                set _ = vm_tags.append(tag_id) %}
-{%-               if tag not in tags.vsphere %}
-{%-                 set _ = tags.vsphere.append(tag) %}
-{%-               endif %}
-{%-             endfor %}
+{%-             if vm_config.tags %}
+{%-               set vm_tags = [] %}
+{%-               for tag in vm_config.tags %}
+{%-                 set tag_id = 'vsphere_tag.'+tag|replace('-', '_')+'.id' %}
+{%                  set _ = vm_tags.append(tag_id) %}
+{%-                 if tag not in tags.vsphere %}
+{%-                   set _ = tags.vsphere.append(tag) %}
+{%-                 endif %}
+{%-               endfor %}
     tags   = {{ vm_tags|replace("'", "") }}
+{%-             endif %}
 }
 {%-           endif %}
-{%-         endif %}
-{%-       endif %}
-{%-     endif %}
-{%-   endfor %}
-{%-   for tag in tags.digitalocean %}
+{%-           for tag in tags.digitalocean %}
 # Resource DigitalOcean tag
 resource "digitalocean_tag" "{{ tag|replace('-', '_') }}" {
   name = "{{ tag }}"
 }
-{%-   endfor %}
-{%-   if tags.vsphere != [] %}
+{%-           endfor %}
+{%-           if tags.vsphere != [] %}
 # Resource tag category as a default to contain actual vSphere tags
 resource "vsphere_tag_category" "category" {
   name        = "terraform-test-category"
@@ -110,12 +75,31 @@ resource "vsphere_tag_category" "category" {
     "Datastore",
   ]
 }
-{%-   endif %}
-{%-   for tag in tags.vsphere %}
+{%-           endif %}
+{%-           for tag in tags.vsphere %}
 # Resource vSphere tag
 resource "vsphere_tag" "{{ tag|replace('-', '_') }}" {
   name        = "{{ tag }}"
   category_id = vsphere_tag_category.category.id
 }
-{%-   endfor %}
-{%- endif %}
+{%-           endfor %}
+{%-         endif %}
+{%-       endfor %}
+{%-       if module_vms and module_vms != [] %}
+# Consuming existing vSphere datacenter
+data "vsphere_datacenter" "dc" {
+    name = var.vsphere_datacenter
+}
+# Consuming existing vSphere cluster
+data "vsphere_compute_cluster" "cluster" {
+    name = var.vsphere_compute_cluster
+}
+# Consuming existing vSphere network
+data "vsphere_network" "network" {
+    name          = var.vsphere_network
+    datacenter_id = data.vsphere_datacenter.dc.id
+}
+{%-       endif %}
+{%-     endif %}
+{%-   endif %}
+{%- endfor %}

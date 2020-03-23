@@ -4,47 +4,6 @@ variable "environment" {
   type    = string
   default = ""
 }
-# Variable azurerm_domain config
-variable "azurerm_domain" {
-    type = string
-    description = "Default AzureRM domain for resources"
-    default = ""
-}
-# Variable azurerm_environment config
-variable "azurerm_environment" {
-    type = string
-    description = "AzureRM Environment"
-    default = "public"
-}
-# Variable azurerm_features config
-variable "azurerm_features" {
-    description = "Customize the behaviour of certain Azure Provider resources."
-    default = "{}"
-}
-# Variable azurerm_location config
-variable "azurerm_location" {
-    description = "Default AzureRM location"
-    type = string
-    default = ""
-}
-# Variable azurerm_resource_group config
-variable "azurerm_resource_group" {
-    description = "Default AzureRM resource group"
-    type = string
-    default = ""
-}
-# Variable azurerm_subscription_id config
-variable "azurerm_subscription_id" {
-    type = string
-    description = "AzureRM Subscription ID"
-    default = ""
-}
-# Variable azurerm_tenant_id config
-variable "azurerm_tenant_id" {
-    type = string
-    description = "AzureRM Tenant ID"
-    default = ""
-}
 # Variable do_api_endpoint config
 variable "do_api_endpoint" {
     type = string

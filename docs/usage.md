@@ -76,7 +76,12 @@ modules:
 # Define providers and variables
 providers:
   AzureRM:
+    resources: {}
     variables:
+      azurerm_domain:
+        type: string
+        description: Default AzureRM domain for resources
+        default: ""
       azurerm_environment:
         type: string
         description: AzureRM Environment
@@ -84,6 +89,14 @@ providers:
       azurerm_features:
         description: Customize the behaviour of certain Azure Provider resources.
         default: {}
+      azurerm_location:
+        description: Default AzureRM location
+        type: string
+        default: ""
+      azurerm_resource_group:
+        description: Default AzureRM resource group
+        type: string
+        default: ""
       azurerm_subscription_id:
         type: string
         description: AzureRM Subscription ID
@@ -93,11 +106,33 @@ providers:
         description: AzureRM Tenant ID
         default: ""
   DigitalOcean:
+    resources:
+      vms:
+        test-do-root:
+          count: 1
+          memory: 1024
+          module: root
+          num_cpus: 1
+          tags:
+            - test-digitalocean
+            - test-digitalocean-root
+        test-do-network:
+          count: 1
+          memory: 1024
+          module: network
+          num_cpus: 1
+          tags:
+            - test-digitalocean
+            - test-digitalocean-network
     variables:
       do_api_endpoint:
         type: string
         description: This can be used to override the base URL for DigitalOcean API requests
         default: https://api.digitalocean.com
+      do_domain:
+        type: string
+        description: Default DigitalOcean domain for resources
+        default: ""
       do_image:
         type: string
         description: Default DigitalOcean droplet image
@@ -115,6 +150,24 @@ providers:
         description: This is the DO API token
         default: ""
   vSphere:
+    resources:
+      vms:
+        test-vs-root:
+          count: 1
+          memory: 2048
+          module: root
+          num_cpus: 1
+          tags:
+            - test-vsphere
+            - test-vsphere-root
+        test-vs-services:
+          count: 1
+          memory: 1024
+          module: services
+          num_cpus: 2
+          tags:
+            - test-vsphere
+            - test-vsphere-services
     variables:
       vsphere_allow_unverified_ssl:
         type: bool
@@ -148,58 +201,6 @@ providers:
         type: string
         description: Username for vSphere API operations
         default: ""
-
-# Define required resources including provider and module
-# Resources are defined in an agnostic way to ensure portability
-# between providers.
-resources:
-  projects:
-    TerraformCloud:
-      description: Terraform Cloud Project
-      environment: development
-      module: root
-      provider: DigitalOcean
-      purpose: Terraform Cloud Project
-      resources: []
-      tags:
-        - test
-  vms:
-    test-do-root:
-      count: 1
-      memory: 1024
-      module: root
-      num_cpus: 1
-      provider: DigitalOcean
-      tags:
-        - test-digitalocean
-        - test-digitalocean-root
-    test-do-network:
-      count: 1
-      memory: 1024
-      module: network
-      num_cpus: 1
-      provider: DigitalOcean
-      tags:
-        - test-digitalocean
-        - test-vsphere-network
-    test-vs-root:
-      count: 1
-      memory: 2048
-      module: root
-      num_cpus: 1
-      provider: vSphere
-      tags:
-        - test-vsphere
-        - test-vsphere-root
-    test-vs-services:
-      count: 1
-      memory: 1024
-      module: services
-      num_cpus: 2
-      provider: vSphere
-      tags:
-        - test-vsphere
-        - test-vsphere-services
 ```
 
 To properly secure secrets such as API tokens, usernames, passwords, etc.

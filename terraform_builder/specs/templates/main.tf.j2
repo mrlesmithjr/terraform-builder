@@ -1,6 +1,6 @@
 # Generated using https://github.com/mrlesmithjr/terraform-builder
 {%- if module == 'root' %}
-{%-   if args.backends.remote is not defined or (args.backends.remote is defined and args.backends.remote == {}) %}
+{%-   if not args.backends.remote or (args.backends.remote and args.backends.remote == {}) %}
 # Backend local config
 terraform {
     backend "local" {
@@ -47,22 +47,26 @@ terraform {
 module "{{ module }}" {
     source      = "../../modules/{{ module }}"
     environment = "{{ module_env }}"
-{%-         set vm_providers = [] %}
-{%-         for vm, config in args.resources.vms.items() %}
-{%-           if config.module == module %}
-{%-             set _ = vm_providers.append(config.provider) %}
-{%-           endif %}
-{%-         endfor %}
 {%-         for provider, provider_config in args.providers.items() -%}
-{%-           if provider in vm_providers %}
 {%-           if provider_config != {} -%}
 {%-             if provider_config['variables'] -%}
-{%-               for variable, variable_config in provider_config['variables'].items() %}
+{%-               set module_vars = [] %}
+{%-               if provider_config.resources %}
+{%-                 if provider_config.resources.vms %}
+{%-                   for vm, vm_config in provider_config.resources.vms.items() %}
+{%-                     if vm_config.module == module %}
+{%-                       set _ = module_vars.append(vm_config.module) %}
+{%-                     endif %}
+{%-                   endfor %}
+{%-                 endif %}
+{%-               endif %}
+{%-               if module_vars != [] %}
+{%-                 for variable, variable_config in provider_config['variables'].items() %}
     {{ variable }} = "{{ variable_config.default }}"
-{%-               endfor %}
+{%-                 endfor %}
+{%-               endif %}
 {%-             endif -%}
 {%-           endif -%}
-{%-           endif %}
 {%-         endfor %}
 }
 {%-    endif %}

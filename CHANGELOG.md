@@ -1,3 +1,29 @@
+commit 01bb9197cac1de18e92ca2b12e8cea530de38532
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sun Mar 22 23:50:20 2020 -0400
+
+    This seems like too much work
+
+commit 64ba65d34f7d8dc2c5a062e66b3e5b5a93cb2196
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sun Mar 22 21:56:43 2020 -0400
+
+    Added initial domain resources
+    
+    - Will be pausing here for a bit until some additional parsers are built
+
+commit 9ece73223b98abb924fdf8ec0bd2cd77adaf121b
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sun Mar 22 20:56:56 2020 -0400
+
+    Added initial default config for local backend
+
+commit 0e556ec54a34be29ede91800cd727320fe0e0e29
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sun Mar 22 18:06:19 2020 -0400
+
+    Added doc info on requirements
+
 commit 0fcb1b9cb7e2ca9039eb8252e232e5a3b7da2e0c
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Sun Mar 22 18:05:36 2020 -0400
