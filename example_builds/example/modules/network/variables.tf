@@ -10,6 +10,12 @@ variable "do_api_endpoint" {
     description = "This can be used to override the base URL for DigitalOcean API requests"
     default = "https://api.digitalocean.com"
 }
+# Variable do_domain config
+variable "do_domain" {
+    type = string
+    description = "Default DigitalOcean domain for resources"
+    default = ""
+}
 # Variable do_image config
 variable "do_image" {
     type = string
