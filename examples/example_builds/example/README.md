@@ -58,7 +58,8 @@ records.
 
 ```yaml
 AzureRM:
-  resources: {}
+  resources:
+    vms: {}
   variables:
     azurerm_domain:
       default: ''
@@ -76,7 +77,7 @@ AzureRM:
       description: Default AzureRM location
       type: string
     azurerm_resource_group:
-      default: ''
+      default: default
       description: Default AzureRM resource group
       type: string
     azurerm_subscription_id:

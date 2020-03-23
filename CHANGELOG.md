@@ -1,8 +1,14 @@
-commit 01bb9197cac1de18e92ca2b12e8cea530de38532
+commit 51ac7e3d913567a129fdd20ccd75a8884b0f18e6
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
-Date:   Sun Mar 22 23:50:20 2020 -0400
+Date:   Mon Mar 23 10:29:09 2020 -0400
 
-    This seems like too much work
+    Reorganized resources
+    
+    Resources are now defined within a provider. If resources need to be
+    changed to a different provider, simply move those resources under the
+    new provider. Everything will update appropriately to the new provider.
+    This change SHOULD make things easier to move around, including the
+    logic to do so.
 
 commit 64ba65d34f7d8dc2c5a062e66b3e5b5a93cb2196
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>

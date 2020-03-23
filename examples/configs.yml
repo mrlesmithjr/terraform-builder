@@ -28,7 +28,17 @@ modules:
 # Define providers and variables
 providers:
   AzureRM:
-    resources: {}
+    resources:
+      vms:
+        {}
+        # test-az-root:
+        #   count: 1
+        #   memory: 1024
+        #   module: root
+        #   num_cpus: 1
+        #   tags:
+        #     - test-azurerm
+        #     - test-azurerm-root
     variables:
       azurerm_domain:
         type: string
@@ -42,13 +52,13 @@ providers:
         description: Customize the behaviour of certain Azure Provider resources.
         default: {}
       azurerm_location:
-        description: Default AzureRM location
         type: string
+        description: Default AzureRM location
         default: ""
       azurerm_resource_group:
-        description: Default AzureRM resource group
         type: string
-        default: ""
+        description: Default AzureRM resource group
+        default: default
       azurerm_subscription_id:
         type: string
         description: AzureRM Subscription ID
