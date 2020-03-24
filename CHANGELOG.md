@@ -1,3 +1,16 @@
+commit 305ad529e747cac9b51f7f06b003641cf483b0d1
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Tue Mar 24 00:24:11 2020 -0400
+
+    Final AzureRM virtual machine functionality
+    
+    All initial requirements to provision an AzureRM virtual machine are
+    completed for now. Will need some additional testing as I am sure there
+    are some things that need to be addressed. Various things are bubbling
+    up from provider vars to resources, etc. This will allow for easier
+    configurations to be built without relying so much on provider vars.
+    This will likely change quite a bit over time.
+
 commit cb1baf99ce4ff83bd9daf02ea8aaa2cab1d3c0f3
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Mon Mar 23 17:18:29 2020 -0400

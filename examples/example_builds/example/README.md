@@ -169,47 +169,66 @@ DigitalOcean:
       type: string
 vSphere:
   resources:
-    vms:
-      test-vs-root:
-        count: 1
-        memory: 2048
+    datacenters:
+      example-dc:
+        clusters:
+          example-cluster:
+            create: true
+            drs_automation_level: fullyAutomated
+            drs_enabled: true
+            ha_enabled: true
+            hosts:
+              example-esxi-01:
+                create: true
+                hostname: 10.10.10.1
+                password: password
+                username: root
+            vms:
+              example-vm:
+                count: 1
+                memory: 2048
+                network: example-pg
+                num_cpus: 1
+                tags:
+                - example-vsphere
+        create: true
         module: root
-        num_cpus: 1
+        virtual_switches:
+          example-switch:
+            active_nics:
+            - vmnic0
+            create: true
+            network_adapters:
+            - vmnic0
+            - vmnic1
+            port_groups:
+              example-pg:
+                create: true
+            standby_nics:
+            - vmnic1
+            teaming_policy: loadbalance_srcid
+            type: host
+    tag_categories:
+      example-category:
+        associable_types:
+        - ClusterComputeResource
+        - Datacenter
+        - Datastore
+        - HostSystem
+        - VirtualMachine
+        cardinality: SINGLE
+        create: true
+        module: root
         tags:
-        - test-vsphere
-        - test-vsphere-root
-      test-vs-services:
-        count: 1
-        memory: 1024
-        module: services
-        num_cpus: 2
-        tags:
-        - test-vsphere
-        - test-vsphere-services
+        - example-vsphere
   variables:
     vsphere_allow_unverified_ssl:
       default: 'false'
       description: Boolean that can be set to true to disable SSL certificate verification
       type: bool
-    vsphere_compute_cluster:
-      default: ''
-      description: Compute cluster to use by default
-      type: string
-    vsphere_datacenter:
-      default: ''
-      description: Datacenter to use by default
-      type: string
-    vsphere_network:
-      default: ''
-      description: Network to use by default
-      type: string
     vsphere_password:
       default: ''
       description: Password for vSphere API operations
-      type: string
-    vsphere_resource_pool:
-      default: ''
-      description: The resource pool to put virtual machine's in
       type: string
     vsphere_server:
       default: ''
