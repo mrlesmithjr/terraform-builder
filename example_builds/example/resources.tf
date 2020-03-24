@@ -1,9 +1,13 @@
 # Generated using https://github.com/mrlesmithjr/terraform-builder
+# Data AzureRM resource group
+data "azurerm_resource_group" "default" {
+        name     = "default"
+}
 # Resource DigitalOcean virtual machine
 resource "digitalocean_droplet" "test_do_root" {
     count  = 1
     name   = format("test-do-root-%02s-%s", count.index + 1, substr(var.environment,0,4))
-    image  = var.do_image
+    image  = "ubuntu-18-04-x64"
     region = var.do_region
     size   = "s-1vcpu-1gb"
 

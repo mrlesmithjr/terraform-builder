@@ -71,14 +71,16 @@
         </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#using-terraform-builder">Using Terraform Builder</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#configurations">Configurations</a>
-        <ul>
-    <li class="toctree-l4"><a class="reference internal" href="#providers">Providers</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#example-configuration">Example Configuration</a>
+    <li class="toctree-l2"><a class="reference internal" href="#configurations">Configurations</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#providers">Providers</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#resources">Resources</a>
     </li>
         </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#example-configuration">Example Configuration</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#help">Help</a>
     </li>
@@ -202,14 +204,14 @@ Definitely check it out <a href="https://github.com/tfutils/tfenv">here</a>.</p>
 <h2 id="using-terraform-builder">Using Terraform Builder</h2>
 <p>Is using Terraform Builder easy? Of course it is. But first we need to explore
 some of the concepts.</p>
-<h3 id="configurations">Configurations</h3>
+<h2 id="configurations">Configurations</h2>
 <p>Configurations are defined in YAML, and must follow a specific format. By doing
 this, we can ensure that we have consistency in our Terraform configurations. We
 use <code>configs.yml</code> but the filename can be anything you wish. However, if the
 content must be consistent.</p>
-<h4 id="providers">Providers</h4>
+<h3 id="providers">Providers</h3>
 <p>We can configure specific providers in our <code>configs.yml</code>.</p>
-<h5 id="resources">Resources</h5>
+<h4 id="resources">Resources</h4>
 <p>Resources are where we can defined things such as VMs, resource groups, etc. For
 example, VMs are defined in an agnostic way in which you can cut/paste VM resources
 between providers. When doing this, the backend configurations are handled for
@@ -243,7 +245,7 @@ resource &quot;azurerm_resource_group&quot; &quot;example&quot; {
 }
 </code></pre>
 
-<h4 id="example-configuration">Example Configuration</h4>
+<h3 id="example-configuration">Example Configuration</h3>
 <p>Below is an example of our <code>configs.yml</code>:</p>
 <blockquote>
 <p>NOTE: You can always find an updated example <a href="https://raw.githubusercontent.com/mrlesmithjr/terraform-builder/master/examples/configs.yml">here</a></p>
@@ -279,24 +281,34 @@ modules:
 providers:
   AzureRM:
     resources:
+      networks:
+        example:
+          create: true
+          module: services
+          network: 10.0.0.0/16
+          resource_group: example
+          subnets:
+            - 10.0.1.0/24
+            - 10.0.2.0/24
       resource_groups:
-        {}
-        # default:
-        #   create: false
-        #   module: root
-        # example:
-        #   create: true
-        #   module: services
+        default:
+          create: false
+          module: root
+        example:
+          create: true
+          module: services
       vms:
-        {}
-        # test-az-root:
-        #   count: 1
-        #   memory: 1024
-        #   module: services
-        #   num_cpus: 1
-        #   tags:
-        #     - test-azurerm
-        #     - test-azurerm-root
+        test-az-root:
+          count: 2
+          image: ubuntu-18-04-x64
+          memory: 1024
+          module: services
+          network: example
+          subnet: 10.0.2.0/24
+          num_cpus: 1
+          tags:
+            - test-azurerm
+            - test-azurerm-root
     variables:
       azurerm_domain:
         type: string
@@ -309,14 +321,29 @@ providers:
       azurerm_features:
         description: Customize the behaviour of certain Azure Provider resources.
         default: {}
+      azurerm_image_reference:
+        description: Default OS image reference lookups
+        default:
+          {
+            &quot;ubuntu-16-04-x64&quot;:
+              {
+                &quot;publisher&quot;: &quot;Canonical&quot;,
+                &quot;offer&quot;: &quot;UbuntuServer&quot;,
+                &quot;sku&quot;: &quot;16.04-LTS&quot;,
+                &quot;version&quot;: &quot;latest&quot;,
+              },
+            &quot;ubuntu-18-04-x64&quot;:
+              {
+                &quot;publisher&quot;: &quot;Canonical&quot;,
+                &quot;offer&quot;: &quot;UbuntuServer&quot;,
+                &quot;sku&quot;: &quot;18.04-LTS&quot;,
+                &quot;version&quot;: &quot;latest&quot;,
+              },
+          }
       azurerm_location:
         type: string
         description: Default AzureRM location/region
         default: East US
-      azurerm_resource_group:
-        type: string
-        description: Default AzureRM resource group
-        default: example
       azurerm_subscription_id:
         type: string
         description: AzureRM Subscription ID
@@ -330,6 +357,7 @@ providers:
       vms:
         test-do-root:
           count: 1
+          image: ubuntu-18-04-x64
           memory: 1024
           module: root
           num_cpus: 1
@@ -338,6 +366,7 @@ providers:
             - test-digitalocean-root
         test-do-network:
           count: 1
+          image: ubuntu-18-04-x64
           memory: 1024
           module: network
           num_cpus: 1
@@ -353,10 +382,6 @@ providers:
         type: string
         description: Default DigitalOcean domain for resources
         default: &quot;&quot;
-      do_image:
-        type: string
-        description: Default DigitalOcean droplet image
-        default: ubuntu-18-04-x64
       do_region:
         type: string
         description: DigitalOcean region
