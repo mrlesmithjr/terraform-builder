@@ -59,34 +59,28 @@ records.
 ```yaml
 AzureRM:
   resources:
-    networks:
-      example:
-        create: true
-        module: services
-        network: 10.0.0.0/16
-        resource_group: example
-        subnets:
-        - 10.0.1.0/24
-        - 10.0.2.0/24
     resource_groups:
-      default:
-        create: false
-        module: root
-      example:
+      example-rg-root:
         create: true
-        module: services
-    vms:
-      test-az-root:
-        count: 2
-        image: ubuntu-18-04-x64
-        memory: 1024
-        module: services
-        network: example
-        num_cpus: 1
-        subnet: 10.0.2.0/24
-        tags:
-        - test-azurerm
-        - test-azurerm-root
+        module: root
+        virtual_networks:
+          example-net:
+            address_space:
+            - 10.0.0.0/16
+            create: true
+            subnets:
+            - 10.0.1.0/24
+            - 10.0.2.0/24
+        vms:
+          example-vm-root:
+            count: 1
+            image: ubuntu-18-04-x64
+            memory: 1024
+            network: example-net
+            num_cpus: 1
+            subnet: 10.0.2.0/24
+            tags:
+              environment: ${var.environment}
   variables:
     azurerm_domain:
       default: ''

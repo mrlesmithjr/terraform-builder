@@ -1,3 +1,29 @@
+commit b26e9d3875c9dce27084727cd7a5402ea609d409
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Tue Mar 24 11:48:44 2020 -0400
+
+    Changed vsphere_host username/password to vars
+    
+    This ensures that we do not contain username/password in configs.yml.
+    
+    Closes #4
+
+commit 7d65d405afa801b36aa6e1114ab9ea4b89c093f7
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Tue Mar 24 11:34:57 2020 -0400
+
+    Updated vSphere constructs
+    
+    Now that things are becoming more defined in configs.yml. We can now
+    define things underneath the vSphere provider. Such as: dcs, clusters,
+    hosts, host virtual switches/pgs, vms, tags, etc. We are moving away
+    from using Terraform vars where needed because we want Terraform Builder
+    to handle the configuration lifecycle.
+    
+    The changes here address the initial stages of vSphere.
+    
+    Closes #2
+
 commit 305ad529e747cac9b51f7f06b003641cf483b0d1
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Tue Mar 24 00:24:11 2020 -0400
