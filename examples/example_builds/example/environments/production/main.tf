@@ -20,12 +20,4 @@ module "services" {
     azurerm_location = "East US"
     azurerm_subscription_id = ""
     azurerm_tenant_id = ""
-    vsphere_allow_unverified_ssl = "false"
-    vsphere_compute_cluster = ""
-    vsphere_datacenter = ""
-    vsphere_network = ""
-    vsphere_password = ""
-    vsphere_resource_pool = ""
-    vsphere_server = ""
-    vsphere_username = ""
 }

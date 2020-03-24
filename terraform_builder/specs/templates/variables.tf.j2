@@ -19,6 +19,14 @@ variable "environment" {
 {%-               endif %}
 {%-             endfor %}
 {%-           endif %}
+{%-           elif provider == 'vSphere' %}
+{%-             if provider_config.resources.datacenters %}
+{%-               for dc, dc_config in provider_config.resources.datacenters.items() %}
+{%-                 if dc_config.module == module %}
+{%-                   set _ = module_vars.append(dc_config.module) %}
+{%-                 endif %}
+{%-               endfor %}
+{%-             endif %}
 {%-         endif %}
 {%-         if provider_config.resources.vms %}
 {%-           for vm, vm_config in provider_config.resources.vms.items() %}

@@ -144,47 +144,66 @@ providers:
         default: ""
   vSphere:
     resources:
-      vms:
-        test-vs-root:
-          count: 1
-          memory: 2048
+      datacenters:
+        example-dc:
+          clusters:
+            example-cluster:
+              create: true
+              drs_enabled: true
+              drs_automation_level: fullyAutomated
+              ha_enabled: true
+              hosts:
+                example-esxi-01:
+                  create: true
+                  hostname: 10.10.10.1
+                  username: root
+                  password: password
+              vms:
+                example-vm:
+                  count: 1
+                  memory: 2048
+                  network: example-pg
+                  num_cpus: 1
+                  tags:
+                    - example-vsphere
+          create: true
           module: root
-          num_cpus: 1
+          virtual_switches:
+            example-switch:
+              create: true
+              type: host
+              network_adapters:
+                - vmnic0
+                - vmnic1
+              active_nics:
+                - vmnic0
+              standby_nics:
+                - vmnic1
+              teaming_policy: loadbalance_srcid
+              port_groups:
+                example-pg:
+                  create: true
+      tag_categories:
+        example-category:
+          associable_types:
+            - ClusterComputeResource
+            - Datacenter
+            - Datastore
+            - HostSystem
+            - VirtualMachine
+          cardinality: SINGLE
+          create: true
+          module: root
           tags:
-            - test-vsphere
-            - test-vsphere-root
-        test-vs-services:
-          count: 1
-          memory: 1024
-          module: services
-          num_cpus: 2
-          tags:
-            - test-vsphere
-            - test-vsphere-services
+            - example-vsphere
     variables:
       vsphere_allow_unverified_ssl:
         type: bool
         description: Boolean that can be set to true to disable SSL certificate verification
         default: "false"
-      vsphere_compute_cluster:
-        type: string
-        description: Compute cluster to use by default
-        default: ""
-      vsphere_datacenter:
-        type: string
-        description: Datacenter to use by default
-        default: ""
-      vsphere_network:
-        type: string
-        description: Network to use by default
-        default: ""
       vsphere_password:
         type: string
         description: Password for vSphere API operations
-        default: ""
-      vsphere_resource_pool:
-        type: string
-        description: The resource pool to put virtual machine's in
         default: ""
       vsphere_server:
         type: string
