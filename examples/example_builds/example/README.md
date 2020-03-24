@@ -183,8 +183,20 @@ vSphere:
                 num_cpus: 1
                 tags:
                 - example-vsphere
+                template: ''
+              example-vm-from-template:
+                count: 1
+                memory: 2048
+                network: example-pg
+                num_cpus: 1
+                tags:
+                - example-vsphere
+                template: ubuntu-18-04-x64
         create: true
         module: root
+        templates:
+        - ubuntu-16-04-x64
+        - ubuntu-18-04-x64
         virtual_switches:
           example-switch:
             active_nics:
