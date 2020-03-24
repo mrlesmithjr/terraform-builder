@@ -38,8 +38,8 @@ resource "vsphere_compute_cluster" "example_cluster" {
 # Resource vSphere host
 resource "vsphere_host" "example_esxi_01" {
   hostname = "10.10.10.1"
-  username = "root"
-  password = "password"
+  username = var.vsphere_host_username
+  password = var.vsphere_host_password
   cluster  = vsphere_compute_cluster.example_cluster.id
 }
 # Resource vSphere host virtual switch

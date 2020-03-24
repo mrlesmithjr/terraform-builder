@@ -80,6 +80,18 @@ variable "vsphere_allow_unverified_ssl" {
     description = "Boolean that can be set to true to disable SSL certificate verification"
     default = "false"
 }
+# Variable vsphere_host_password config
+variable "vsphere_host_password" {
+    type = string
+    description = "Password for vSphere hosts"
+    default = ""
+}
+# Variable vsphere_host_username config
+variable "vsphere_host_username" {
+    type = string
+    description = "Username for vSphere hosts"
+    default = ""
+}
 # Variable vsphere_password config
 variable "vsphere_password" {
     type = string
