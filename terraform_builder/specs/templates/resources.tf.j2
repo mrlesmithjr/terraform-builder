@@ -89,8 +89,8 @@ resource "vsphere_compute_cluster" "{{ cluster|replace('-','_') }}" {
 # Resource {{ provider }} host
 resource "vsphere_host" "{{ host|replace('-','_') }}" {
   hostname = "{{ host_config.hostname }}"
-  username = "{{ host_config.username }}"
-  password = "{{ host_config.password }}"
+  username = var.vsphere_host_username
+  password = var.vsphere_host_password
   cluster  = vsphere_compute_cluster.{{ cluster|replace('-','_') }}.id
 }
 {%-                     else %}

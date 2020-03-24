@@ -156,8 +156,6 @@ providers:
                 example-esxi-01:
                   create: true
                   hostname: 10.10.10.1
-                  username: root
-                  password: password
               vms:
                 example-vm:
                   count: 1
@@ -201,6 +199,14 @@ providers:
         type: bool
         description: Boolean that can be set to true to disable SSL certificate verification
         default: "false"
+      vsphere_host_password:
+        type: string
+        description: Password for vSphere hosts
+        default: ""
+      vsphere_host_username:
+        type: string
+        description: Username for vSphere hosts
+        default: ""
       vsphere_password:
         type: string
         description: Password for vSphere API operations
