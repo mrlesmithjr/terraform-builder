@@ -6,47 +6,102 @@
 {%-         for rg, rg_config in provider_config.resources.resource_groups.items() %}
 {%-           if rg_config.module == module %}
 {%-             if rg_config.create %}
-# Resource AzureRM resource group
-resource "azurerm_resource_group" "{{ rg }}" {
+# Resource {{ provider }} resource group
+resource "azurerm_resource_group" "{{ rg|replace('-','_') }}" {
   name     = "{{ rg }}"
   location = var.azurerm_location
 }
 {%-             else %}
-# Data AzureRM resource group
-data "azurerm_resource_group" "{{ rg }}" {
+# Data {{ provider }} resource group
+data "azurerm_resource_group" "{{ rg|replace('-','_') }}" {
   name = "{{ rg }}"
 }
 {%-             endif %}
-{%-           endif %}
-{%-         endfor %}
-{%-       endif %}
-{%-       if provider_config.resources.networks %}
-{%-         for net, net_config in provider_config.resources.networks.items() %}
-{%-           if net_config.module == module %}
-{%-             if net_config.create %}
+{%-             if rg_config.virtual_networks %}
+{%-               for net, net_config in rg_config.virtual_networks.items() %}
+{%-                 if net_config.create %}
 # Resource {{ provider }} virtual network
-resource "azurerm_virtual_network" "{{ net }}" {
+resource "azurerm_virtual_network" "{{ net|replace('-','_') }}" {
   name                = "{{ net }}"
-  address_space       = ["{{ net_config.network }}"]
+  address_space       = {{ net_config.address_space|replace('\'','"') }}
   location            = var.azurerm_location
-  resource_group_name = azurerm_resource_group.{{ net_config.resource_group }}.name
+  resource_group_name = azurerm_resource_group.{{ rg|replace('-','_') }}.name
 }
-{%-               if net_config.subnets %}
-{%-                 for subnet in net_config.subnets %}
+{%-                   if net_config.subnets %}
+{%-                     for subnet in net_config.subnets %}
 # Resource {{ provider }} subnet
-resource "azurerm_subnet" "{{ net+'_subnet_'+loop.index0|string }}" {
+resource "azurerm_subnet" "{{ net|replace('-','_')+'_subnet_'+loop.index0|string }}" {
   name                 = "{{ net+'_subnet_'+loop.index0|string }}"
-  resource_group_name  = azurerm_resource_group.{{ net_config.resource_group }}.name
-  virtual_network_name = azurerm_virtual_network.{{ net }}.name
+  resource_group_name  = azurerm_resource_group.{{ rg|replace('-','_') }}.name
+  virtual_network_name = azurerm_virtual_network.{{ net|replace('-','_') }}.name
   address_prefix       = "{{ subnet }}"
 }
-{%-                 endfor %}
-{%-               endif %}
-{%-             else %}
+{%-                     endfor %}
+{%-                   endif %}
+{%-                 else %}
 # Data {{ provider }} virtual network
-data "azurerm_virtual_network" "{{ net }}" {
-  name                = "{{ net }}"
+data "azurerm_virtual_network" "{{ net|replace('-','_') }}" {
+  name = "{{ net }}"
 }
+{%-                 endif %}
+{%-               endfor %}
+{%-             endif %}
+{%-             if rg_config.vms %}
+{%-               for vm, vm_config in rg_config.vms.items() %}
+# Resource {{ provider }} network interface
+resource "azurerm_network_interface" "{{ vm|replace('-','_') }}" {
+  count               = {{ vm_config.count|default(1) }}
+  name                = format("{{ vm }}-%02s-nic", count.index + 1)
+  location            = var.azurerm_location
+  resource_group_name = azurerm_resource_group.{{ rg|replace('-','_') }}.name
+
+  ip_configuration {
+    name                          = format("{{ vm }}-%02s-ip-config", count.index + 1)
+    subnet_id                     = azurerm_subnet.{{ vm_config.network|replace('-','_')+'_subnet_'+rg_config.virtual_networks[vm_config.network].subnets.index(vm_config.subnet)|string }}.id
+    private_ip_address_allocation = "Dynamic"
+  }
+}
+{%-                 set memory = (vm_config.memory|default(1024)/1024)|round|int|string %}
+{%-                 set cpus = (vm_config.num_cpus)|default(1)|string %}
+{%-                 if cpus|int < 2 and memory|int < 7 %}
+{%-                   set vm_size = 'Standard_DS1_v2' %}
+{%-                 elif cpus|int < 4 and memory|int < 14 %}
+{%-                   set vm_size = 'Standard_DS2_v2' %}
+{%-                 elif cpus|int < 8 and memory|int < 28 %}
+{%-                   set vm_size = 'Standard_DS3_v2' %}
+{%-                 elif cpus|int < 16 and memory|int < 56 %}
+{%-                   set vm_size = 'Standard_DS4_v2' %}
+{%-                 elif cpus|int >= 16 and memory|int >= 56 %}
+{%-                   set vm_size = 'Standard_DS5_v2' %}
+{%-                 else %}
+{%-                   set vm_size = 'Standard_DS1_v2' %}
+{%-                 endif %}
+# Resource {{ provider }} virtual machine
+resource "azurerm_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
+  count                 = {{ vm_config.count|default(1) }}
+  name                  = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+  vm_size               = "{{ vm_size }}"
+  location              = var.azurerm_location
+  resource_group_name   = azurerm_resource_group.{{ rg|replace('-','_') }}.name
+  network_interface_ids = [azurerm_network_interface.{{ vm|replace('-','_') }}[count.index].id]
+
+  storage_image_reference {
+    publisher = lookup(var.azurerm_image_reference.{{ vm_config.image }}, "publisher")
+    offer     = lookup(var.azurerm_image_reference.{{ vm_config.image }}, "offer")
+    sku       = lookup(var.azurerm_image_reference.{{ vm_config.image }}, "sku")
+    version   = lookup(var.azurerm_image_reference.{{ vm_config.image }}, "version")
+  }
+  storage_os_disk {
+    name              = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+    caching           = "ReadWrite"
+    create_option     = "FromImage"
+    managed_disk_type = "Standard_LRS"
+  }
+{%-                 if vm_config.tags %}
+  tags = {{ vm_config.tags|replace('\'','"') }}
+{%-                 endif %}
+}
+{%-               endfor %}
 {%-             endif %}
 {%-           endif %}
 {%-         endfor %}
@@ -153,7 +208,7 @@ resource "vsphere_host_port_group" "{{ pg|replace('-','_') }}" {
 # Resource {{ provider }} virtual machine
 resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
   count            = {{ vm_config.count|default(1) }}
-  name             = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment,0,4))
+  name             = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
   num_cpus         = {{ cpus }}
   memory           = {{ memory }}
 {%-                     if cluster_config.create %}
@@ -217,60 +272,11 @@ resource "vsphere_tag" "{{ tag|replace('-','_') }}" {
 {%-           set _ = module_vms.append(provider) %}
 {%-           set memory = (vm_config.memory|default(1024)/1024)|round|int|string %}
 {%-           set cpus = (vm_config.num_cpus)|default(1)|string %}
-{%-           if provider == 'AzureRM' %}
-# Resource {{ provider }} network interface
-resource "azurerm_network_interface" "{{ vm }}" {
-  count               = {{ vm_config.count|default(1) }}
-  name                = format("{{ vm }}-%02s-nic", count.index +1)
-  location            = var.azurerm_location
-  resource_group_name = azurerm_resource_group.{{ provider_config.resources.networks[vm_config.network].resource_group }}.name
-
-  ip_configuration {
-    name                          = format("{{ vm }}-%02s-ip-config", count.index +1)
-    subnet_id                     = azurerm_subnet.{{ vm_config.network+'_subnet_'+provider_config.resources.networks[vm_config.network].subnets.index(vm_config.subnet)|string }}.id
-    private_ip_address_allocation = "Dynamic"
-  }
-}
-{%-             if cpus|int < 2 and memory|int < 7 %}
-{%-               set vm_size = 'Standard_DS1_v2' %}
-{%-             elif cpus|int < 4 and memory|int < 14 %}
-{%-               set vm_size = 'Standard_DS2_v2' %}
-{%-             elif cpus|int < 8 and memory|int < 28 %}
-{%-               set vm_size = 'Standard_DS3_v2' %}
-{%-             elif cpus|int < 16 and memory|int < 56 %}
-{%-               set vm_size = 'Standard_DS4_v2' %}
-{%-             elif cpus|int >= 16 and memory|int >= 56 %}
-{%-               set vm_size = 'Standard_DS5_v2' %}
-{%-             else %}
-{%-               set vm_size = 'Standard_DS1_v2' %}
-{%-             endif %}
-# Resource {{ provider }} virtual machine
-resource "azurerm_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
-  count                 = {{ vm_config.count|default(1) }}
-  name                  = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment,0,4))
-  vm_size               = "{{ vm_size }}"
-  location              = var.azurerm_location
-  resource_group_name   = azurerm_resource_group.{{ provider_config.resources.networks[vm_config.network].resource_group }}.name
-  network_interface_ids = [azurerm_network_interface.{{ vm }}[count.index].id]
-
-  storage_image_reference {
-    publisher = lookup(var.azurerm_image_reference.{{ vm_config.image }}, "publisher")
-    offer     = lookup(var.azurerm_image_reference.{{ vm_config.image }}, "offer")
-    sku       = lookup(var.azurerm_image_reference.{{ vm_config.image }}, "sku")
-    version   = lookup(var.azurerm_image_reference.{{ vm_config.image }}, "version")
-  }
-  storage_os_disk {
-    name              = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment,0,4))
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
-  }
-}
-{%-           elif provider == 'DigitalOcean' %}
+{%-           if provider == 'DigitalOcean' %}
 # Resource {{ provider }} virtual machine
 resource "digitalocean_droplet" "{{ vm.split('.')[0]|replace('-','_') }}" {
   count  = {{ vm_config.count|default(1) }}
-  name   = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment,0,4))
+  name   = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
   image  = "{{ vm_config.image }}"
   region = var.do_region
   size   = "{{ 's-'+cpus+'vcpu-'+memory+'gb' }}"
