@@ -16,12 +16,6 @@ variable "do_domain" {
     description = "Default DigitalOcean domain for resources"
     default = ""
 }
-# Variable do_image config
-variable "do_image" {
-    type = string
-    description = "Default DigitalOcean droplet image"
-    default = "ubuntu-18-04-x64"
-}
 # Variable do_region config
 variable "do_region" {
     type = string

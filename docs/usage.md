@@ -34,18 +34,18 @@ It is recommended that you install [Graphviz](https://graphviz.gitlab.io/downloa
 Is using Terraform Builder easy? Of course it is. But first we need to explore
 some of the concepts.
 
-### Configurations
+## Configurations
 
 Configurations are defined in YAML, and must follow a specific format. By doing
 this, we can ensure that we have consistency in our Terraform configurations. We
 use `configs.yml` but the filename can be anything you wish. However, if the
 content must be consistent.
 
-#### Providers
+### Providers
 
 We can configure specific providers in our `configs.yml`.
 
-##### Resources
+#### Resources
 
 Resources are where we can defined things such as VMs, resource groups, etc. For
 example, VMs are defined in an agnostic way in which you can cut/paste VM resources
@@ -85,7 +85,7 @@ resource "azurerm_resource_group" "example" {
 }
 ```
 
-#### Example Configuration
+### Example Configuration
 
 Below is an example of our `configs.yml`:
 
@@ -123,24 +123,34 @@ modules:
 providers:
   AzureRM:
     resources:
+      networks:
+        example:
+          create: true
+          module: services
+          network: 10.0.0.0/16
+          resource_group: example
+          subnets:
+            - 10.0.1.0/24
+            - 10.0.2.0/24
       resource_groups:
-        {}
-        # default:
-        #   create: false
-        #   module: root
-        # example:
-        #   create: true
-        #   module: services
+        default:
+          create: false
+          module: root
+        example:
+          create: true
+          module: services
       vms:
-        {}
-        # test-az-root:
-        #   count: 1
-        #   memory: 1024
-        #   module: services
-        #   num_cpus: 1
-        #   tags:
-        #     - test-azurerm
-        #     - test-azurerm-root
+        test-az-root:
+          count: 2
+          image: ubuntu-18-04-x64
+          memory: 1024
+          module: services
+          network: example
+          subnet: 10.0.2.0/24
+          num_cpus: 1
+          tags:
+            - test-azurerm
+            - test-azurerm-root
     variables:
       azurerm_domain:
         type: string
@@ -153,14 +163,29 @@ providers:
       azurerm_features:
         description: Customize the behaviour of certain Azure Provider resources.
         default: {}
+      azurerm_image_reference:
+        description: Default OS image reference lookups
+        default:
+          {
+            "ubuntu-16-04-x64":
+              {
+                "publisher": "Canonical",
+                "offer": "UbuntuServer",
+                "sku": "16.04-LTS",
+                "version": "latest",
+              },
+            "ubuntu-18-04-x64":
+              {
+                "publisher": "Canonical",
+                "offer": "UbuntuServer",
+                "sku": "18.04-LTS",
+                "version": "latest",
+              },
+          }
       azurerm_location:
         type: string
         description: Default AzureRM location/region
         default: East US
-      azurerm_resource_group:
-        type: string
-        description: Default AzureRM resource group
-        default: example
       azurerm_subscription_id:
         type: string
         description: AzureRM Subscription ID
@@ -174,6 +199,7 @@ providers:
       vms:
         test-do-root:
           count: 1
+          image: ubuntu-18-04-x64
           memory: 1024
           module: root
           num_cpus: 1
@@ -182,6 +208,7 @@ providers:
             - test-digitalocean-root
         test-do-network:
           count: 1
+          image: ubuntu-18-04-x64
           memory: 1024
           module: network
           num_cpus: 1
@@ -197,10 +224,6 @@ providers:
         type: string
         description: Default DigitalOcean domain for resources
         default: ""
-      do_image:
-        type: string
-        description: Default DigitalOcean droplet image
-        default: ubuntu-18-04-x64
       do_region:
         type: string
         description: DigitalOcean region

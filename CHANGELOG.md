@@ -1,3 +1,9 @@
+commit cb1baf99ce4ff83bd9daf02ea8aaa2cab1d3c0f3
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Mon Mar 23 17:18:29 2020 -0400
+
+    Initial support of creating/consuming AzureRM resource groups
+
 commit 9fb9754a6705c4f7e94ed9d14435925f3c18635c
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Mon Mar 23 16:12:58 2020 -0400

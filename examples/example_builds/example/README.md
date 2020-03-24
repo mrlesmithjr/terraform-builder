@@ -59,8 +59,34 @@ records.
 ```yaml
 AzureRM:
   resources:
-    resource_groups: {}
-    vms: {}
+    networks:
+      example:
+        create: true
+        module: services
+        network: 10.0.0.0/16
+        resource_group: example
+        subnets:
+        - 10.0.1.0/24
+        - 10.0.2.0/24
+    resource_groups:
+      default:
+        create: false
+        module: root
+      example:
+        create: true
+        module: services
+    vms:
+      test-az-root:
+        count: 2
+        image: ubuntu-18-04-x64
+        memory: 1024
+        module: services
+        network: example
+        num_cpus: 1
+        subnet: 10.0.2.0/24
+        tags:
+        - test-azurerm
+        - test-azurerm-root
   variables:
     azurerm_domain:
       default: ''
@@ -73,13 +99,22 @@ AzureRM:
     azurerm_features:
       default: {}
       description: Customize the behaviour of certain Azure Provider resources.
+    azurerm_image_reference:
+      default:
+        ubuntu-16-04-x64:
+          offer: UbuntuServer
+          publisher: Canonical
+          sku: 16.04-LTS
+          version: latest
+        ubuntu-18-04-x64:
+          offer: UbuntuServer
+          publisher: Canonical
+          sku: 18.04-LTS
+          version: latest
+      description: Default OS image reference lookups
     azurerm_location:
       default: East US
       description: Default AzureRM location/region
-      type: string
-    azurerm_resource_group:
-      default: example
-      description: Default AzureRM resource group
       type: string
     azurerm_subscription_id:
       default: ''
@@ -94,6 +129,7 @@ DigitalOcean:
     vms:
       test-do-network:
         count: 1
+        image: ubuntu-18-04-x64
         memory: 1024
         module: network
         num_cpus: 1
@@ -102,6 +138,7 @@ DigitalOcean:
         - test-digitalocean-network
       test-do-root:
         count: 1
+        image: ubuntu-18-04-x64
         memory: 1024
         module: root
         num_cpus: 1
@@ -117,10 +154,6 @@ DigitalOcean:
     do_domain:
       default: ''
       description: Default DigitalOcean domain for resources
-      type: string
-    do_image:
-      default: ubuntu-18-04-x64
-      description: Default DigitalOcean droplet image
       type: string
     do_region:
       default: nyc1
