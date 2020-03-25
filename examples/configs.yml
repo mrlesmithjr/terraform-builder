@@ -51,6 +51,14 @@ providers:
               num_cpus: 1
               tags: { "environment": "${var.environment}" }
     variables:
+      azurerm_client_id:
+        type: string
+        description: Default AzureRM client id
+        default: ""
+      azurerm_client_secret:
+        type: string
+        description: Default AzureRM client secret
+        default: ""
       azurerm_domain:
         type: string
         description: Default AzureRM domain for resources
