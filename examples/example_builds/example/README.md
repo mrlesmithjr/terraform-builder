@@ -82,6 +82,14 @@ AzureRM:
             tags:
               environment: ${var.environment}
   variables:
+    azurerm_client_id:
+      default: ''
+      description: Default AzureRM client id
+      type: string
+    azurerm_client_secret:
+      default: ''
+      description: Default AzureRM client secret
+      type: string
     azurerm_domain:
       default: ''
       description: Default AzureRM domain for resources

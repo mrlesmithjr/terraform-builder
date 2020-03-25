@@ -8,7 +8,7 @@
 {%-             if rg_config.create %}
 # Resource {{ provider }} resource group
 resource "azurerm_resource_group" "{{ rg|replace('-','_') }}" {
-  name     = "{{ rg }}"
+  name     = format("{{ rg }}-%s", substr(var.environment, 0, 4))
   location = var.azurerm_location
 }
 {%-             else %}
@@ -22,7 +22,7 @@ data "azurerm_resource_group" "{{ rg|replace('-','_') }}" {
 {%-                 if net_config.create %}
 # Resource {{ provider }} virtual network
 resource "azurerm_virtual_network" "{{ net|replace('-','_') }}" {
-  name                = "{{ net }}"
+  name                = format("{{ net }}-%s", substr(var.environment, 0, 4))
   address_space       = {{ net_config.address_space|replace('\'','"') }}
   location            = var.azurerm_location
   resource_group_name = azurerm_resource_group.{{ rg|replace('-','_') }}.name
@@ -31,7 +31,7 @@ resource "azurerm_virtual_network" "{{ net|replace('-','_') }}" {
 {%-                     for subnet in net_config.subnets %}
 # Resource {{ provider }} subnet
 resource "azurerm_subnet" "{{ net|replace('-','_')+'_subnet_'+loop.index0|string }}" {
-  name                 = "{{ net+'_subnet_'+loop.index0|string }}"
+  name                 = format("{{ net+'_subnet_'+loop.index0|string }}-%s", substr(var.environment, 0, 4))
   resource_group_name  = azurerm_resource_group.{{ rg|replace('-','_') }}.name
   virtual_network_name = azurerm_virtual_network.{{ net|replace('-','_') }}.name
   address_prefix       = "{{ subnet }}"
@@ -51,7 +51,7 @@ data "azurerm_virtual_network" "{{ net|replace('-','_') }}" {
 # Resource {{ provider }} network interface
 resource "azurerm_network_interface" "{{ vm|replace('-','_') }}" {
   count               = {{ vm_config.count|default(1) }}
-  name                = format("{{ vm }}-%02s-nic", count.index + 1)
+  name                = format("{{ vm }}-%02s-nic-%s", count.index + 1, substr(var.environment, 0, 4))
   location            = var.azurerm_location
   resource_group_name = azurerm_resource_group.{{ rg|replace('-','_') }}.name
 
