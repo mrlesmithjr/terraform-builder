@@ -229,35 +229,37 @@ virtual networks, compute instances, or higher-level components such as DNS
 records.</p>
 <pre><code class="yaml">AzureRM:
   resources:
-    networks:
-      example:
-        create: true
-        module: services
-        network: 10.0.0.0/16
-        resource_group: example
-        subnets:
-        - 10.0.1.0/24
-        - 10.0.2.0/24
     resource_groups:
-      default:
-        create: false
-        module: root
-      example:
+      example-rg-root:
         create: true
-        module: services
-    vms:
-      test-az-root:
-        count: 2
-        image: ubuntu-18-04-x64
-        memory: 1024
-        module: services
-        network: example
-        num_cpus: 1
-        subnet: 10.0.2.0/24
-        tags:
-        - test-azurerm
-        - test-azurerm-root
+        module: root
+        virtual_networks:
+          example-net:
+            address_space:
+            - 10.0.0.0/16
+            create: true
+            subnets:
+            - 10.0.1.0/24
+            - 10.0.2.0/24
+        vms:
+          example-vm-root:
+            count: 1
+            image: ubuntu-18-04-x64
+            memory: 1024
+            network: example-net
+            num_cpus: 1
+            subnet: 10.0.2.0/24
+            tags:
+              environment: ${var.environment}
   variables:
+    azurerm_client_id:
+      default: ''
+      description: Default AzureRM client id
+      type: string
+    azurerm_client_secret:
+      default: ''
+      description: Default AzureRM client secret
+      type: string
     azurerm_domain:
       default: ''
       description: Default AzureRM domain for resources
@@ -296,25 +298,25 @@ records.</p>
       type: string
 DigitalOcean:
   resources:
-    vms:
-      test-do-network:
-        count: 1
-        image: ubuntu-18-04-x64
-        memory: 1024
-        module: network
-        num_cpus: 1
-        tags:
-        - test-digitalocean
-        - test-digitalocean-network
-      test-do-root:
-        count: 1
-        image: ubuntu-18-04-x64
-        memory: 1024
+    projects:
+      example:
+        create: true
+        description: Example project
+        domains:
+          example.org:
+            create: true
         module: root
-        num_cpus: 1
+        purpose: Just to demonstrate an example project
         tags:
-        - test-digitalocean
-        - test-digitalocean-root
+        - example-digitalocean
+        vms:
+          example-vm:
+            count: 1
+            image: ubuntu-18-04-x64
+            memory: 1024
+            num_cpus: 1
+            tags:
+            - example-digitalocean
   variables:
     do_api_endpoint:
       default: https://api.digitalocean.com
@@ -332,54 +334,90 @@ DigitalOcean:
     do_ssh_keys:
       default: []
       description: DigitalOcean SSH keys to deploy to new droplets
-      type: string
     do_token:
       default: ''
       description: This is the DO API token
       type: string
 vSphere:
   resources:
-    vms:
-      test-vs-root:
-        count: 1
-        memory: 2048
+    datacenters:
+      example-dc:
+        clusters:
+          example-cluster:
+            create: true
+            drs_automation_level: fullyAutomated
+            drs_enabled: true
+            ha_enabled: true
+            hosts:
+              example-esxi-01:
+                create: true
+                hostname: 10.10.10.1
+            vms:
+              example-vm:
+                count: 1
+                memory: 2048
+                network: example-pg
+                num_cpus: 1
+                tags:
+                - example-vsphere
+                template: ''
+              example-vm-from-template:
+                count: 1
+                memory: 2048
+                network: example-pg
+                num_cpus: 1
+                tags:
+                - example-vsphere
+                template: ubuntu-18-04-x64
+        create: true
         module: root
-        num_cpus: 1
+        templates:
+        - ubuntu-16-04-x64
+        - ubuntu-18-04-x64
+        virtual_switches:
+          example-switch:
+            active_nics:
+            - vmnic0
+            create: true
+            network_adapters:
+            - vmnic0
+            - vmnic1
+            port_groups:
+              example-pg:
+                create: true
+            standby_nics:
+            - vmnic1
+            teaming_policy: loadbalance_srcid
+            type: host
+    tag_categories:
+      example-category:
+        associable_types:
+        - ClusterComputeResource
+        - Datacenter
+        - Datastore
+        - HostSystem
+        - VirtualMachine
+        cardinality: SINGLE
+        create: true
+        module: root
         tags:
-        - test-vsphere
-        - test-vsphere-root
-      test-vs-services:
-        count: 1
-        memory: 1024
-        module: services
-        num_cpus: 2
-        tags:
-        - test-vsphere
-        - test-vsphere-services
+        - example-vsphere
   variables:
     vsphere_allow_unverified_ssl:
       default: 'false'
       description: Boolean that can be set to true to disable SSL certificate verification
       type: bool
-    vsphere_compute_cluster:
+    vsphere_host_password:
       default: ''
-      description: Compute cluster to use by default
+      description: Password for vSphere hosts
       type: string
-    vsphere_datacenter:
+    vsphere_host_username:
       default: ''
-      description: Datacenter to use by default
-      type: string
-    vsphere_network:
-      default: ''
-      description: Network to use by default
+      description: Username for vSphere hosts
       type: string
     vsphere_password:
       default: ''
       description: Password for vSphere API operations
-      type: string
-    vsphere_resource_pool:
-      default: ''
-      description: The resource pool to put virtual machine's in
       type: string
     vsphere_server:
       default: ''
