@@ -38,7 +38,7 @@ some of the concepts.
 
 Configurations are defined in YAML, and must follow a specific format. By doing
 this, we can ensure that we have consistency in our Terraform configurations. We
-use `configs.yml` but the filename can be anything you wish. However, if the
+use `configs.yml` but the filename can be anything you wish. However, the
 content must be consistent.
 
 ### Providers
@@ -469,3 +469,693 @@ commands will detect it and remind you to do so if necessary.[0m
 [0m
 
 ```
+
+## Demos
+
+### Azure
+
+For this demo I'll be walking through building out some resources in Azure. I
+am using macOS therefore I need to install the Azure CLI tool. I'll also be
+creating a new project in my `$HOME/Playground/Terraform_Project` directory.
+
+#### Create project directory
+
+```bash
+mkdir -p $HOME/Playground/Terraform_Project
+```
+
+#### Install Azure CLI
+
+```bash
+brew install azure-cli
+```
+
+#### Clone Terraform Builder
+
+```bash
+cd $HOME/Playground/
+git clone https://github.com/mrlesmithjr/terraform-builder.git
+```
+
+#### Azure Service Principal
+
+Next I'll need to create a Service Principal to [authenticate](https://www.terraform.io/docs/providers/azurerm/index.html#authenticating-to-azure) with.
+
+Let's go ahead and login using the Azure CLI tool.
+
+```bash
+az login
+```
+
+You should have been redirected with your browser to authenticate at this point.
+And if you go back to your terminal you should see something similar to:
+
+```bash
+[
+  {
+    "cloudName": "AzureCloud",
+    "id": "00000000-0000-0000-0000-000000000000",
+    "isDefault": true,
+    "name": "PAYG Subscription",
+    "state": "Enabled",
+    "tenantId": "00000000-0000-0000-0000-000000000000",
+    "user": {
+      "name": "user@example.com",
+      "type": "user"
+    }
+  }
+]
+```
+
+We are now ready to create the Service Principal.
+
+Using the `id` to replace `SUBSCRIPTION_ID` below.
+
+```bash
+az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/SUBSCRIPTION_ID"
+```
+
+You should get back something similar to below:
+
+```bash
+{
+  "appId": "00000000-0000-0000-0000-000000000000",
+  "displayName": "azure-cli-2017-06-05-10-41-15",
+  "name": "http://azure-cli-2017-06-05-10-41-15",
+  "password": "0000-0000-0000-0000-000000000000",
+  "tenant": "00000000-0000-0000-0000-000000000000"
+}
+```
+
+#### Configs and Secrets
+
+Now you will need to configure your `secrets.yml` file to look like below using
+the `SUBSCRIPTION_ID` that you received after doing `az login`. The remaining
+three fields will be from the information you received after creating the Service
+Principal.
+
+`$HOME/Playground/Terraform_Project/secrets.yml`:
+
+```yaml
+---
+# Define secrets - Use with caution
+secrets:
+  azurerm_client_id: appID
+  azurerm_client_secret: password
+  azurerm_subscription_id: SUBSCRIPTION_ID
+  azurerm_tenant_id: tenant
+```
+
+Now we need to configure our `configs.yml` file to look similar to below:
+
+`$HOME/Playground/Terraform_Project/configs.yml`:
+
+```yaml
+---
+# This is an example config layout
+
+# Defines project name which becomes parent root directory
+project_name: Terraform-Playground
+
+# Define backends
+backends:
+  local: {}
+  remote: {}
+
+# Defines environments
+environments:
+  development: {}
+  production: {}
+  staging: {}
+
+# Define global variables
+global_variables: {}
+
+# Define modules - Structure will be project_name/modules/{module}
+# root needs to always exist
+modules:
+  root: {}
+
+# Define providers and variables
+providers:
+  AzureRM:
+    resources:
+      resource_groups:
+        example-rg-root:
+          create: true
+          module: root
+          virtual_networks:
+            {}
+            # example-net:
+            #   address_space:
+            #     - 10.0.0.0/16
+            #   create: true
+            #   subnets:
+            #     - 10.0.1.0/24
+            #     - 10.0.2.0/24
+          vms:
+            {}
+            # example-vm-root:
+            #   count: 1
+            #   image: ubuntu-18-04-x64
+            #   memory: 1024
+            #   network: example-net
+            #   subnet: 10.0.2.0/24
+            #   num_cpus: 1
+            #   tags: { "environment": "${var.environment}" }
+    variables:
+      azurerm_client_id:
+        type: string
+        description: Default AzureRM client id
+        default: ""
+      azurerm_client_secret:
+        type: string
+        description: Default AzureRM client secret
+        default: ""
+      azurerm_domain:
+        type: string
+        description: Default AzureRM domain for resources
+        default: ""
+      azurerm_environment:
+        type: string
+        description: AzureRM Environment
+        default: public
+      azurerm_features:
+        description: Customize the behaviour of certain Azure Provider resources.
+        default: {}
+      azurerm_image_reference:
+        description: Default OS image reference lookups
+        default:
+          {
+            "ubuntu-16-04-x64":
+              {
+                "publisher": "Canonical",
+                "offer": "UbuntuServer",
+                "sku": "16.04-LTS",
+                "version": "latest",
+              },
+            "ubuntu-18-04-x64":
+              {
+                "publisher": "Canonical",
+                "offer": "UbuntuServer",
+                "sku": "18.04-LTS",
+                "version": "latest",
+              },
+          }
+      azurerm_location:
+        type: string
+        description: Default AzureRM location/region
+        default: East US
+      azurerm_subscription_id:
+        type: string
+        description: AzureRM Subscription ID
+        default: ""
+      azurerm_tenant_id:
+        type: string
+        description: AzureRM Tenant ID
+        default: ""
+```
+
+#### Build Project
+
+After we've configured our `secrets.yml` and `configs.yml` files in our
+`$HOME/Playground/Terraform_Project` directory. We are now ready to build our
+Terraform project.
+
+```bash
+cd $HOME/Playground/terraform-builder
+```
+
+We now need to install a few Python packages which are required and we will do
+so in a Python virtual environment.
+
+First, create Python virtual environment:
+
+```bash
+python3 -m venv venv
+```
+
+Next activate the Python virtual environment:
+
+```bash
+source venv/bin/activate
+```
+
+Now let's install the required Python packages:
+
+```bash
+pip3 install -r requirements.txt
+```
+
+Once this has completed we are ready to build our project.
+
+```bash
+python -m terraform_builder --config $HOME/Playground/Terraform_Project/configs.yml --secrets $HOME/Playground/Terraform_Project/secrets.yml --outputdir $HOME/Playground/Terraform_Project
+...
+Initializing modules...
+
+Initializing the backend...
+
+Initializing provider plugins...
+
+The following providers do not have any version constraints in configuration,
+so the latest version was installed.
+
+To prevent automatic upgrades to new major versions that may contain breaking
+changes, it is recommended to add version = "..." constraints to the
+corresponding provider blocks in configuration, with the constraint strings
+suggested below.
+
+* provider.azurerm: version = "~> 2.2"
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+
+Success! The configuration is valid.
+
+
+(venv)
+```
+
+Success!
+
+Now we are ready to start using Terraform in our project directory.
+
+```bash
+cd $HOME/Playground/Terraform_Project/Terraform-Playground
+```
+
+Let's do a quick `terraform plan` and see what all is going to be done.
+
+```bash
+terraform plan
+...
+Refreshing Terraform state in-memory prior to plan...
+The refreshed state will be used to calculate this plan, but will not be
+persisted to local or remote state storage.
+
+
+------------------------------------------------------------------------
+
+An execution plan has been generated and is shown below.
+Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # azurerm_resource_group.example_rg_root will be created
+  + resource "azurerm_resource_group" "example_rg_root" {
+      + id       = (known after apply)
+      + location = "eastus"
+      + name     = "example-rg-root"
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+
+------------------------------------------------------------------------
+
+Note: You didn't specify an "-out" parameter to save this plan, so Terraform
+can't guarantee that exactly these actions will be performed if
+"terraform apply" is subsequently run.
+```
+
+So far so good. Let's go ahead and do a `terraform apply` now:
+
+```bash
+terraform apply
+...
+An execution plan has been generated and is shown below.
+Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # azurerm_resource_group.example_rg_root will be created
+  + resource "azurerm_resource_group" "example_rg_root" {
+      + id       = (known after apply)
+      + location = "eastus"
+      + name     = "example-rg-root"
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+azurerm_resource_group.example_rg_root: Creating...
+azurerm_resource_group.example_rg_root: Creation complete after 1s [id=/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-rg-root]
+
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+
+The state of your infrastructure has been saved to the path
+below. This state is required to modify and destroy your
+infrastructure, so keep it safe. To inspect the complete state
+use the `terraform show` command.
+
+State path: terraform.tfstate
+```
+
+Boom. We've successfully created our very first resource group in Azure using
+Terraform Builder. The awesome part was we did not need to dig into the Terraform
+configurations at all to get everything configured.
+
+Now let's go ahead and create our virtual network. Open up `configs.yml` and
+uncomment the `virtual_networks` section so our providers `AzureRM`
+configuration now looks like:
+
+```yaml
+providers:
+  AzureRM:
+    resources:
+      resource_groups:
+        example-rg-root:
+          create: true
+          module: root
+          virtual_networks:
+            example-net:
+              address_space:
+                - 10.0.0.0/16
+              create: true
+              subnets:
+                - 10.0.1.0/24
+                - 10.0.2.0/24
+```
+
+After uncommenting the `virtual_networks`, run Terraform Builder again:
+
+```bash
+python -m terraform_builder --config $HOME/Playground/Terraform_Project/configs.yml --secrets $HOME/Playground/Terraform_Project/secrets.yml --outputdir $HOME/Playground/Terraform_Project
+```
+
+And now run `terraform plan` again and we should see the following:
+
+```bash
+terraform plan
+...
+Refreshing Terraform state in-memory prior to plan...
+The refreshed state will be used to calculate this plan, but will not be
+persisted to local or remote state storage.
+
+azurerm_resource_group.example_rg_root: Refreshing state... [id=/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-rg-root]
+
+------------------------------------------------------------------------
+
+An execution plan has been generated and is shown below.
+Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # azurerm_subnet.example_net_subnet_0 will be created
+  + resource "azurerm_subnet" "example_net_subnet_0" {
+      + address_prefix                                 = "10.0.1.0/24"
+      + enforce_private_link_endpoint_network_policies = false
+      + enforce_private_link_service_network_policies  = false
+      + id                                             = (known after apply)
+      + name                                           = "example-net_subnet_0"
+      + resource_group_name                            = "example-rg-root"
+      + virtual_network_name                           = "example-net"
+    }
+
+  # azurerm_subnet.example_net_subnet_1 will be created
+  + resource "azurerm_subnet" "example_net_subnet_1" {
+      + address_prefix                                 = "10.0.2.0/24"
+      + enforce_private_link_endpoint_network_policies = false
+      + enforce_private_link_service_network_policies  = false
+      + id                                             = (known after apply)
+      + name                                           = "example-net_subnet_1"
+      + resource_group_name                            = "example-rg-root"
+      + virtual_network_name                           = "example-net"
+    }
+
+  # azurerm_virtual_network.example_net will be created
+  + resource "azurerm_virtual_network" "example_net" {
+      + address_space       = [
+          + "10.0.0.0/16",
+        ]
+      + id                  = (known after apply)
+      + location            = "eastus"
+      + name                = "example-net"
+      + resource_group_name = "example-rg-root"
+
+      + subnet {
+          + address_prefix = (known after apply)
+          + id             = (known after apply)
+          + name           = (known after apply)
+          + security_group = (known after apply)
+        }
+    }
+
+Plan: 3 to add, 0 to change, 0 to destroy.
+
+------------------------------------------------------------------------
+
+Note: You didn't specify an "-out" parameter to save this plan, so Terraform
+can't guarantee that exactly these actions will be performed if
+"terraform apply" is subsequently run.
+```
+
+Looks good. So, let's apply this configuration now.
+
+```bash
+terraform apply
+...
+azurerm_resource_group.example_rg_root: Refreshing state... [id=/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-rg-root]
+
+An execution plan has been generated and is shown below.
+Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # azurerm_subnet.example_net_subnet_0 will be created
+  + resource "azurerm_subnet" "example_net_subnet_0" {
+      + address_prefix                                 = "10.0.1.0/24"
+      + enforce_private_link_endpoint_network_policies = false
+      + enforce_private_link_service_network_policies  = false
+      + id                                             = (known after apply)
+      + name                                           = "example-net_subnet_0"
+      + resource_group_name                            = "example-rg-root"
+      + virtual_network_name                           = "example-net"
+    }
+
+  # azurerm_subnet.example_net_subnet_1 will be created
+  + resource "azurerm_subnet" "example_net_subnet_1" {
+      + address_prefix                                 = "10.0.2.0/24"
+      + enforce_private_link_endpoint_network_policies = false
+      + enforce_private_link_service_network_policies  = false
+      + id                                             = (known after apply)
+      + name                                           = "example-net_subnet_1"
+      + resource_group_name                            = "example-rg-root"
+      + virtual_network_name                           = "example-net"
+    }
+
+  # azurerm_virtual_network.example_net will be created
+  + resource "azurerm_virtual_network" "example_net" {
+      + address_space       = [
+          + "10.0.0.0/16",
+        ]
+      + id                  = (known after apply)
+      + location            = "eastus"
+      + name                = "example-net"
+      + resource_group_name = "example-rg-root"
+
+      + subnet {
+          + address_prefix = (known after apply)
+          + id             = (known after apply)
+          + name           = (known after apply)
+          + security_group = (known after apply)
+        }
+    }
+
+Plan: 3 to add, 0 to change, 0 to destroy.
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+azurerm_virtual_network.example_net: Creating...
+azurerm_virtual_network.example_net: Still creating... [10s elapsed]
+azurerm_virtual_network.example_net: Creation complete after 13s [id=/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-rg-root/providers/Microsoft.Network/virtualNetworks/example-net]
+azurerm_subnet.example_net_subnet_1: Creating...
+azurerm_subnet.example_net_subnet_0: Creating...
+azurerm_subnet.example_net_subnet_0: Creation complete after 1s [id=/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-rg-root/providers/Microsoft.Network/virtualNetworks/example-net/subnets/example-net_subnet_0]
+azurerm_subnet.example_net_subnet_1: Creation complete after 2s [id=/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-rg-root/providers/Microsoft.Network/virtualNetworks/example-net/subnets/example-net_subnet_1]
+
+Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
+
+The state of your infrastructure has been saved to the path
+below. This state is required to modify and destroy your
+infrastructure, so keep it safe. To inspect the complete state
+use the `terraform show` command.
+
+State path: terraform.tfstate
+```
+
+BOOOOOM!!
+
+Now let's create a VM. So, uncomment the `vms` section in `configs.yml` for the
+`AzureRM` provider. After doing so, our provider configuration should look like:
+
+```yaml
+providers:
+  AzureRM:
+    resources:
+      resource_groups:
+        example-rg-root:
+          create: true
+          module: root
+          virtual_networks:
+            example-net:
+              address_space:
+                - 10.0.0.0/16
+              create: true
+              subnets:
+                - 10.0.1.0/24
+                - 10.0.2.0/24
+          vms:
+            example-vm-root:
+              count: 1
+              image: ubuntu-18-04-x64
+              memory: 1024
+              network: example-net
+              subnet: 10.0.2.0/24
+              num_cpus: 1
+              tags: { "environment": "${var.environment}" }
+```
+
+After uncommenting the `vms`, run Terraform Builder again:
+
+```bash
+python -m terraform_builder --config $HOME/Playground/Terraform_Project/configs.yml --secrets $HOME/Playground/Terraform_Project/secrets.yml --outputdir $HOME/Playground/Terraform_Project
+```
+
+And now run `terraform plan` again and we should see the following:
+
+```bash
+terraform plan
+...
+Refreshing Terraform state in-memory prior to plan...
+The refreshed state will be used to calculate this plan, but will not be
+persisted to local or remote state storage.
+
+azurerm_resource_group.example_rg_root: Refreshing state... [id=/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-rg-root]
+azurerm_virtual_network.example_net: Refreshing state... [id=/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-rg-root/providers/Microsoft.Network/virtualNetworks/example-net]
+azurerm_subnet.example_net_subnet_1: Refreshing state... [id=/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-rg-root/providers/Microsoft.Network/virtualNetworks/example-net/subnets/example-net_subnet_1]
+azurerm_subnet.example_net_subnet_0: Refreshing state... [id=/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-rg-root/providers/Microsoft.Network/virtualNetworks/example-net/subnets/example-net_subnet_0]
+
+------------------------------------------------------------------------
+
+An execution plan has been generated and is shown below.
+Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # azurerm_network_interface.example_vm_root[0] will be created
+  + resource "azurerm_network_interface" "example_vm_root" {
+      + applied_dns_servers           = (known after apply)
+      + dns_servers                   = (known after apply)
+      + enable_accelerated_networking = false
+      + enable_ip_forwarding          = false
+      + id                            = (known after apply)
+      + internal_dns_name_label       = (known after apply)
+      + location                      = "eastus"
+      + mac_address                   = (known after apply)
+      + name                          = "example-vm-root-01-nic"
+      + private_ip_address            = (known after apply)
+      + private_ip_addresses          = (known after apply)
+      + resource_group_name           = "example-rg-root"
+      + virtual_machine_id            = (known after apply)
+
+      + ip_configuration {
+          + name                          = "example-vm-root-01-ip-config"
+          + primary                       = (known after apply)
+          + private_ip_address            = (known after apply)
+          + private_ip_address_allocation = "dynamic"
+          + private_ip_address_version    = "IPv4"
+          + subnet_id                     = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-rg-root/providers/Microsoft.Network/virtualNetworks/example-net/subnets/example-net_subnet_1"
+        }
+    }
+
+  # azurerm_virtual_machine.example_vm_root[0] will be created
+  + resource "azurerm_virtual_machine" "example_vm_root" {
+      + availability_set_id              = (known after apply)
+      + delete_data_disks_on_termination = false
+      + delete_os_disk_on_termination    = false
+      + id                               = (known after apply)
+      + license_type                     = (known after apply)
+      + location                         = "eastus"
+      + name                             = "example-vm-root-01-"
+      + network_interface_ids            = (known after apply)
+      + resource_group_name              = "example-rg-root"
+      + tags                             = {
+          + "environment" = ""
+        }
+      + vm_size                          = "Standard_DS1_v2"
+
+      + identity {
+          + identity_ids = (known after apply)
+          + principal_id = (known after apply)
+          + type         = (known after apply)
+        }
+
+      + storage_data_disk {
+          + caching                   = (known after apply)
+          + create_option             = (known after apply)
+          + disk_size_gb              = (known after apply)
+          + lun                       = (known after apply)
+          + managed_disk_id           = (known after apply)
+          + managed_disk_type         = (known after apply)
+          + name                      = (known after apply)
+          + vhd_uri                   = (known after apply)
+          + write_accelerator_enabled = (known after apply)
+        }
+
+      + storage_image_reference {
+          + offer     = "UbuntuServer"
+          + publisher = "Canonical"
+          + sku       = "18.04-LTS"
+          + version   = "latest"
+        }
+
+      + storage_os_disk {
+          + caching                   = "ReadWrite"
+          + create_option             = "FromImage"
+          + disk_size_gb              = (known after apply)
+          + managed_disk_id           = (known after apply)
+          + managed_disk_type         = "Standard_LRS"
+          + name                      = "example-vm-root-01-"
+          + os_type                   = (known after apply)
+          + write_accelerator_enabled = false
+        }
+    }
+
+Plan: 2 to add, 0 to change, 0 to destroy.
+
+------------------------------------------------------------------------
+
+Note: You didn't specify an "-out" parameter to save this plan, so Terraform
+can't guarantee that exactly these actions will be performed if
+"terraform apply" is subsequently run.
+```
+
+Now let's run `terraform apply` once again!
+
+```bash
+terraform apply
+```
+
+And once this has completed you **SHOULD** have your VMs up and running.
