@@ -128,25 +128,25 @@ AzureRM:
       type: string
 DigitalOcean:
   resources:
-    vms:
-      test-do-network:
-        count: 1
-        image: ubuntu-18-04-x64
-        memory: 1024
-        module: network
-        num_cpus: 1
-        tags:
-        - test-digitalocean
-        - test-digitalocean-network
-      test-do-root:
-        count: 1
-        image: ubuntu-18-04-x64
-        memory: 1024
+    projects:
+      example:
+        create: true
+        description: Example project
+        domains:
+          example.org:
+            create: true
         module: root
-        num_cpus: 1
+        purpose: Just to demonstrate an example project
         tags:
-        - test-digitalocean
-        - test-digitalocean-root
+        - example-digitalocean
+        vms:
+          example-vm:
+            count: 1
+            image: ubuntu-18-04-x64
+            memory: 1024
+            num_cpus: 1
+            tags:
+            - example-digitalocean
   variables:
     do_api_endpoint:
       default: https://api.digitalocean.com
@@ -164,7 +164,6 @@ DigitalOcean:
     do_ssh_keys:
       default: []
       description: DigitalOcean SSH keys to deploy to new droplets
-      type: string
     do_token:
       default: ''
       description: This is the DO API token
