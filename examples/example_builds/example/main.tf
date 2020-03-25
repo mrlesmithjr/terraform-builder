@@ -9,6 +9,8 @@ terraform {
 provider "azurerm" {
     environment     = var.azurerm_environment
     features        {}
+    client_id       = var.azurerm_client_id
+    client_secret   = var.azurerm_client_secret
     subscription_id = var.azurerm_subscription_id
     tenant_id       = var.azurerm_tenant_id
 }
@@ -27,14 +29,17 @@ provider "vsphere" {
 # Module development config
 module "development" {
     source = "./environments/development"
+    environment = "development"
 }
 # Module production config
 module "production" {
     source = "./environments/production"
+    environment = "production"
 }
 # Module staging config
 module "staging" {
     source = "./environments/staging"
+    environment = "staging"
 }
 # Setting required Terraform version or greater
 terraform {

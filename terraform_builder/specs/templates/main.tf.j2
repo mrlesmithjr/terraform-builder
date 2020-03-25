@@ -15,6 +15,8 @@ provider "{{ provider|lower }}" {
 {%-       if provider|lower == 'azurerm' %}
     environment     = var.azurerm_environment
     features        {}
+    client_id       = var.azurerm_client_id
+    client_secret   = var.azurerm_client_secret
     subscription_id = var.azurerm_subscription_id
     tenant_id       = var.azurerm_tenant_id
 {%-       elif provider|lower == 'digitalocean' %}
@@ -33,6 +35,7 @@ provider "{{ provider|lower }}" {
 # Module {{ environment }} config
 module "{{ environment }}" {
     source = "./environments/{{ environment }}"
+    environment = "{{ environment }}"
 }
 {%-   endfor %}
 # Setting required Terraform version or greater
@@ -52,6 +55,15 @@ module "{{ module }}" {
 {%-             if provider_config['variables'] -%}
 {%-               set module_vars = [] %}
 {%-               if provider_config.resources %}
+{%-                 if provider == 'AzureRM' %}
+{%-                   if provider_config.resources.resource_groups %}
+{%-                     for rg, rg_config in provider_config.resources.resource_groups.items() %}
+{%-                       if rg_config.module == module %}
+{%-                         set _ = module_vars.append(rg_config.module) %}
+{%-                       endif %}
+{%-                     endfor %}
+{%-                   endif %}
+{%-                 endif %}
 {%-                 if provider_config.resources.vms %}
 {%-                   for vm, vm_config in provider_config.resources.vms.items() %}
 {%-                     if vm_config.module == module %}

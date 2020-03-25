@@ -1,26 +1,26 @@
 # Generated using https://github.com/mrlesmithjr/terraform-builder
 # Resource AzureRM resource group
 resource "azurerm_resource_group" "example_rg_root" {
-  name     = "example-rg-root"
+  name     = format("example-rg-root-%s", substr(var.environment, 0, 4))
   location = var.azurerm_location
 }
 # Resource AzureRM virtual network
 resource "azurerm_virtual_network" "example_net" {
-  name                = "example-net"
+  name                = format("example-net-%s", substr(var.environment, 0, 4))
   address_space       = ["10.0.0.0/16"]
   location            = var.azurerm_location
   resource_group_name = azurerm_resource_group.example_rg_root.name
 }
 # Resource AzureRM subnet
 resource "azurerm_subnet" "example_net_subnet_0" {
-  name                 = "example-net_subnet_0"
+  name                 = format("example-net_subnet_0-%s", substr(var.environment, 0, 4))
   resource_group_name  = azurerm_resource_group.example_rg_root.name
   virtual_network_name = azurerm_virtual_network.example_net.name
   address_prefix       = "10.0.1.0/24"
 }
 # Resource AzureRM subnet
 resource "azurerm_subnet" "example_net_subnet_1" {
-  name                 = "example-net_subnet_1"
+  name                 = format("example-net_subnet_1-%s", substr(var.environment, 0, 4))
   resource_group_name  = azurerm_resource_group.example_rg_root.name
   virtual_network_name = azurerm_virtual_network.example_net.name
   address_prefix       = "10.0.2.0/24"
@@ -28,7 +28,7 @@ resource "azurerm_subnet" "example_net_subnet_1" {
 # Resource AzureRM network interface
 resource "azurerm_network_interface" "example_vm_root" {
   count               = 1
-  name                = format("example-vm-root-%02s-nic", count.index + 1)
+  name                = format("example-vm-root-%02s-nic-%s", count.index + 1, substr(var.environment, 0, 4))
   location            = var.azurerm_location
   resource_group_name = azurerm_resource_group.example_rg_root.name
 

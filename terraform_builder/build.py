@@ -8,6 +8,7 @@ import sys
 import jinja2
 from graphviz import Source
 from terraform_builder.specs.important.files import important_files
+from terraform_builder.specs.filters.j2 import to_json
 
 
 class Build:
@@ -39,6 +40,8 @@ class Build:
 
         # Sets Jinja2 template environment
         template_env = jinja2.Environment(loader=template_loader)
+
+        template_env.filters['to_json'] = to_json
 
         self.logger.info(
             'Rendering template for module: %s using: %s.tf.j2', module, file)

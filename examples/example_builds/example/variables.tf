@@ -4,6 +4,18 @@ variable "environment" {
   type    = string
   default = ""
 }
+# Variable azurerm_client_id config
+variable "azurerm_client_id" {
+    type = string
+    description = "Default AzureRM client id"
+    default = ""
+}
+# Variable azurerm_client_secret config
+variable "azurerm_client_secret" {
+    type = string
+    description = "Default AzureRM client secret"
+    default = ""
+}
 # Variable azurerm_domain config
 variable "azurerm_domain" {
     type = string
@@ -42,36 +54,6 @@ variable "azurerm_subscription_id" {
 variable "azurerm_tenant_id" {
     type = string
     description = "AzureRM Tenant ID"
-    default = ""
-}
-# Variable do_api_endpoint config
-variable "do_api_endpoint" {
-    type = string
-    description = "This can be used to override the base URL for DigitalOcean API requests"
-    default = "https://api.digitalocean.com"
-}
-# Variable do_domain config
-variable "do_domain" {
-    type = string
-    description = "Default DigitalOcean domain for resources"
-    default = ""
-}
-# Variable do_region config
-variable "do_region" {
-    type = string
-    description = "DigitalOcean region"
-    default = "nyc1"
-}
-# Variable do_ssh_keys config
-variable "do_ssh_keys" {
-    type = string
-    description = "DigitalOcean SSH keys to deploy to new droplets"
-    default = "[]"
-}
-# Variable do_token config
-variable "do_token" {
-    type = string
-    description = "This is the DO API token"
     default = ""
 }
 # Variable vsphere_allow_unverified_ssl config
