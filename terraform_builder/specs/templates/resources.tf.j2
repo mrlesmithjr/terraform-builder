@@ -106,6 +106,81 @@ resource "azurerm_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
 {%-           endif %}
 {%-         endfor %}
 {%-       endif %}
+{%-     elif provider == 'DigitalOcean' %}
+{%-       if provider_config.resources.projects %}
+{%-         for proj, proj_config in provider_config.resources.projects.items() %}
+{%-           if proj_config.module == module %}
+{%-             set project_resources = [] %}
+{%-             if proj_config.create %}
+# Resource {{ provider }} project
+resource "digitalocean_project" "{{ proj|replace('-','_') }}" {
+  name        = format("{{ proj }}-%s", substr(var.environment, 0, 4))
+  description = format("{{ proj_config.description }} - %s", var.environment)
+  purpose     = format("{{ proj_config.purpose }} - %s", var.environment)
+  environment = format("%s", var.environment)
+  resources   = [for resource in flatten(local.project_resources) : resource]
+}
+{%-             else %}
+# Data {{ provider }} project
+data "digitalocean_project" "{{ proj|replace('-','_') }}" {
+  name        = format("{{ proj }}-%s", substr(var.environment, 0, 4))
+}
+{%-             endif %}
+{%-             if proj_config.domains %}
+{%-               for domain, domain_config in proj_config.domains.items() %}
+{%-                 if domain_config.create %}
+# Resource {{ provider }} domain
+resource "digitalocean_domain" "{{ domain|replace('-','_')|replace('.','_') }}" {
+  name = "{{ domain }}"
+}
+{%-                   set _ = project_resources.append('digitalocean_domain.'+domain|replace('-','_')|replace('.','_')+'.urn') %}
+{%-                 else %}
+# Data {{ provider }} domain
+data "digitalocean_domain" "{{ domain|replace('-','_')|replace('.','_') }}" {
+  name = "{{ domain }}"
+}
+{%-                 endif %}
+{%-               endfor %}
+{%-             endif %}
+{%-             if proj_config.tags %}
+{%-               for tag in proj_config.tags %}
+# Resource {{ provider }} tag
+resource "digitalocean_tag" "{{ tag|replace('-','_') }}" {
+  name = "{{ tag }}"
+}
+{%-               endfor %}
+{%-             endif %}
+{%-             if proj_config.vms %}
+{%-               for vm, vm_config in proj_config.vms.items() %}
+{%-                 set memory = (vm_config.memory|default(1024)/1024)|round|int|string %}
+{%-                 set cpus = (vm_config.num_cpus)|default(1)|string %}
+# Resource {{ provider }} virtual machine
+resource "digitalocean_droplet" "{{ vm.split('.')[0]|replace('-','_') }}" {
+  count    = {{ vm_config.count|default(1) }}
+  name     = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+  image    = "{{ vm_config.image }}"
+  region   = var.do_region
+  size     = "{{ 's-'+cpus+'vcpu-'+memory+'gb' }}"
+  ssh_keys = var.do_ssh_keys
+{%-                 if vm_config.tags %}
+{%-                   set tags = [] %}
+{%-                   for tag in vm_config.tags %}
+{%-                     set tag_id = 'digitalocean_tag.'+tag|replace('-','_')+'.id' %}
+{%-                     set _ = tags.append(tag_id) %}
+{%-                   endfor %}
+  tags     = {{ tags|replace('\'', '') }}
+{%-                 endif %}
+}
+{%-                   set _ = project_resources.append('digitalocean_droplet.'+vm.split('.')[0]|replace('-','_')+'.*.urn') %}
+{%-               endfor %}
+{%-             endif %}
+# Obtain list of project resources as local and use
+locals {
+  project_resources = {{ project_resources|replace('\'','') }}
+}
+{%-           endif %}
+{%-         endfor %}
+{%-       endif %}
 {%-     elif provider == 'vSphere' %}
 {%-       if provider_config.resources.datacenters %}
 {%-         for dc, dc_config in provider_config.resources.datacenters.items() %}
@@ -293,44 +368,6 @@ resource "vsphere_tag" "{{ tag|replace('-','_') }}" {
 {%-           endif %}
 {%-         endfor %}
 {%-       endif %}
-{%-     endif %}
-{%-     if provider_config.resources.vms %}
-{%-       set module_vms = [] %}
-{%-       for vm, vm_config in provider_config.resources.vms.items() %}
-{%-         if vm_config.module == module %}
-{%-           set tags = {'digitalocean': [], 'vsphere': []} %}
-{%-           set _ = module_vms.append(provider) %}
-{%-           set memory = (vm_config.memory|default(1024)/1024)|round|int|string %}
-{%-           set cpus = (vm_config.num_cpus)|default(1)|string %}
-{%-           if provider == 'DigitalOcean' %}
-# Resource {{ provider }} virtual machine
-resource "digitalocean_droplet" "{{ vm.split('.')[0]|replace('-','_') }}" {
-  count  = {{ vm_config.count|default(1) }}
-  name   = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
-  image  = "{{ vm_config.image }}"
-  region = var.do_region
-  size   = "{{ 's-'+cpus+'vcpu-'+memory+'gb' }}"
-{%-             if vm_config.tags %}
-{%-               set vm_tags = [] %}
-{%-               for tag in vm_config.tags %}
-{%-                 set tag_id = 'digitalocean_tag.'+tag|replace('-','_')+'.id' %}
-{%                  set _ = vm_tags.append(tag_id) %}
-{%-                 if tag not in tags.digitalocean %}
-{%-                   set _ = tags.digitalocean.append(tag) %}
-{%-                 endif %}
-{%-               endfor %}
-  tags = {{ vm_tags|replace('\'', '') }}
-{%-             endif %}
-}
-{%-           endif %}
-{%-           for tag in tags.digitalocean %}
-# Resource DigitalOcean tag
-resource "digitalocean_tag" "{{ tag|replace('-','_') }}" {
-  name = "{{ tag }}"
-}
-{%-           endfor %}
-{%-         endif %}
-{%-       endfor %}
 {%-     endif %}
 {%-   endif %}
 {%- endfor %}

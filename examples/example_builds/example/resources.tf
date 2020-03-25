@@ -61,6 +61,36 @@ resource "azurerm_virtual_machine" "example_vm_root" {
   }
   tags = {"environment": "${var.environment}"}
 }
+# Resource DigitalOcean project
+resource "digitalocean_project" "example" {
+  name        = format("example-%s", substr(var.environment, 0, 4))
+  description = format("Example project - %s", var.environment)
+  purpose     = format("Just to demonstrate an example project - %s", var.environment)
+  environment = format("%s", var.environment)
+  resources   = [for resource in flatten(local.project_resources) : resource]
+}
+# Resource DigitalOcean domain
+resource "digitalocean_domain" "example_org" {
+  name = "example.org"
+}
+# Resource DigitalOcean tag
+resource "digitalocean_tag" "example_digitalocean" {
+  name = "example-digitalocean"
+}
+# Resource DigitalOcean virtual machine
+resource "digitalocean_droplet" "example_vm" {
+  count    = 1
+  name     = format("example-vm-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+  image    = "ubuntu-18-04-x64"
+  region   = var.do_region
+  size     = "s-1vcpu-1gb"
+  ssh_keys = var.do_ssh_keys
+  tags     = [digitalocean_tag.example_digitalocean.id]
+}
+# Obtain list of project resources as local and use
+locals {
+  project_resources = [digitalocean_domain.example_org.urn, digitalocean_droplet.example_vm.*.urn]
+}
 # Resource vSphere datacenter
 resource "vsphere_datacenter" "example_dc" {
   name = "example-dc"
