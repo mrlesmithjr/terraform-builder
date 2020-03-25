@@ -1,3 +1,45 @@
+commit dd496a442b0feabd802a5a5daf029df7ad418da0
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Wed Mar 25 01:14:20 2020 -0400
+
+    These changes address secrets not in proper JSON format
+    
+    Created a Jinja2 file to_json to properly format to JSON the secrets
+
+commit 22aa07a64c6688410b315b41a62a43d950ec2c54
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Wed Mar 25 01:12:47 2020 -0400
+
+    Various vars missing for AzureRM and environment
+    
+    These changes resolve the initial vars missing to provision into environments using modules
+
+commit a224eb5a3e7ffadb1686fd5aafc3f6e9362f1428
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Tue Mar 24 19:45:00 2020 -0400
+
+    Added log rotating
+
+commit 6de71303bda15a51d1de8fe518aac164e5e753ab
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Tue Mar 24 19:29:15 2020 -0400
+
+    Added vSphere template support
+    
+    Can now define a VM with template to clone from
+    Closes #10
+
+commit 827f9af8dc250085648ccc3e705f4ffdc6b1c029
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Tue Mar 24 17:33:51 2020 -0400
+
+    Updated AzureRM resources format
+    
+    These changes align AzureRM current state to vSphere resources
+    structure. Add'l functionality will come over time.
+    
+    Closes #6
+
 commit b26e9d3875c9dce27084727cd7a5402ea609d409
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Tue Mar 24 11:48:44 2020 -0400
