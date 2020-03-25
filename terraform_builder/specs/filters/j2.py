@@ -2,7 +2,15 @@
 
 # Jinja2 filters
 
+import json
 import yaml
+
+
+def to_json(value):
+    """Creates a to_json filter for Jinja2"""
+
+    data = json.dumps(value)
+    return data
 
 
 def to_yaml(value):
