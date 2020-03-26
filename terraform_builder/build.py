@@ -5,10 +5,16 @@ import os
 import shutil
 import subprocess
 import sys
+import json
 import jinja2
 from graphviz import Source
 from terraform_builder.specs.important.files import important_files
 from terraform_builder.specs.filters.j2 import to_json
+from terraform_builder.specs.parsers.backends import Backends
+from terraform_builder.specs.parsers.providers import Providers
+# from terraform_builder.specs.parsers.resources import Resources
+from terraform_builder.specs.parsers.variables import Variables
+from terraform_builder.specs.parsers.modules import Modules
 
 
 class Build:
@@ -17,7 +23,6 @@ class Build:
     def __init__(self, args, configs, secrets):
         """Init a thing."""
 
-        self.args = args
         self.configs = configs
         self.secrets = secrets
 
@@ -131,15 +136,79 @@ class Build:
 
         # Create Terraform configuration files for root module
         if self.outputformat == 'Native':
-        for file in ['main.tf', 'resources.tf', 'terraform.tfvars.json',
-                     'variables.tf']:
-            template = self.template(
+            for file in ['main.tf', 'resources.tf', 'terraform.tfvars.json',
+                         'variables.tf']:
+                template = self.template(
                     self.configs, secrets=self.secrets, module='root',
                     file=file)
-            file_path = os.path.join(self.project_root, f'{file}')
+                file_path = os.path.join(self.project_root, f'{file}')
+                with open(file_path, 'w') as config:
+                    self.logger.info('Creating: %s', file_path)
+                    config.write(template)
+
+        else:
+            self.root_json()
+
+    def root_json(self):
+        """Output as JSON configurations."""
+
+        # Define JSON output dictionary
+        json_output = {}
+
+        # Capture required Terraform version
+        req_ver = self.configs['required_terraform_version']
+
+        # Define main config for root module path
+        json_output['main'] = {}
+        json_output['main']['terraform'] = {
+            'required_version': f">= {req_ver}"}
+
+        # Define backends from configs
+        backends = self.configs['backends']
+        # Set backends class
+        backend = Backends()
+        json_output['main']['terraform']['backend'] = backend.parse(
+            backends)
+
+        # Define provider configs
+        provider_configs = self.configs['providers']
+
+        # Define provider
+        providers = Providers()
+        json_output['providers'] = providers.parse(
+            provider_configs)
+
+        # Set variables class
+        variables = Variables()
+        # Get dictionary list of variables
+        json_output['variables'] = variables.parse(provider_configs)
+
+        # Get environments to setup root modules
+        environments = self.configs['environments']
+
+        # Define data to pass to modules as kwargs
+        data = {'environments': environments, 'module': 'root'}
+
+        # Set modules class
+        modules = Modules(data=data)
+        # Get dictionary list of modules
+        json_output['modules'] = modules.parse()
+
+        # Iterate through JSON config files to create
+        # Using JSON key to generate files
+        for config_json in ['main', 'modules', 'providers', 'variables']:
+            self.logger.info('config_json: %s', config_json)
+            file_path = os.path.join(
+                self.project_root, f'{config_json}.tf.json')
             with open(file_path, 'w') as config:
                 self.logger.info('Creating: %s', file_path)
-                config.write(template)
+                json.dump(json_output[config_json], config, indent=2)
+
+        # Save secrets as JSON
+        secrets_json = os.path.join(
+            self.project_root, 'terraform.tfvars.json')
+        with open(secrets_json, 'w') as config:
+            json.dump(self.secrets['secrets'], config, indent=2)
 
     def environments(self):
         """Configures environments."""
@@ -152,15 +221,54 @@ class Build:
                 os.makedirs(env_dir)
 
             if self.outputformat == 'Native':
-            for file in ['main.tf', 'resources.tf', 'variables.tf']:
-                template = self.template(
+                for file in ['main.tf', 'resources.tf', 'variables.tf']:
+                    template = self.template(
                         self.configs, secrets=self.secrets, module=env,
                         file=file)
-                file_path = os.path.join(env_dir, f'{file}')
-                with open(file_path, 'w') as config:
-                    self.logger.info('Creating: %s', file_path)
-                    config.write(template)
+                    file_path = os.path.join(env_dir, f'{file}')
+                    with open(file_path, 'w') as config:
+                        self.logger.info('Creating: %s', file_path)
+                        config.write(template)
             else:
+                self.environments_json(env, env_dir)
+
+    def environments_json(self, env, env_dir):
+        """Output as JSON configurations."""
+
+        # Define JSON output dictionary
+        json_output = {}
+
+        # Define provider configs
+        provider_configs = self.configs['providers']
+
+        # Set variables class
+        variables = Variables()
+        # Get dictionary list of variables
+        json_output['variables'] = variables.parse(
+            provider_configs)
+
+        # Define module configs
+        module_configs = self.configs['modules']
+
+        # Define data to pass to modules as kwargs
+        data = {'environment': env,
+                'module': 'environments',
+                'module_configs': module_configs}
+
+        # Set modules class
+        modules = Modules(data=data)
+        # Get dictionary list of modules
+        json_output['modules'] = modules.parse()
+
+        # Iterate through JSON config files to create
+        # Using JSON key to generate files
+        for config_json in ['modules', 'variables']:
+            self.logger.info('config_json: %s', config_json)
+            file_path = os.path.join(env_dir, f'{config_json}.tf.json')
+            with open(file_path, 'w') as config:
+                self.logger.info('Creating: %s', file_path)
+                json.dump(
+                    json_output[config_json], config, indent=2)
 
     def modules(self):
         """Configures modules."""
@@ -174,16 +282,45 @@ class Build:
                     os.makedirs(module_dir)
 
                 if self.outputformat == 'Native':
-                # Create Terraform configuration files for modules
-                for file in ['main.tf', 'resources.tf', 'variables.tf']:
-                    template = self.template(
-                        self.configs, secrets=self.secrets, module=module,
-                        file=file)
-                    file_path = os.path.join(
-                        self.project_root, 'modules', module, f'{file}')
-                    with open(file_path, 'w') as config:
-                        self.logger.info('Creating: %s', file_path)
-                        config.write(template)
+                    # Create Terraform configuration files for modules
+                    for file in ['main.tf', 'resources.tf', 'variables.tf']:
+                        template = self.template(
+                            self.configs, secrets=self.secrets, module=module,
+                            file=file)
+                        file_path = os.path.join(
+                            self.project_root, 'modules', module, f'{file}')
+                        with open(file_path, 'w') as config:
+                            self.logger.info('Creating: %s', file_path)
+                            config.write(template)
+                else:
+                    self.modules_json(module)
+
+    def modules_json(self, module):
+        """Output as JSON configurations."""
+
+        # Define JSON output dictionary
+        json_output = {}
+
+        # Define provider configs
+        provider_configs = self.configs['providers']
+
+        # Set variables class
+        variables = Variables()
+        # Get dictionary list of variables
+        json_output['variables'] = variables.parse(
+            provider_configs)
+
+        # Iterate through JSON config files to create
+        # Using JSON key to generate files
+        for config_json in ['variables']:
+            self.logger.info('config_json: %s', config_json)
+            file_path = os.path.join(
+                self.project_root, 'modules', module,
+                f'{config_json}.tf.json')
+            with open(file_path, 'w') as config:
+                self.logger.info('Creating: %s', file_path)
+                json.dump(
+                    json_output[config_json], config, indent=2)
 
     def init(self):
         """Initialize Terraform configs."""

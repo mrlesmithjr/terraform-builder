@@ -1,3 +1,14 @@
+commit cbe67691b9f793f8144e0df9cd241b75af2869a9
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Wed Mar 25 23:59:17 2020 -0400
+
+    Added CLI arg to choose output format
+    
+    This allows us to choose whether to use Native (HCL) or JSON for configs
+    The project root folder is changed to reflect -JSON appended if JSON
+    Currently the default is JSON for testing
+    Possibly may become the only format to minimize Jinja2
+
 commit 9c4cddda977c489b41c7702e36ea377e4dca1cb1
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Wed Mar 25 23:55:10 2020 -0400
