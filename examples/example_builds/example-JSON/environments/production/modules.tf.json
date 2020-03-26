@@ -1,0 +1,18 @@
+[
+  {
+    "module": {
+      "network": {
+        "source": "../../modules/network",
+        "environment": "production"
+      }
+    }
+  },
+  {
+    "module": {
+      "services": {
+        "source": "../../modules/services",
+        "environment": "production"
+      }
+    }
+  }
+]

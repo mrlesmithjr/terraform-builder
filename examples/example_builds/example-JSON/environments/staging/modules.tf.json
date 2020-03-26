@@ -1,0 +1,18 @@
+[
+  {
+    "module": {
+      "network": {
+        "source": "../../modules/network",
+        "environment": "staging"
+      }
+    }
+  },
+  {
+    "module": {
+      "services": {
+        "source": "../../modules/services",
+        "environment": "staging"
+      }
+    }
+  }
+]

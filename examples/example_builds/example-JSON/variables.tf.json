@@ -1,0 +1,200 @@
+[
+  {
+    "variable": {
+      "environment": {
+        "type": "string",
+        "default": ""
+      }
+    }
+  },
+  {
+    "variable": {
+      "azurerm_client_id": {
+        "type": "string",
+        "description": "Default AzureRM client id",
+        "default": ""
+      }
+    }
+  },
+  {
+    "variable": {
+      "azurerm_client_secret": {
+        "type": "string",
+        "description": "Default AzureRM client secret",
+        "default": ""
+      }
+    }
+  },
+  {
+    "variable": {
+      "azurerm_domain": {
+        "type": "string",
+        "description": "Default AzureRM domain for resources",
+        "default": ""
+      }
+    }
+  },
+  {
+    "variable": {
+      "azurerm_environment": {
+        "type": "string",
+        "description": "AzureRM Environment",
+        "default": "public"
+      }
+    }
+  },
+  {
+    "variable": {
+      "azurerm_features": {
+        "description": "Customize the behaviour of certain Azure Provider resources.",
+        "default": {}
+      }
+    }
+  },
+  {
+    "variable": {
+      "azurerm_image_reference": {
+        "description": "Default OS image reference lookups",
+        "default": {
+          "ubuntu-16-04-x64": {
+            "publisher": "Canonical",
+            "offer": "UbuntuServer",
+            "sku": "16.04-LTS",
+            "version": "latest"
+          },
+          "ubuntu-18-04-x64": {
+            "publisher": "Canonical",
+            "offer": "UbuntuServer",
+            "sku": "18.04-LTS",
+            "version": "latest"
+          }
+        }
+      }
+    }
+  },
+  {
+    "variable": {
+      "azurerm_location": {
+        "type": "string",
+        "description": "Default AzureRM location/region",
+        "default": "East US"
+      }
+    }
+  },
+  {
+    "variable": {
+      "azurerm_subscription_id": {
+        "type": "string",
+        "description": "AzureRM Subscription ID",
+        "default": ""
+      }
+    }
+  },
+  {
+    "variable": {
+      "azurerm_tenant_id": {
+        "type": "string",
+        "description": "AzureRM Tenant ID",
+        "default": ""
+      }
+    }
+  },
+  {
+    "variable": {
+      "do_api_endpoint": {
+        "type": "string",
+        "description": "This can be used to override the base URL for DigitalOcean API requests",
+        "default": "https://api.digitalocean.com"
+      }
+    }
+  },
+  {
+    "variable": {
+      "do_domain": {
+        "type": "string",
+        "description": "Default DigitalOcean domain for resources",
+        "default": ""
+      }
+    }
+  },
+  {
+    "variable": {
+      "do_region": {
+        "type": "string",
+        "description": "DigitalOcean region",
+        "default": "nyc1"
+      }
+    }
+  },
+  {
+    "variable": {
+      "do_ssh_keys": {
+        "description": "DigitalOcean SSH keys to deploy to new droplets",
+        "default": []
+      }
+    }
+  },
+  {
+    "variable": {
+      "do_token": {
+        "type": "string",
+        "description": "This is the DO API token",
+        "default": ""
+      }
+    }
+  },
+  {
+    "variable": {
+      "vsphere_allow_unverified_ssl": {
+        "type": "bool",
+        "description": "Boolean that can be set to true to disable SSL certificate verification",
+        "default": "false"
+      }
+    }
+  },
+  {
+    "variable": {
+      "vsphere_host_password": {
+        "type": "string",
+        "description": "Password for vSphere hosts",
+        "default": ""
+      }
+    }
+  },
+  {
+    "variable": {
+      "vsphere_host_username": {
+        "type": "string",
+        "description": "Username for vSphere hosts",
+        "default": ""
+      }
+    }
+  },
+  {
+    "variable": {
+      "vsphere_password": {
+        "type": "string",
+        "description": "Password for vSphere API operations",
+        "default": ""
+      }
+    }
+  },
+  {
+    "variable": {
+      "vsphere_server": {
+        "type": "string",
+        "description": "vCenter server name for vSphere API operations",
+        "default": ""
+      }
+    }
+  },
+  {
+    "variable": {
+      "vsphere_username": {
+        "type": "string",
+        "description": "Username for vSphere API operations",
+        "default": ""
+      }
+    }
+  }
+]

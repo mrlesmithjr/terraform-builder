@@ -1,0 +1,41 @@
+[
+  {
+    "resource": {
+      "azurerm_resource_group": {
+        "example_rg_root": {
+          "name": "${format(\"example-rg-root-%s\", substr(var.environment, 0, 4))}",
+          "location": "${var.azurerm_location}"
+        }
+      }
+    }
+  },
+  {
+    "resource": {
+      "digitalocean_project": {
+        "example": {
+          "name": "${format(\"example-%s\", substr(var.environment, 0, 4))}",
+          "description": "${format(\"Example project - %s\", var.environment)}",
+          "purpose": "${format(\"Just to demonstrate an example project - %s\", var.environment)}",
+          "environment": "${var.environment}",
+          "resources": "${[for resource in flatten(local.project_resources) : resource]}"
+        }
+      }
+    }
+  },
+  {
+    "resource": {
+      "digitalocean_domain": {
+        "example_org": {
+          "name": "example.org"
+        }
+      }
+    }
+  },
+  {
+    "locals": {
+      "project_resources": [
+        "digitalocean_domain.example_org.urn"
+      ]
+    }
+  }
+]

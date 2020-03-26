@@ -1,0 +1,26 @@
+[
+  {
+    "module": {
+      "development": {
+        "source": "./environments/development",
+        "environment": "development"
+      }
+    }
+  },
+  {
+    "module": {
+      "production": {
+        "source": "./environments/production",
+        "environment": "production"
+      }
+    }
+  },
+  {
+    "module": {
+      "staging": {
+        "source": "./environments/staging",
+        "environment": "staging"
+      }
+    }
+  }
+]
