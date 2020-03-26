@@ -21,5 +21,6 @@ script:
   - flake8 terraform_builder/
   - pylint terraform_builder/
   - python -m terraform_builder --version
-  - python -m terraform_builder --config examples/configs.yml --outputdir examples/example_builds/ --secrets examples/secrets.yml
+  - python -m terraform_builder --config examples/configs.yml --outputdir examples/example_builds/ --secrets examples/secrets.yml --outputformat Native
+  - python -m terraform_builder --config examples/configs.yml --outputdir examples/example_builds/ --secrets examples/secrets.yml --outputformat JSON
   - cat logs/terraform_builder.log

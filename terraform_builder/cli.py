@@ -16,11 +16,11 @@ def cli_args():
     parser.add_argument(
         '--config', help='Configuration (YAML) to load',
         default=os.path.join(default_configs_dir, 'configs.yml'))
-    parser.add_argument('--outputformat', help='Native or JSON',
-                        choices=['Native', 'JSON'], default='JSON')
     parser.add_argument('--outputdir', help='Define path to save configs.',
                         default=os.path.join(default_configs_dir,
                                              'example_builds'))
+    parser.add_argument('--outputformat', help='Native or JSON',
+                        choices=['Native', 'JSON'], default='JSON')
     parser.add_argument(
         '--secrets', help='Path to secrets',
         default=os.path.join(default_configs_dir, 'secrets.yml'))

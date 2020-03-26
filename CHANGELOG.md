@@ -1,3 +1,13 @@
+commit cad4e625ac92c6365e611b57af1f728bbe098201
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Thu Mar 26 00:14:43 2020 -0400
+
+    Added initial JSON support
+    
+    - For module, backends, providers, and variables
+    - These now match Native (HCL) format using Jinja2
+    - Still need to add resources
+
 commit cbe67691b9f793f8144e0df9cd241b75af2869a9
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Wed Mar 25 23:59:17 2020 -0400
