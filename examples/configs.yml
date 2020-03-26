@@ -4,9 +4,12 @@
 # Defines project name which becomes parent root directory
 project_name: example
 
+required_terraform_version: 0.12.0
+
 # Define backends
 backends:
-  local: {}
+  local:
+    path: terraform.tfstate
   remote: {}
 
 # Defines environments
