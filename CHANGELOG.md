@@ -1,3 +1,11 @@
+commit 26587d867f4d2976cfc0c5c3cc26ff4c392a4a98
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Thu Mar 26 00:37:16 2020 -0400
+
+    Added CI test for both Native|JSON
+    
+    Forgot to add tests for both output formats to ensure testing is good.
+
 commit cad4e625ac92c6365e611b57af1f728bbe098201
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Thu Mar 26 00:14:43 2020 -0400

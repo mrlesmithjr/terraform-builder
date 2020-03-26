@@ -12,7 +12,7 @@ from terraform_builder.specs.important.files import important_files
 from terraform_builder.specs.filters.j2 import to_json
 from terraform_builder.specs.parsers.backends import Backends
 from terraform_builder.specs.parsers.providers import Providers
-# from terraform_builder.specs.parsers.resources import Resources
+from terraform_builder.specs.parsers.resources import Resources
 from terraform_builder.specs.parsers.variables import Variables
 from terraform_builder.specs.parsers.modules import Modules
 
@@ -170,13 +170,22 @@ class Build:
         json_output['main']['terraform']['backend'] = backend.parse(
             backends)
 
-        # Define provider configs
+        # Define provider configs - Use for providers and resources
         provider_configs = self.configs['providers']
 
-        # Define provider
+        # Define providers
         providers = Providers()
         json_output['providers'] = providers.parse(
             provider_configs)
+
+        # Define data to pass to modules as kwargs
+        data = {'provider_configs': provider_configs, 'module': 'root'}
+
+        # Define resources
+        resources = Resources(data=data)
+        json_output['resources'] = resources.parse()
+
+        self.logger.info(json_output['resources'])
 
         # Set variables class
         variables = Variables()
@@ -196,7 +205,7 @@ class Build:
 
         # Iterate through JSON config files to create
         # Using JSON key to generate files
-        for config_json in ['main', 'modules', 'providers', 'variables']:
+        for config_json in ['main', 'modules', 'providers', 'resources', 'variables']:
             self.logger.info('config_json: %s', config_json)
             file_path = os.path.join(
                 self.project_root, f'{config_json}.tf.json')
