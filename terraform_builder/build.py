@@ -20,14 +20,25 @@ class Build:
         self.args = args
         self.configs = configs
         self.secrets = secrets
+
+        # Define Terraform output format - Native|JSON
+        self.outputformat = args.outputformat
+
         # Setup logging
         self.logger = logging.getLogger(__name__)
+
         self.project_name = self.configs['project_name']
+
+        # If JSON format is desired, append -JSON to project directory to keep
+        # things separate. There may be a reason to have both native and JSON
+        if self.outputformat == 'JSON':
+            project_name = f"{self.configs['project_name']}-JSON"
+        else:
+            project_name = self.configs['project_name']
+
         # Define project root directory
         self.project_root = os.path.join(
-            self.args.outputdir, self.configs['project_name'])
-        # Log project root
-        self.logger.info('project_root: %s', self.project_root)
+            args.outputdir, project_name)
 
     def template(self, args, secrets, module, file):
         """Renders template and returns the config."""
@@ -55,6 +66,12 @@ class Build:
     def configurations(self):
         """Generate Terraform configurations."""
 
+        # Log project root
+        self.logger.info('project_root: %s', self.project_root)
+        # Log Terraform output format
+        self.logger.info('outputformat: %s', self.outputformat)
+
+        # Build out project structure
         self.structure()
 
         # Ensure Terraform command found
@@ -113,10 +130,12 @@ class Build:
             os.makedirs(self.project_root)
 
         # Create Terraform configuration files for root module
+        if self.outputformat == 'Native':
         for file in ['main.tf', 'resources.tf', 'terraform.tfvars.json',
                      'variables.tf']:
             template = self.template(
-                self.configs, secrets=self.secrets, module='root', file=file)
+                    self.configs, secrets=self.secrets, module='root',
+                    file=file)
             file_path = os.path.join(self.project_root, f'{file}')
             with open(file_path, 'w') as config:
                 self.logger.info('Creating: %s', file_path)
@@ -132,13 +151,16 @@ class Build:
                 self.logger.info('Creating environment: %s', env_dir)
                 os.makedirs(env_dir)
 
+            if self.outputformat == 'Native':
             for file in ['main.tf', 'resources.tf', 'variables.tf']:
                 template = self.template(
-                    self.configs, secrets=self.secrets, module=env, file=file)
+                        self.configs, secrets=self.secrets, module=env,
+                        file=file)
                 file_path = os.path.join(env_dir, f'{file}')
                 with open(file_path, 'w') as config:
                     self.logger.info('Creating: %s', file_path)
                     config.write(template)
+            else:
 
     def modules(self):
         """Configures modules."""
@@ -151,6 +173,7 @@ class Build:
                     self.logger.info('Creating module: %s', module_dir)
                     os.makedirs(module_dir)
 
+                if self.outputformat == 'Native':
                 # Create Terraform configuration files for modules
                 for file in ['main.tf', 'resources.tf', 'variables.tf']:
                     template = self.template(

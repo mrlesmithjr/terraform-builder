@@ -1,3 +1,51 @@
+commit 9c4cddda977c489b41c7702e36ea377e4dca1cb1
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Wed Mar 25 23:55:10 2020 -0400
+
+    Added local path as var and Terraform req. ver.
+
+commit 8f761dde0ccd2f863478f9ad24e35aac0dc19272
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Wed Mar 25 20:51:14 2020 -0400
+
+    Cleaned up unused specs
+    
+    Some of these might come back as things play out
+
+commit f439e3eaa42f1348990c0c69c3cddd03a8275d0f
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Wed Mar 25 14:24:01 2020 -0400
+
+    Forgot AzureRM demo
+
+commit 15837b26375ab7aebdd23c2003df22a8f9639b8b
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Wed Mar 25 14:18:14 2020 -0400
+
+    Initial commit for bringing DigitalOcean up to other providers
+    
+    This commit brings DigitalOCean provider up to the other providers
+    format. Such as: AzureRM and vSphere. There will likely be more
+    functionality coming soon, but for now....
+    
+    Closes #9
+
+commit e1d7338223364fcaf90279f9404f429f1e49f3ab
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Wed Mar 25 01:24:07 2020 -0400
+
+    Forgot to add these for issue #12
+
+commit b2038778502c39e3f7196c02745ff4ec92cabbe9
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Wed Mar 25 01:16:11 2020 -0400
+
+    These changes address add'l required vars for AzureRM
+    
+    Running through tests uncovered these missing
+    
+    Resolves #12
+
 commit dd496a442b0feabd802a5a5daf029df7ad418da0
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Wed Mar 25 01:14:20 2020 -0400
