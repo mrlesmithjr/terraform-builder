@@ -1,0 +1,15 @@
+{%-  if proj_config.create %}
+# Resource {{ provider }} project
+resource "digitalocean_project" "{{ proj|replace('-','_') }}" {
+  name        = format("{{ proj }}-%s", substr(var.environment, 0, 4))
+  description = format("{{ proj_config.description }} - %s", var.environment)
+  purpose     = format("{{ proj_config.purpose }} - %s", var.environment)
+  environment = var.environment
+  resources   = [for resource in flatten(local.project_resources) : resource]
+}
+{%-  else %}
+# Data {{ provider }} project
+data "digitalocean_project" "{{ proj|replace('-','_') }}" {
+  name        = format("{{ proj }}-%s", substr(var.environment, 0, 4))
+}
+{%-  endif %}

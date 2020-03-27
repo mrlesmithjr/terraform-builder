@@ -1,0 +1,8 @@
+{%-  for tag in tc_config.tags %}
+# Resource {{ provider }} tag
+resource "vsphere_tag" "{{ tag|replace('-','_') }}" {
+  name        = "{{ tag }}"
+  category_id = vsphere_tag_category.{{ tc|replace('-','_') }}.id
+  description = "Managed by Terraform"
+}
+{%-  endfor %}

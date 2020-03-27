@@ -1,0 +1,43 @@
+{%-  for vm, vm_config in rg_config.vms.items() %}
+{%-    include 'providers/azurerm/azurerm_network_interface.j2' %}
+{%-    set memory = (vm_config.memory|default(1024)/1024)|round|int|string %}
+{%-    set cpus = (vm_config.num_cpus)|default(1)|string %}
+{%-    if cpus|int < 2 and memory|int < 7 %}
+{%-      set vm_size = 'Standard_DS1_v2' %}
+{%-    elif cpus|int < 4 and memory|int < 14 %}
+{%-      set vm_size = 'Standard_DS2_v2' %}
+{%-    elif cpus|int < 8 and memory|int < 28 %}
+{%-      set vm_size = 'Standard_DS3_v2' %}
+{%-    elif cpus|int < 16 and memory|int < 56 %}
+{%-      set vm_size = 'Standard_DS4_v2' %}
+{%-    elif cpus|int >= 16 and memory|int >= 56 %}
+{%-      set vm_size = 'Standard_DS5_v2' %}
+{%-    else %}
+{%-      set vm_size = 'Standard_DS1_v2' %}
+{%-    endif %}
+# Resource {{ provider }} virtual machine
+resource "azurerm_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
+  count                 = {{ vm_config.count|default(1) }}
+  name                  = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+  vm_size               = "{{ vm_size }}"
+  location              = var.azurerm_location
+  resource_group_name   = azurerm_resource_group.{{ rg|replace('-','_') }}.name
+  network_interface_ids = [azurerm_network_interface.{{ vm|replace('-','_') }}[count.index].id]
+
+  storage_image_reference {
+    publisher = lookup(var.azurerm_image_reference.{{ vm_config.image }}, "publisher")
+    offer     = lookup(var.azurerm_image_reference.{{ vm_config.image }}, "offer")
+    sku       = lookup(var.azurerm_image_reference.{{ vm_config.image }}, "sku")
+    version   = lookup(var.azurerm_image_reference.{{ vm_config.image }}, "version")
+  }
+  storage_os_disk {
+    name              = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+    caching           = "ReadWrite"
+    create_option     = "FromImage"
+    managed_disk_type = "Standard_LRS"
+  }
+{%-    if vm_config.tags %}
+  tags = {{ vm_config.tags|replace('\'','"') }}
+{%-    endif %}
+}
+{%-  endfor %}

@@ -1,0 +1,18 @@
+{%-  for pg, pg_info in vs_config.port_groups.items() %}
+{%-    if pg_info.create %}
+# Resource {{ provider }} host port group
+resource "vsphere_host_port_group" "{{ pg|replace('-','_') }}" {
+  name                = "{{ pg }}"
+{%-      if host_config.create %}
+  host_system_id      = vsphere_host.{{ host|replace('-','_') }}.id
+{%-      else %}
+  host_system_id      = data.vsphere_host.{{ host|replace('-','_') }}.id
+{%-      endif %}
+{%-      if vs_config.create %}
+  virtual_switch_name = vsphere_host_virtual_switch.{{ vs|replace('-','_') }}.name
+{%-      else %}
+  virtual_switch_name = data.vsphere_host_virtual_switch.{{ vs|replace('-','_') }}.name
+{%-      endif %}
+}
+{%-    endif %}
+{%-  endfor %}
