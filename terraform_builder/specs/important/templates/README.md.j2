@@ -103,8 +103,7 @@ physical objects.
 {%- if args.modules != {} %}
 |-- modules
 {%- for item in args.modules %}
-{%-   if item|lower != 'root' %}
-{%-      if not loop.last %}
+{%-   if not loop.last %}
 |  |-- {{ item }}
 |  |  |-- LICENSE.md
 |  |  |-- README.md
@@ -118,7 +117,6 @@ physical objects.
 |     |-- main.tf
 |     |-- resources.tf
 |     |-- variables.tf
-{%-     endif %}
 {%-   endif %}
 {%- endfor %}
 |-- requirements-dev.txt

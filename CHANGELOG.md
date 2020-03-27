@@ -1,3 +1,14 @@
+commit 349ca21a55b118d65720068f46cbd60b17af3a3f
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 27 17:34:54 2020 -0400
+
+    This is the final commit to address restructuring root
+    
+    The root module has been restructured in a way that it can now be
+    consumed from environments properly.
+    
+    Closes #20
+
 commit 8ba405cf526db9f82e6130a1a3cc832177fc8586
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Fri Mar 27 17:30:16 2020 -0400

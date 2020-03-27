@@ -320,6 +320,12 @@ example
 |     |-- variables.tf
 |-- main.tf
 |-- modules
+|  |-- root
+|  |  |-- LICENSE.md
+|  |  |-- README.md
+|  |  |-- main.tf
+|  |  |-- resources.tf
+|  |  |-- variables.tf
 |  |-- network
 |  |  |-- LICENSE.md
 |  |  |-- README.md
