@@ -1,0 +1,21 @@
+{%-  for dc, dc_config in provider_config.resources.datacenters.items() %}
+{%-    if dc_config.module == module %}
+{%-      if dc_config.create %}
+# Resource {{ provider }} datacenter
+resource "vsphere_datacenter" "{{ dc|replace('-','_') }}" {
+  name = "{{ dc }}"
+}
+{%-      else %}
+# Data {{ provider }} datacenter
+data "vsphere_datacenter" "{{ dc|replace('-','_') }}" {
+  name = "{{ dc }}"
+}
+{%-      endif %}
+{%-      if dc_config.templates %}
+{%-        include 'providers/vsphere/resources/vsphere_virtual_machine_template.j2' %}
+{%-      endif %}
+{%-      if dc_config.clusters %}
+{%-        include 'providers/vsphere/resources/vsphere_compute_cluster.j2' %}
+{%-      endif %}
+{%-    endif %}
+{%-  endfor %}

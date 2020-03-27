@@ -1,0 +1,22 @@
+{%-  for vm, vm_config in proj_config.vms.items() %}
+{%-    set memory = (vm_config.memory|default(1024)/1024)|round|int|string %}
+{%-    set cpus = (vm_config.num_cpus)|default(1)|string %}
+# Resource {{ provider }} virtual machine
+resource "digitalocean_droplet" "{{ vm.split('.')[0]|replace('-','_') }}" {
+  count    = {{ vm_config.count|default(1) }}
+  name     = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+  image    = "{{ vm_config.image }}"
+  region   = var.do_region
+  size     = "{{ 's-'+cpus+'vcpu-'+memory+'gb' }}"
+  ssh_keys = var.do_ssh_keys
+{%-    if vm_config.tags %}
+{%-      set tags = [] %}
+{%-      for tag in vm_config.tags %}
+{%-        set tag_id = 'digitalocean_tag.'+tag|replace('-','_')+'.id' %}
+{%-        set _ = tags.append(tag_id) %}
+{%-      endfor %}
+  tags     = {{ tags|replace('\'', '') }}
+{%-    endif %}
+}
+{%-      set _ = project_resources.append('digitalocean_droplet.'+vm.split('.')[0]|replace('-','_')+'.*.urn') %}
+{%-  endfor %}

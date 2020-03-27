@@ -1,0 +1,21 @@
+{%-  for vs, vs_config in dc_config.virtual_switches.items() %}
+{%-    if vs_config.create %}
+{%-      if vs_config.type == 'host' %}
+# Resource {{ provider }} host virtual switch
+resource "vsphere_host_virtual_switch" "{{ vs|replace('-','_') }}" {
+  name             = "{{ vs }}"
+{%-        if host_config.create %}
+  host_system_id   = vsphere_host.{{ host|replace('-','_') }}.id
+{%-        else %}
+  host_system_id   = data.vsphere_host.{{ host|replace('-', '_') }}.id
+{%-        endif %}
+  network_adapters = {{ vs_config.network_adapters|replace('\'','"') }}
+  active_nics      = {{ vs_config.active_nics|replace('\'','"') }}
+  standby_nics     = {{ vs_config.standby_nics|replace('\'','"') }}
+}
+{%-      endif %}
+{%-      if vs_config.port_groups %}
+{%-        include 'providers/vsphere/resources/vsphere_host_port_group.j2' %}
+{%-      endif %}
+{%-    endif %}
+{%-  endfor %}

@@ -1,0 +1,17 @@
+{%-  for tc, tc_config in provider_config.resources.tag_categories.items() %}
+{%-    if tc_config.module == module %}
+{%-      if tc_config.create %}
+# Resource {{ provider }} tag category
+resource "vsphere_tag_category" "{{ tc|replace('-','_') }}" {
+  name        = "{{ tc }}"
+  description = "Managed by Terraform"
+  cardinality = "{{ tc_config.cardinality|upper }}"
+
+  associable_types = {{ tc_config.associable_types|replace('\'','"') }}
+}
+{%-        if tc_config.tags %}
+{%-          include 'providers/vsphere/resources/vsphere_tag.j2' %}
+{%-        endif %}
+{%-      endif %}
+{%-    endif %}
+{%-  endfor %}

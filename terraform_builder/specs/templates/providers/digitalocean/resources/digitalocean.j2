@@ -1,0 +1,21 @@
+{%-  if provider_config.resources.projects %}
+{%-    for proj, proj_config in provider_config.resources.projects.items() %}
+{%-      if proj_config.module == module %}
+{%-        set project_resources = [] %}
+{%-        include 'providers/digitalocean/resources/digitalocean_project.j2' %}
+{%-        if proj_config.domains %}
+{%-          include 'providers/digitalocean/resources/digitalocean_domain.j2' %}
+{%-        endif %}
+{%-        if proj_config.tags %}
+{%-          include 'providers/digitalocean/resources/digitalocean_tag.j2' %}
+{%-        endif %}
+{%-        if proj_config.vms %}
+{%-          include 'providers/digitalocean/resources/digitalocean_droplet.j2' %}
+{%-        endif %}
+# Obtain list of project resources as local and use
+locals {
+  project_resources = {{ project_resources|replace('\'','') }}
+}
+{%-      endif %}
+{%-    endfor %}
+{%-  endif %}

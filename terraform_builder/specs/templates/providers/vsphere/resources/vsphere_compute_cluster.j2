@@ -1,0 +1,23 @@
+{%-  for cluster, cluster_config in dc_config.clusters.items() %}
+{%-    if cluster_config.create %}
+# Resource {{ provider }} compute cluster
+resource "vsphere_compute_cluster" "{{ cluster|replace('-','_') }}" {
+  name          = "{{ cluster }}"
+{%-  if dc_config.create %}
+  datacenter_id = vsphere_datacenter.{{ dc|replace('-','_') }}.id
+{%-  else %}
+  datacenter_id = data.vsphere_datacenter.{{ dc|replace('-','_') }}.id
+{%-  endif %}
+  # host_system_ids     = ["${data.vsphere_host.hosts.*.id}"]
+  drs_enabled          = {{ cluster_config.drs_enabled|lower }}
+  drs_automation_level = "{{ cluster_config.drs_automation_level }}"
+  ha_enabled           = {{ cluster_config.ha_enabled|lower }}
+}
+{%-    endif %}
+{%-    if cluster_config.hosts %}
+{%-      include 'providers/vsphere/resources/vsphere_host.j2' %}
+{%-    endif %}
+{%-    if cluster_config.vms %}
+{%-      include 'providers/vsphere/resources/vsphere_virtual_machine.j2' %}
+{%-    endif %}
+{%-  endfor %}

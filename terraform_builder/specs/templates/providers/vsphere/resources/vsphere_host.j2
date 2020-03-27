@@ -1,0 +1,24 @@
+{%-  for host, host_config in cluster_config.hosts.items() %}
+{%-    if host_config.create %}
+# Resource {{ provider }} host
+resource "vsphere_host" "{{ host|replace('-','_') }}" {
+  hostname = "{{ host_config.hostname }}"
+  username = var.vsphere_host_username
+  password = var.vsphere_host_password
+  cluster  = vsphere_compute_cluster.{{ cluster|replace('-','_') }}.id
+}
+{%-    else %}
+# Data {{ provider }} host
+data "vsphere_host" "{{ host|replace('-','_') }}" {
+  name          = "{{ host }}"
+{%-      if dc_config.create %}
+  datacenter_id = vsphere_datacenter.{{ dc|replace('-','_') }}.id
+{%-      else %}
+  datacenter_id = data.vsphere_datacenter.{{ dc|replace('-','_') }}.id
+{%-      endif %}
+}
+{%-    endif %}
+{%-    if dc_config.virtual_switches %}
+{%-      include 'providers/vsphere/resources/vsphere_host_virtual_switch.j2' %}
+{%-    endif %}
+{%-  endfor %}

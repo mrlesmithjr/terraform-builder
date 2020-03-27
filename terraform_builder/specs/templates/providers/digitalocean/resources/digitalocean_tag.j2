@@ -1,0 +1,6 @@
+{%-  for tag in proj_config.tags %}
+# Resource {{ provider }} tag
+resource "digitalocean_tag" "{{ tag|replace('-','_') }}" {
+  name = "{{ tag }}"
+}
+{%-  endfor %}

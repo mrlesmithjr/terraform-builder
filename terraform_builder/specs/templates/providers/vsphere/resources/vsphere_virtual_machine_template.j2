@@ -1,0 +1,11 @@
+{%-  for template in dc_config.templates %}
+# Data {{ provider }} virtual machine template
+data "vsphere_virtual_machine" "{{ template|replace('-','_') }}" {
+  name          = "{{ template }}"
+{%-    if dc_config.create %}
+  datacenter_id = vsphere_datacenter.{{ dc|replace('-','_') }}.id
+{%-    else %}
+  datacenter_id = data.vsphere_datacenter.{{ dc|replace('-','_') }}.id
+{%-    endif %}
+}
+{%-  endfor %}

@@ -1,0 +1,22 @@
+{%-  for rg, rg_config in provider_config.resources.resource_groups.items() %}
+{%-    if rg_config.module == module %}
+{%-      if rg_config.create %}
+# Resource {{ provider }} resource group
+resource "azurerm_resource_group" "{{ rg|replace('-','_') }}" {
+  name     = format("{{ rg }}-%s", substr(var.environment, 0, 4))
+  location = var.azurerm_location
+}
+{%-      else %}
+# Data {{ provider }} resource group
+data "azurerm_resource_group" "{{ rg|replace('-','_') }}" {
+  name = "{{ rg }}"
+}
+{%-      endif %}
+{%-      if rg_config.virtual_networks %}
+{%-        include 'providers/azurerm/resources/azurerm_virtual_network.j2' %}
+{%-      endif %}
+{%-      if rg_config.vms %}
+{%-        include 'providers/azurerm/resources/azurerm_virtual_machine.j2' %}
+{%-      endif %}
+{%-    endif %}
+{%-  endfor %}
