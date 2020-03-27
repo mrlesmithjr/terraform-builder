@@ -1,0 +1,10 @@
+# Generated using https://github.com/mrlesmithjr/terraform-builder
+# Project root main.tf
+{%  include 'backends/main.j2' %}
+{%  include 'project_root/environments.j2' %}
+{%  include 'project_root/providers.j2' %}
+
+# Setting required Terraform version or greater
+terraform {
+  required_version = ">= {{ args.required_version }}"
+}

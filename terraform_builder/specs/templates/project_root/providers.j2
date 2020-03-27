@@ -1,12 +1,3 @@
-# Project root
-{%-  for environment in args.environments %}
-# Module {{ environment }} config
-module "{{ environment }}" {
-  source      = "./environments/{{ environment }}"
-  environment = "{{ environment }}"
-}
-{%-  endfor %}
-{%-  include 'backends/main.j2' %}
 {%-  for provider, config in args.providers.items() %}
 {%-    if config != {} %}
 # Provider {{ provider }} config
@@ -30,7 +21,3 @@ provider "{{ provider|lower }}" {
 }
 {%-    endif -%}
 {%-  endfor %}
-# Setting required Terraform version or greater
-terraform {
-  required_version = ">= {{ args.required_version }}"
-}

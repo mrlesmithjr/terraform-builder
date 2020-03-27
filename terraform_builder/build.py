@@ -105,18 +105,19 @@ class Build:
         important_files(self.project_root, self.configs)
 
     def root(self):
-        """Configured root environment - Parent directory."""
+        """Configures project root environment - Parent directory."""
 
         # If project root does not exist, create it
         if not os.path.isdir(self.project_root):
             self.logger.info('Creating project_root: %s', self.project_root)
             os.makedirs(self.project_root)
 
-        # Create Terraform configuration files for root module
-        for file in ['project_main.tf', 'terraform.tfvars.json',
-                     'variables.tf']:
+        # Create Terraform configuration files in parent root
+        for file in ['main.tf', 'terraform.tfvars.json', 'variables.tf']:
+            template_file = f'project_root/{file}'
             template = self.template(
-                self.configs, secrets=self.secrets, module='root', file=file)
+                self.configs, secrets=self.secrets, module='root',
+                file=template_file)
             file_path = os.path.join(self.project_root, f'{file}')
             with open(file_path, 'w') as config:
                 self.logger.info('Creating: %s', file_path)
