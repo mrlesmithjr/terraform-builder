@@ -41,6 +41,50 @@ this, we can ensure that we have consistency in our Terraform configurations. We
 use `configs.yml` but the filename can be anything you wish. However, the
 content must be consistent.
 
+### Backends
+
+We can configure different Terraform backends to use for our Terraform state.
+Initially this functionality is limited to the default `local` and `Consul`.
+`Consul` support is limited and under development now. But you can use it for
+testing purposes until fully implemented.
+
+#### Local
+
+The default `local` is defined and should always be defined. But, if
+you don't. It will still default back to local without the added configs.
+
+```yaml
+# Define backends
+backends:
+  local:
+    path: terraform.tfstate
+  remote:
+    {}
+    # consul:
+    #   address: http://127.0.0.1:8500
+    #   scheme: http
+    #   path: example/terraform
+```
+
+#### Consul
+
+To enable `Consul` as a backend, simply add the relevant info as below:
+
+> NOTE: Leave `local` configured as a fallback. If `Consul` is configured, it
+> will default to it rather than `local`.
+
+```yaml
+# Define backends
+backends:
+  local:
+    path: terraform.tfstate
+  remote:
+    consul:
+      address: http://127.0.0.1:8500
+      scheme: http
+      path: example/terraform
+```
+
 ### Providers
 
 We can configure specific providers in our `configs.yml`.

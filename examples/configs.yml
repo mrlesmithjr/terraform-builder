@@ -11,7 +11,12 @@ required_version: 0.12.0
 backends:
   local:
     path: terraform.tfstate
-  remote: {}
+  remote:
+    {}
+    # consul:
+    #   address: http://127.0.0.1:8500
+    #   scheme: http
+    #   path: example/terraform
 
 # Defines environments
 environments:

@@ -5,4 +5,8 @@ terraform {
     path = "{{ args.backends.local.path }}"
   }
 }
+{%-  else %}
+{%-    if args.backends.remote.consul %}
+{%-      include 'backends/consul.j2' %}
+{%-    endif %}
 {%-  endif %}

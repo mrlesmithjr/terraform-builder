@@ -1,0 +1,8 @@
+# Backend Consul
+terraform {
+  backend "consul" {
+    address = "{{ args.backends.remote.consul.address }}"
+    scheme  = "{{ args.backends.remote.consul.scheme }}"
+    path    = "{{ args.backends.remote.consul.path }}"
+  }
+}

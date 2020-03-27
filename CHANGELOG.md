@@ -1,3 +1,63 @@
+commit 73ca2a4d4dad9ba0d23b6d136dfbf0b06d759648
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Thu Mar 26 21:58:55 2020 -0400
+
+    Cleaned up required ver, etc.
+    
+    Added local backed config to define tfstate file
+
+commit bfdbfbbb621afcb1ef1c99700d89bc7dba752e87
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Thu Mar 26 21:07:05 2020 -0400
+
+    Moved provider templates into resources
+    
+    Trying to get the structure sorted out a bit more.
+
+commit 8463a51acf21e78dbebbeefa7aced05508f60a29
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Thu Mar 26 20:02:01 2020 -0400
+
+    Split out Jinja2 templates into modules
+    
+    By doing this will make it easier to add additional modules going
+    forward. This will also allow troubleshooting, etc. going forward to be
+    a bit more clear.
+
+commit f439e3eaa42f1348990c0c69c3cddd03a8275d0f
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Wed Mar 25 14:24:01 2020 -0400
+
+    Forgot AzureRM demo
+
+commit 15837b26375ab7aebdd23c2003df22a8f9639b8b
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Wed Mar 25 14:18:14 2020 -0400
+
+    Initial commit for bringing DigitalOcean up to other providers
+    
+    This commit brings DigitalOCean provider up to the other providers
+    format. Such as: AzureRM and vSphere. There will likely be more
+    functionality coming soon, but for now....
+    
+    Closes #9
+
+commit e1d7338223364fcaf90279f9404f429f1e49f3ab
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Wed Mar 25 01:24:07 2020 -0400
+
+    Forgot to add these for issue #12
+
+commit b2038778502c39e3f7196c02745ff4ec92cabbe9
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Wed Mar 25 01:16:11 2020 -0400
+
+    These changes address add'l required vars for AzureRM
+    
+    Running through tests uncovered these missing
+    
+    Resolves #12
+
 commit dd496a442b0feabd802a5a5daf029df7ad418da0
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Wed Mar 25 01:14:20 2020 -0400
