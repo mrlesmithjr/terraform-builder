@@ -20,9 +20,18 @@ backends:
 
 # Defines environments
 environments:
-  development: {}
-  production: {}
-  staging: {}
+  development:
+    variables:
+      do_domain: dev.example.org
+      do_region: nyc1
+  production:
+    variables:
+      do_domain: prd.example.org
+      do_region: sfo1
+  staging:
+    variables:
+      do_domain: stg.example.org
+      do_region: ams3
 
 # Define global variables
 global_variables: {}
@@ -33,6 +42,10 @@ modules:
   root: {}
   network: {}
   services: {}
+
+# Defines default root environment to use for vars.
+# production|staging|development
+default_root_module_env: production
 
 # Define providers and variables
 providers:

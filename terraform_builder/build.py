@@ -44,7 +44,7 @@ class Build:
         template_env.filters['to_json'] = to_json
 
         self.logger.info(
-            'Rendering template for module: %s using: %s.tf.j2', module, file)
+            'Rendering template for module: %s using: %s.j2', module, file)
 
         # Defines which template to get from file including .j2 extension
         template = template_env.get_template(
@@ -158,9 +158,10 @@ class Build:
 
             # Create Terraform configuration files for modules
             for file in ['main.tf', 'resources.tf', 'variables.tf']:
+                template_file = f'modules/{file}'
                 template = self.template(
                     self.configs, secrets=self.secrets, module=module,
-                    file=file)
+                    file=template_file)
                 file_path = os.path.join(
                     module_dir, f'{file}')
                 with open(file_path, 'w') as config:
