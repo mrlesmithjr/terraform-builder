@@ -13,10 +13,10 @@ data "azurerm_resource_group" "{{ rg|replace('-','_') }}" {
 }
 {%-      endif %}
 {%-      if rg_config.virtual_networks %}
-{%-        include 'providers/azurerm/azurerm_virtual_network.j2' %}
+{%-        include 'providers/azurerm/resources/azurerm_virtual_network.j2' %}
 {%-      endif %}
 {%-      if rg_config.vms %}
-{%-        include 'providers/azurerm/azurerm_virtual_machine.j2' %}
+{%-        include 'providers/azurerm/resources/azurerm_virtual_machine.j2' %}
 {%-      endif %}
 {%-    endif %}
 {%-  endfor %}

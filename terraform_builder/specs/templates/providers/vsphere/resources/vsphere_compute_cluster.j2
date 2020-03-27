@@ -15,9 +15,9 @@ resource "vsphere_compute_cluster" "{{ cluster|replace('-','_') }}" {
 }
 {%-    endif %}
 {%-    if cluster_config.hosts %}
-{%-      include 'providers/vsphere/vsphere_host.j2' %}
+{%-      include 'providers/vsphere/resources/vsphere_host.j2' %}
 {%-    endif %}
 {%-    if cluster_config.vms %}
-{%-      include 'providers/vsphere/vsphere_virtual_machine.j2' %}
+{%-      include 'providers/vsphere/resources/vsphere_virtual_machine.j2' %}
 {%-    endif %}
 {%-  endfor %}

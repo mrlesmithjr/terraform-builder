@@ -10,7 +10,7 @@ resource "vsphere_tag_category" "{{ tc|replace('-','_') }}" {
   associable_types = {{ tc_config.associable_types|replace('\'','"') }}
 }
 {%-        if tc_config.tags %}
-{%-          include 'providers/vsphere/vsphere_tag.j2' %}
+{%-          include 'providers/vsphere/resources/vsphere_tag.j2' %}
 {%-        endif %}
 {%-      endif %}
 {%-    endif %}

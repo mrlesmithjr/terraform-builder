@@ -1,0 +1,6 @@
+{%-  if provider_config.resources.datacenters %}
+{%-    include 'providers/vsphere/resources/vsphere_datacenter.j2' %}
+{%-  endif %}
+{%-  if provider_config.resources.tag_categories %}
+{%-    include 'providers/vsphere/resources/vsphere_tag_category.j2' %}
+{%-  endif %}

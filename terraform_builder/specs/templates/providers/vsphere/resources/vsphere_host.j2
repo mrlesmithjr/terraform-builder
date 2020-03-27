@@ -19,6 +19,6 @@ data "vsphere_host" "{{ host|replace('-','_') }}" {
 }
 {%-    endif %}
 {%-    if dc_config.virtual_switches %}
-{%-      include 'providers/vsphere/vsphere_host_virtual_switch.j2' %}
+{%-      include 'providers/vsphere/resources/vsphere_host_virtual_switch.j2' %}
 {%-    endif %}
 {%-  endfor %}

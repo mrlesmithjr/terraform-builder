@@ -12,10 +12,10 @@ data "vsphere_datacenter" "{{ dc|replace('-','_') }}" {
 }
 {%-      endif %}
 {%-      if dc_config.templates %}
-{%-        include 'providers/vsphere/vsphere_virtual_machine_template.j2' %}
+{%-        include 'providers/vsphere/resources/vsphere_virtual_machine_template.j2' %}
 {%-      endif %}
 {%-      if dc_config.clusters %}
-{%-        include 'providers/vsphere/vsphere_compute_cluster.j2' %}
+{%-        include 'providers/vsphere/resources/vsphere_compute_cluster.j2' %}
 {%-      endif %}
 {%-    endif %}
 {%-  endfor %}

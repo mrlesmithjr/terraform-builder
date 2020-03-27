@@ -8,7 +8,7 @@ resource "azurerm_virtual_network" "{{ net|replace('-','_') }}" {
   resource_group_name = azurerm_resource_group.{{ rg|replace('-','_') }}.name
 }
 {%-      if net_config.subnets %}
-{%-        include 'providers/azurerm/azurerm_subnet.j2' %}
+{%-        include 'providers/azurerm/resources/azurerm_subnet.j2' %}
 {%-      endif %}
 {%-    else %}
 # Data {{ provider }} virtual network

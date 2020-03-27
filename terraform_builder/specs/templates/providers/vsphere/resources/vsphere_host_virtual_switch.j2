@@ -15,7 +15,7 @@ resource "vsphere_host_virtual_switch" "{{ vs|replace('-','_') }}" {
 }
 {%-      endif %}
 {%-      if vs_config.port_groups %}
-{%-        include 'providers/vsphere/vsphere_host_port_group.j2' %}
+{%-        include 'providers/vsphere/resources/vsphere_host_port_group.j2' %}
 {%-      endif %}
 {%-    endif %}
 {%-  endfor %}

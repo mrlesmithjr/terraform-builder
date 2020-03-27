@@ -1,0 +1,8 @@
+{%-  if not args.backends.remote or (args.backends.remote and args.backends.remote == {}) %}
+# Backend local config
+terraform {
+  backend "local" {
+    path = "terraform.tfstate"
+  }
+}
+{%-  endif %}
