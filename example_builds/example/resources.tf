@@ -66,7 +66,7 @@ resource "digitalocean_project" "example" {
   name        = format("example-%s", substr(var.environment, 0, 4))
   description = format("Example project - %s", var.environment)
   purpose     = format("Just to demonstrate an example project - %s", var.environment)
-  environment = format("%s", var.environment)
+  environment = var.environment
   resources   = [for resource in flatten(local.project_resources) : resource]
 }
 # Resource DigitalOcean domain

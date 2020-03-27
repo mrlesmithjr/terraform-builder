@@ -203,7 +203,8 @@ such as apply is executed. This abstraction enables non-local file state
 storage, remote execution, etc.</p>
 <p>By default, Terraform uses the <code>local</code> backend, which is the normal behavior of
 Terraform you're used to.</p>
-<pre><code class="yaml">local: {}
+<pre><code class="yaml">local:
+  path: terraform.tfstate
 remote: {}
 
 </code></pre>
