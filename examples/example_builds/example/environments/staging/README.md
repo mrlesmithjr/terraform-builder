@@ -3,7 +3,10 @@
 ## Module Info
 
 ```yaml
-staging: {}
+staging:
+  variables:
+    do_domain: stg.example.org
+    do_region: ams3
 
 ```
 

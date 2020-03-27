@@ -12,9 +12,18 @@ this project.
 Environments represent such things as: `development`, `staging`, and `production`.
 
 ```yaml
-development: {}
-production: {}
-staging: {}
+development:
+  variables:
+    do_domain: dev.example.org
+    do_region: nyc1
+production:
+  variables:
+    do_domain: prd.example.org
+    do_region: sfo1
+staging:
+  variables:
+    do_domain: stg.example.org
+    do_region: ams3
 
 ```
 

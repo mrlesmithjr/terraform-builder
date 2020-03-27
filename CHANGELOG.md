@@ -1,3 +1,68 @@
+commit 8ba405cf526db9f82e6130a1a3cc832177fc8586
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 27 17:30:16 2020 -0400
+
+    New example build added with new structure
+    
+    The new structure has been implemented. Therefore, the example build
+    needs to reflect this new structure.
+
+commit 4e84bfcd776615dd9901d2bac68cf228187aba67
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 27 17:27:59 2020 -0400
+
+    Deleted previous example build
+    
+    The structure has changed. Therefore, we must ensure consistency going
+    forward.
+
+commit b518b9b233e1feed731afc1219ad113483d4875d
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 27 17:26:34 2020 -0400
+
+    Moved resources into modules
+    
+    Resources will likely always exist in a module. Whether that is root or
+    other modules defined.
+
+commit 7c96961f2a21bf4aa59accc06eb0092837e4a6e0
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 27 16:51:09 2020 -0400
+
+    Reorganized environments templates
+    
+    This should minimize and bring clarity to the logic in the Jinja2
+    template structure.
+    
+    Next up is modules
+
+commit ecf2f7e2001ec084678e9482f3219b48f14efa21
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 27 16:26:44 2020 -0400
+
+    Changed parent root structure
+    
+    Next will be environments
+
+commit 76e4167eeca6c387ba7cd7f76be00c68cccf8971
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 27 15:25:45 2020 -0400
+
+    First phase of moving root module
+    
+    This semi works, but the template structure needs to be changed to be more clear
+
+commit 7f391edde85dcb024461594d3e0271f811a805de
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 27 00:11:46 2020 -0400
+
+    Added initial Consul remote support
+    
+    The support for Consul is limited at this time. I've personally only
+    tested this locally. Therefore, full functionality is not enabled.
+    
+    Closes #18
+
 commit 73ca2a4d4dad9ba0d23b6d136dfbf0b06d759648
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Thu Mar 26 21:58:55 2020 -0400

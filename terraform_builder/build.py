@@ -44,7 +44,7 @@ class Build:
         template_env.filters['to_json'] = to_json
 
         self.logger.info(
-            'Rendering template for module: %s using: %s.tf.j2', module, file)
+            'Rendering template for module: %s using: %s.j2', module, file)
 
         # Defines which template to get from file including .j2 extension
         template = template_env.get_template(
@@ -105,18 +105,19 @@ class Build:
         important_files(self.project_root, self.configs)
 
     def root(self):
-        """Configured root environment - Parent directory."""
+        """Configures project root environment - Parent directory."""
 
         # If project root does not exist, create it
         if not os.path.isdir(self.project_root):
             self.logger.info('Creating project_root: %s', self.project_root)
             os.makedirs(self.project_root)
 
-        # Create Terraform configuration files for root module
-        for file in ['main.tf', 'resources.tf', 'terraform.tfvars.json',
-                     'variables.tf']:
+        # Create Terraform configuration files in parent root
+        for file in ['main.tf', 'terraform.tfvars.json', 'variables.tf']:
+            template_file = f'project_root/{file}'
             template = self.template(
-                self.configs, secrets=self.secrets, module='root', file=file)
+                self.configs, secrets=self.secrets, module='root',
+                file=template_file)
             file_path = os.path.join(self.project_root, f'{file}')
             with open(file_path, 'w') as config:
                 self.logger.info('Creating: %s', file_path)
@@ -133,8 +134,10 @@ class Build:
                 os.makedirs(env_dir)
 
             for file in ['main.tf', 'resources.tf', 'variables.tf']:
+                template_file = f'environments/{file}'
                 template = self.template(
-                    self.configs, secrets=self.secrets, module=env, file=file)
+                    self.configs, secrets=self.secrets, module=env,
+                    file=template_file)
                 file_path = os.path.join(env_dir, f'{file}')
                 with open(file_path, 'w') as config:
                     self.logger.info('Creating: %s', file_path)
@@ -145,22 +148,25 @@ class Build:
 
         modules = self.configs['modules']
         for module, _module_config in modules.items():
-            if module.lower() != 'root':
+            if module.lower() == 'root':
+                module_dir = os.path.join(self.project_root, module)
+            else:
                 module_dir = os.path.join(self.project_root, 'modules', module)
-                if not os.path.isdir(module_dir):
-                    self.logger.info('Creating module: %s', module_dir)
-                    os.makedirs(module_dir)
+            if not os.path.isdir(module_dir):
+                self.logger.info('Creating module: %s', module_dir)
+                os.makedirs(module_dir)
 
-                # Create Terraform configuration files for modules
-                for file in ['main.tf', 'resources.tf', 'variables.tf']:
-                    template = self.template(
-                        self.configs, secrets=self.secrets, module=module,
-                        file=file)
-                    file_path = os.path.join(
-                        self.project_root, 'modules', module, f'{file}')
-                    with open(file_path, 'w') as config:
-                        self.logger.info('Creating: %s', file_path)
-                        config.write(template)
+            # Create Terraform configuration files for modules
+            for file in ['main.tf', 'resources.tf', 'variables.tf']:
+                template_file = f'modules/{file}'
+                template = self.template(
+                    self.configs, secrets=self.secrets, module=module,
+                    file=template_file)
+                file_path = os.path.join(
+                    module_dir, f'{file}')
+                with open(file_path, 'w') as config:
+                    self.logger.info('Creating: %s', file_path)
+                    config.write(template)
 
     def init(self):
         """Initialize Terraform configs."""

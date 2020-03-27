@@ -14,7 +14,9 @@ variable "{{ variable }}" {
 {%-           if key|lower == 'type' %}
     {{ key }} = {{ value }}
 {%-           else %}
-{%-             if value is mapping %}
+{%-             if value is iterable and value is not string and value is not mapping  %}
+    {{ key }} = {{ value }}
+{%-             elif value is mapping %}
     {{ key }} = {{ value|replace('\'', '\"') }}
 {%-             else %}
     {{ key }} = "{{ value }}"

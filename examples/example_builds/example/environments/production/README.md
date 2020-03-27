@@ -3,7 +3,10 @@
 ## Module Info
 
 ```yaml
-production: {}
+production:
+  variables:
+    do_domain: prd.example.org
+    do_region: sfo1
 
 ```
 

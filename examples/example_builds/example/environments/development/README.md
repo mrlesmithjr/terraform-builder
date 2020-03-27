@@ -3,7 +3,10 @@
 ## Module Info
 
 ```yaml
-development: {}
+development:
+  variables:
+    do_domain: dev.example.org
+    do_region: nyc1
 
 ```
 

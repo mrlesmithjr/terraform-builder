@@ -1,0 +1,17 @@
+{%-  set module_env = module %}
+# Module root config
+module "root" {
+  source      = "../../root"
+  environment = "{{ module_env }}"
+{%-   include 'environments/environment_vars.j2' %}
+}
+{%-  for module in args.modules %}
+{%-    if module != 'root' %}
+# Module {{ module }} config
+module "{{ module }}" {
+  source      = "../../modules/{{ module }}"
+  environment = "{{ module_env }}"
+{%-   include 'environments/environment_vars.j2' %}
+}
+{%-    endif %}
+{%-  endfor -%}

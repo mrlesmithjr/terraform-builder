@@ -37,18 +37,20 @@ def important_files(project_root, configs):
         # Iterate over modules to create important files to have in module
         # directories.
         for module in configs['modules']:
-            if module.lower() != 'root':
+            if module.lower() == 'root':
+                file_path = os.path.join(project_root, module, file)
+            else:
                 # Defines path to module directory
                 file_path = os.path.join(project_root, 'modules', module, file)
 
-                # Defines which template to get from file with .j2 extension
-                template = template_env.get_template(
-                    f'{file}.j2').render(args=args, module=module,
-                                         modules=True)
+            # Defines which template to get from file with .j2 extension
+            template = template_env.get_template(
+                f'{file}.j2').render(args=args, module=module,
+                                     modules=True)
 
-                with open(file_path, 'w') as config:
-                    logger.info('Creating important file: %s', file_path)
-                    config.write(template)
+            with open(file_path, 'w') as config:
+                logger.info('Creating important file: %s', file_path)
+                config.write(template)
 
         for environment in configs['environments']:
             # Defines path to module directory

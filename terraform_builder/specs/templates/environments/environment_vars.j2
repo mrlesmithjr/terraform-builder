@@ -1,0 +1,11 @@
+{%-  if args.environments[module_env]['variables'] %}
+{%-    for key, value in args.environments[module_env]['variables'].items() %}
+{%-      if value is iterable and value is not string %}
+  {{ key }}   = {{ value }}
+{%-      elif value is mapping %}
+  {{ key }}   = {{ value }}
+{%-      else %}
+  {{ key }}   = "{{ value }}"
+{%-      endif %}
+{%-    endfor %}
+{%-  endif %}
