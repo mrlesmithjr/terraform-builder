@@ -74,6 +74,14 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#configurations">Configurations</a>
         <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#backends">Backends</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#local">Local</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#consul">Consul</a>
+    </li>
+        </ul>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#providers">Providers</a>
         <ul>
     <li class="toctree-l4"><a class="reference internal" href="#resources">Resources</a>
@@ -167,6 +175,14 @@
                 </li>
     </ul>
                 </li>
+                <li class="toctree-l2"><a class="reference internal" href="#">Root</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../example_builds/example/root/">Terraform Project - example - Module root</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../example_builds/example/root/LICENSE/">LICENSE</a>
+                </li>
+    </ul>
+                </li>
     </ul>
                     </li>
                 </ul>
@@ -229,6 +245,43 @@ some of the concepts.</p>
 this, we can ensure that we have consistency in our Terraform configurations. We
 use <code>configs.yml</code> but the filename can be anything you wish. However, the
 content must be consistent.</p>
+<h3 id="backends">Backends</h3>
+<p>We can configure different Terraform backends to use for our Terraform state.
+Initially this functionality is limited to the default <code>local</code> and <code>Consul</code>.
+<code>Consul</code> support is limited and under development now. But you can use it for
+testing purposes until fully implemented.</p>
+<h4 id="local">Local</h4>
+<p>The default <code>local</code> is defined and should always be defined. But, if
+you don't. It will still default back to local without the added configs.</p>
+<pre><code class="yaml"># Define backends
+backends:
+  local:
+    path: terraform.tfstate
+  remote:
+    {}
+    # consul:
+    #   address: http://127.0.0.1:8500
+    #   scheme: http
+    #   path: example/terraform
+</code></pre>
+
+<h4 id="consul">Consul</h4>
+<p>To enable <code>Consul</code> as a backend, simply add the relevant info as below:</p>
+<blockquote>
+<p>NOTE: Leave <code>local</code> configured as a fallback. If <code>Consul</code> is configured, it
+will default to it rather than <code>local</code>.</p>
+</blockquote>
+<pre><code class="yaml"># Define backends
+backends:
+  local:
+    path: terraform.tfstate
+  remote:
+    consul:
+      address: http://127.0.0.1:8500
+      scheme: http
+      path: example/terraform
+</code></pre>
+
 <h3 id="providers">Providers</h3>
 <p>We can configure specific providers in our <code>configs.yml</code>.</p>
 <h4 id="resources">Resources</h4>

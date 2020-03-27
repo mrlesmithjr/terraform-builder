@@ -115,6 +115,14 @@
                 </li>
     </ul>
                 </li>
+                <li class="toctree-l2"><a class="reference internal" href="#">Root</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../root/">Terraform Project - example - Module root</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../root/LICENSE/">LICENSE</a>
+                </li>
+    </ul>
+                </li>
     </ul>
                     </li>
                 </ul>
@@ -168,7 +176,10 @@
               
                 <h1 id="terraform-project-example-module-development">Terraform Project - example - Module development</h1>
 <h2 id="module-info">Module Info</h2>
-<pre><code class="yaml">development: {}
+<pre><code class="yaml">development:
+  variables:
+    do_domain: dev.example.org
+    do_region: nyc1
 
 </code></pre>
 

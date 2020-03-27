@@ -135,6 +135,14 @@
                 </li>
     </ul>
                 </li>
+                <li class="toctree-l2"><a class="reference internal" href="#">Root</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="root/">Terraform Project - example - Module root</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="root/LICENSE/">LICENSE</a>
+                </li>
+    </ul>
+                </li>
     </ul>
                     </li>
                 </ul>
@@ -188,9 +196,18 @@ in <code>secrets.yml</code> and use the <code>--secrets</code> argument. The var
 </blockquote>
 <h2 id="environments">Environments</h2>
 <p>Environments represent such things as: <code>development</code>, <code>staging</code>, and <code>production</code>.</p>
-<pre><code class="yaml">development: {}
-production: {}
-staging: {}
+<pre><code class="yaml">development:
+  variables:
+    do_domain: dev.example.org
+    do_region: nyc1
+production:
+  variables:
+    do_domain: prd.example.org
+    do_region: sfo1
+staging:
+  variables:
+    do_domain: stg.example.org
+    do_region: ams3
 
 </code></pre>
 
@@ -475,6 +492,12 @@ services: {}
 |     |-- variables.tf
 |-- main.tf
 |-- modules
+|  |-- root
+|  |  |-- LICENSE.md
+|  |  |-- README.md
+|  |  |-- main.tf
+|  |  |-- resources.tf
+|  |  |-- variables.tf
 |  |-- network
 |  |  |-- LICENSE.md
 |  |  |-- README.md

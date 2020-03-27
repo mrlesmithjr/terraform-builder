@@ -77,7 +77,7 @@ variable "do_region" {
 # Variable do_ssh_keys config
 variable "do_ssh_keys" {
     description = "DigitalOcean SSH keys to deploy to new droplets"
-    default = "[]"
+    default = []
 }
 # Variable do_token config
 variable "do_token" {
