@@ -1,40 +1,17 @@
 {%-  set module_env = module %}
+# Module root config
+module "root" {
+  source      = "../../root"
+  environment = "{{ module_env }}"
+{%-   include 'modules/environment_vars.j2' %}
+}
 {%-  for module in args.modules %}
 {%-    if module != 'root' %}
 # Module {{ module }} config
 module "{{ module }}" {
   source      = "../../modules/{{ module }}"
   environment = "{{ module_env }}"
-{%-      for provider, provider_config in args.providers.items() -%}
-{%-        if provider_config != {} -%}
-{%-          if provider_config['variables'] -%}
-{%-            set module_vars = [] %}
-{%-            if provider_config.resources %}
-{%-              if provider == 'AzureRM' %}
-{%-                if provider_config.resources.resource_groups %}
-{%-                  for rg, rg_config in provider_config.resources.resource_groups.items() %}
-{%-                    if rg_config.module == module %}
-{%-                      set _ = module_vars.append(rg_config.module) %}
-{%-                    endif %}
-{%-                  endfor %}
-{%-                endif %}
-{%-              endif %}
-{%-              if provider_config.resources.vms %}
-{%-                for vm, vm_config in provider_config.resources.vms.items() %}
-{%-                  if vm_config.module == module %}
-{%-                    set _ = module_vars.append(vm_config.module) %}
-{%-                  endif %}
-{%-                endfor %}
-{%-              endif %}
-{%-            endif %}
-{%-            if module_vars != [] %}
-{%-              for variable, variable_config in provider_config['variables'].items() %}
-  {{ variable }} = "{{ variable_config.default }}"
-{%-              endfor %}
-{%-            endif %}
-{%-          endif -%}
-{%-        endif -%}
-{%-      endfor %}
+{%-   include 'modules/environment_vars.j2' %}
 }
 {%-    endif %}
 {%-  endfor -%}

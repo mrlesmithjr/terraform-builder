@@ -1,0 +1,36 @@
+# Project root
+{%-  for environment in args.environments %}
+# Module {{ environment }} config
+module "{{ environment }}" {
+  source      = "./environments/{{ environment }}"
+  environment = "{{ environment }}"
+}
+{%-  endfor %}
+{%-  include 'backends/main.j2' %}
+{%-  for provider, config in args.providers.items() %}
+{%-    if config != {} %}
+# Provider {{ provider }} config
+provider "{{ provider|lower }}" {
+{%-      if provider|lower == 'azurerm' %}
+  environment = var.azurerm_environment
+  features {}
+  client_id       = var.azurerm_client_id
+  client_secret   = var.azurerm_client_secret
+  subscription_id = var.azurerm_subscription_id
+  tenant_id       = var.azurerm_tenant_id
+{%-      elif provider|lower == 'digitalocean' %}
+  api_endpoint = var.do_api_endpoint
+  token        = var.do_token
+{%-      elif provider|lower == 'vsphere' %}
+  allow_unverified_ssl = var.vsphere_allow_unverified_ssl
+  password             = var.vsphere_password
+  user                 = var.vsphere_username
+  vsphere_server       = var.vsphere_server
+{%-      endif %}
+}
+{%-    endif -%}
+{%-  endfor %}
+# Setting required Terraform version or greater
+terraform {
+  required_version = ">= {{ args.required_version }}"
+}
