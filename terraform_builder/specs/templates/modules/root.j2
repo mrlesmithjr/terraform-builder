@@ -1,7 +1,0 @@
-{%-  for environment in args.environments %}
-# Module {{ environment }} config
-module "{{ environment }}" {
-  source      = "../environments/{{ environment }}"
-  environment = "{{ environment }}"
-}
-{%-  endfor %}

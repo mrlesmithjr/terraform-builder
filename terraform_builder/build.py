@@ -134,8 +134,10 @@ class Build:
                 os.makedirs(env_dir)
 
             for file in ['main.tf', 'resources.tf', 'variables.tf']:
+                template_file = f'environments/{file}'
                 template = self.template(
-                    self.configs, secrets=self.secrets, module=env, file=file)
+                    self.configs, secrets=self.secrets, module=env,
+                    file=template_file)
                 file_path = os.path.join(env_dir, f'{file}')
                 with open(file_path, 'w') as config:
                     self.logger.info('Creating: %s', file_path)

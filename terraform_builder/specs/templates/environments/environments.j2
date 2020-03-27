@@ -3,7 +3,7 @@
 module "root" {
   source      = "../../root"
   environment = "{{ module_env }}"
-{%-   include 'modules/environment_vars.j2' %}
+{%-   include 'environments/environment_vars.j2' %}
 }
 {%-  for module in args.modules %}
 {%-    if module != 'root' %}
@@ -11,7 +11,7 @@ module "root" {
 module "{{ module }}" {
   source      = "../../modules/{{ module }}"
   environment = "{{ module_env }}"
-{%-   include 'modules/environment_vars.j2' %}
+{%-   include 'environments/environment_vars.j2' %}
 }
 {%-    endif %}
 {%-  endfor -%}
