@@ -2,7 +2,7 @@
 # Backend local config
 terraform {
   backend "local" {
-    path = "terraform.tfstate"
+    path = "{{ args.backends.local.path }}"
   }
 }
 {%-  endif %}

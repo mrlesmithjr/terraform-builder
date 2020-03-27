@@ -30,7 +30,8 @@ By default, Terraform uses the `local` backend, which is the normal behavior of
 Terraform you're used to.
 
 ```yaml
-local: {}
+local:
+  path: terraform.tfstate
 remote: {}
 
 ```

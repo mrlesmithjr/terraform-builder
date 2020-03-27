@@ -1,4 +1,5 @@
 # Generated using https://github.com/mrlesmithjr/terraform-builder
+# module: root
 # Backend local config
 terraform {
   backend "local" {
@@ -43,5 +44,5 @@ module "staging" {
 }
 # Setting required Terraform version or greater
 terraform {
-  required_version = ">= 0.12"
+  required_version = ">= 0.12.0"
 }

@@ -1,4 +1,5 @@
 # Generated using https://github.com/mrlesmithjr/terraform-builder
+# module: staging
 # Module network config
 module "network" {
   source      = "../../modules/network"
