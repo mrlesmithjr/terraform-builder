@@ -1,22 +1,25 @@
 # Generated using https://github.com/mrlesmithjr/terraform-builder
-# Module root config
-module "root" {
+# Module production-root config
+module "production-root" {
   source      = "../../root"
   environment = "production"
+  azurerm_location   = "West US 2"
   do_domain   = "prd.example.org"
   do_region   = "sfo1"
 }
-# Module network config
-module "network" {
+# Module production-network config
+module "production-network" {
   source      = "../../modules/network"
   environment = "production"
+  azurerm_location   = "West US 2"
   do_domain   = "prd.example.org"
   do_region   = "sfo1"
 }
-# Module services config
-module "services" {
+# Module production-services config
+module "production-services" {
   source      = "../../modules/services"
   environment = "production"
+  azurerm_location   = "West US 2"
   do_domain   = "prd.example.org"
   do_region   = "sfo1"
 }

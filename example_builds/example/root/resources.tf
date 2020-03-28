@@ -135,6 +135,7 @@ resource "vsphere_host_port_group" "example_pg" {
   host_system_id      = vsphere_host.example_esxi_01.id
   virtual_switch_name = vsphere_host_virtual_switch.example_switch.name
 }
+
 # Resource vSphere virtual machine
 resource "vsphere_virtual_machine" "example_vm" {
   count            = 1
@@ -148,6 +149,7 @@ resource "vsphere_virtual_machine" "example_vm" {
 
   tags = ["vsphere_tag.example_vsphere.id"]
 }
+
 # Resource vSphere virtual machine
 resource "vsphere_virtual_machine" "example_vm_from_template" {
   count            = 1
@@ -158,7 +160,7 @@ resource "vsphere_virtual_machine" "example_vm_from_template" {
   guest_id         = data.vsphere_virtual_machine.ubuntu_18_04_x64.guest_id
   scsi_type        = data.vsphere_virtual_machine.ubuntu_18_04_x64.scsi_type
   network_interface {
-    network_id   = vsphere_host_port_group.example_pg.id
+    network_id   = data.vsphere_network.example_network.id
     adapter_type = data.vsphere_virtual_machine.ubuntu_18_04_x64.network_interface_types[0]
   }
   disk {
@@ -172,6 +174,11 @@ resource "vsphere_virtual_machine" "example_vm_from_template" {
   }
 
   tags = ["vsphere_tag.example_vsphere.id"]
+}
+# Data vSphere network
+data "vsphere_network" "example_network" {
+  name          = "example-network"
+  datacenter_id = vsphere_datacenter.example_dc.id
 }
 # Resource vSphere tag category
 resource "vsphere_tag_category" "example_category" {
