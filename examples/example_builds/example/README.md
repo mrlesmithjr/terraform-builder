@@ -14,14 +14,17 @@ Environments represent such things as: `development`, `staging`, and `production
 ```yaml
 development:
   variables:
+    azurerm_location: East US
     do_domain: dev.example.org
     do_region: nyc1
 production:
   variables:
+    azurerm_location: West US 2
     do_domain: prd.example.org
     do_region: sfo1
 staging:
   variables:
+    azurerm_location: North Central US
     do_domain: stg.example.org
     do_region: ams3
 
@@ -125,7 +128,7 @@ AzureRM:
           version: latest
       description: Default OS image reference lookups
     azurerm_location:
-      default: East US
+      default: ''
       description: Default AzureRM location/region
       type: string
     azurerm_subscription_id:
@@ -168,7 +171,7 @@ DigitalOcean:
       description: Default DigitalOcean domain for resources
       type: string
     do_region:
-      default: nyc1
+      default: ''
       description: DigitalOcean region
       type: string
     do_ssh_keys:
@@ -204,13 +207,15 @@ vSphere:
               example-vm-from-template:
                 count: 1
                 memory: 2048
-                network: example-pg
+                network: example-network
                 num_cpus: 1
                 tags:
                 - example-vsphere
                 template: ubuntu-18-04-x64
         create: true
         module: root
+        networks:
+        - example-network
         templates:
         - ubuntu-16-04-x64
         - ubuntu-18-04-x64
@@ -280,9 +285,12 @@ infrastructure in terms of its architecture, rather than directly in terms of
 physical objects.
 
 ```yaml
-network: {}
-root: {}
-services: {}
+network:
+  variables: {}
+root:
+  variables: {}
+services:
+  variables: {}
 
 ```
 

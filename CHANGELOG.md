@@ -1,3 +1,27 @@
+commit 15fe83284dcef730ea01caddef2f26c9985ea386
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sat Mar 28 17:42:33 2020 -0400
+
+    Changed modules to include environment as part of their name
+    
+    This will ensure that there is not any confusion over which environment.
+    We also still include the environment var as part of the module.
+    But this will ensure we follow best practices.
+
+commit d0e7d90e457b3094e3ec5f19376247ed7922c4fc
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sat Mar 28 16:31:22 2020 -0400
+
+    Changed variables format, function
+    
+    Now able to pull vars in from evironments, modules, providers, etc.
+
+commit 9b8cb448f65124f375289f23e9f4ca1687497d55
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Mar 27 17:43:52 2020 -0400
+
+    Forgot to update mapping, etc. to include root
+
 commit 349ca21a55b118d65720068f46cbd60b17af3a3f
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Fri Mar 27 17:34:54 2020 -0400

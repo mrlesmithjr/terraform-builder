@@ -43,6 +43,9 @@ global_variables: {}
 
 # Define modules - Structure will be project_name/modules/{module}
 # root needs to always exist
+# Each module will be named with the respective environment appended to the
+# beginning of the module name. Example: development-root, production-root, and
+# staging-root.
 # You can define variables specific to a module which will override the
 # defaults defined in providers to allow flexibilty between modules. This needs
 # to be tested out a bit more.
