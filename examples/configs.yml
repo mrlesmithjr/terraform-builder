@@ -18,36 +18,58 @@ backends:
     #   scheme: http
     #   path: example/terraform
 
-# Defines environments
+# Define environments - Should be development, production, and staging.
+# You can define specific variables per environment to override the defaults
+# defined in providers.
 environments:
   development:
     variables:
+      azurerm_location: East US
       do_domain: dev.example.org
       do_region: nyc1
   production:
     variables:
+      azurerm_location: West US 2
       do_domain: prd.example.org
       do_region: sfo1
   staging:
     variables:
+      azurerm_location: North Central US
       do_domain: stg.example.org
       do_region: ams3
 
-# Define global variables
+# Define global variables - Not used at this point
 global_variables: {}
 
 # Define modules - Structure will be project_name/modules/{module}
 # root needs to always exist
+# Each module will be named with the respective environment appended to the
+# beginning of the module name. Example: development-root, production-root, and
+# staging-root.
+# You can define variables specific to a module which will override the
+# defaults defined in providers to allow flexibilty between modules. This needs
+# to be tested out a bit more.
 modules:
-  root: {}
-  network: {}
-  services: {}
+  root:
+    variables:
+      {}
+      # environment: test
+  network:
+    variables:
+      {}
+      # environment: test
+  services:
+    variables: {}
 
 # Defines default root environment to use for vars.
 # production|staging|development
 default_root_module_env: production
 
 # Define providers and variables
+# For variable definitions, keep the default as undefined and use either modules
+# or environments to override the provider defaults.
+# Currently only the current variables for each provider are supported. So, it's
+# generally best to leave them as is.
 providers:
   AzureRM:
     resources:
@@ -114,7 +136,7 @@ providers:
       azurerm_location:
         type: string
         description: Default AzureRM location/region
-        default: East US
+        default: ""
       azurerm_subscription_id:
         type: string
         description: AzureRM Subscription ID
@@ -156,7 +178,7 @@ providers:
       do_region:
         type: string
         description: DigitalOcean region
-        default: nyc1
+        default: ""
       do_ssh_keys:
         description: DigitalOcean SSH keys to deploy to new droplets
         default: []

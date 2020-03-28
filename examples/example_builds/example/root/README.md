@@ -3,7 +3,8 @@
 ## Module Info
 
 ```yaml
-root: {}
+root:
+  variables: {}
 
 ```
 
