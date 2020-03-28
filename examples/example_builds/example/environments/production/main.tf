@@ -3,6 +3,7 @@
 module "root" {
   source      = "../../root"
   environment = "production"
+  azurerm_location   = "West US 2"
   do_domain   = "prd.example.org"
   do_region   = "sfo1"
 }
@@ -10,6 +11,7 @@ module "root" {
 module "network" {
   source      = "../../modules/network"
   environment = "production"
+  azurerm_location   = "West US 2"
   do_domain   = "prd.example.org"
   do_region   = "sfo1"
 }
@@ -17,6 +19,7 @@ module "network" {
 module "services" {
   source      = "../../modules/services"
   environment = "production"
+  azurerm_location   = "West US 2"
   do_domain   = "prd.example.org"
   do_region   = "sfo1"
 }

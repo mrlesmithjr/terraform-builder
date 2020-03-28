@@ -1,8 +1,8 @@
 # Generated using https://github.com/mrlesmithjr/terraform-builder
-# Variable environment to use with resources
+# Variable environment config
 variable "environment" {
-  type    = string
-  default = ""
+    type = string
+    default = ""
 }
 # Variable azurerm_client_id config
 variable "azurerm_client_id" {
@@ -42,7 +42,7 @@ variable "azurerm_image_reference" {
 variable "azurerm_location" {
     type = string
     description = "Default AzureRM location/region"
-    default = "East US"
+    default = ""
 }
 # Variable azurerm_subscription_id config
 variable "azurerm_subscription_id" {
@@ -72,7 +72,7 @@ variable "do_domain" {
 variable "do_region" {
     type = string
     description = "DigitalOcean region"
-    default = "nyc1"
+    default = ""
 }
 # Variable do_ssh_keys config
 variable "do_ssh_keys" {
