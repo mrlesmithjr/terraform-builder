@@ -17,5 +17,8 @@ data "vsphere_datacenter" "{{ dc|replace('-','_') }}" {
 {%-      if dc_config.clusters %}
 {%-        include 'providers/vsphere/resources/vsphere_compute_cluster.j2' %}
 {%-      endif %}
+{%-      if dc_config.networks %}
+{%-        include 'providers/vsphere/resources/vsphere_network.j2' %}
+{%-      endif %}
 {%-    endif %}
 {%-  endfor %}
