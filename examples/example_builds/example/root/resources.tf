@@ -61,6 +61,65 @@ resource "azurerm_virtual_machine" "example_vm_root" {
   }
   tags = {"environment": "${var.environment}"}
 }
+# Resource DigitalOcean tag
+resource "digitalocean_tag" "default_firewall" {
+  name = "default-firewall"
+}
+# Resource DigitalOcean firewall
+resource "digitalocean_firewall" "default" {
+  name = format("default-server-rules-%s", var.environment)
+  droplet_ids = concat(digitalocean_droplet.example_vm.*.id)
+  tags     = [digitalocean_tag.default_firewall.id]
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "22"
+    source_addresses = []
+  }
+  outbound_rule {
+    protocol              = "icmp"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+  outbound_rule {
+    protocol              = "tcp"
+    port_range            = "1-65535"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+  outbound_rule {
+    protocol              = "udp"
+    port_range            = "1-65535"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+}
+# Resource DigitalOcean firewall
+resource "digitalocean_firewall" "web" {
+  name = format("web-server-rules-%s", var.environment)
+  tags     = []
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "22"
+    source_addresses = []
+  }
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "80"
+    source_addresses = []
+  }
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "443"
+    source_addresses = []
+  }
+  outbound_rule {
+    protocol              = "tcp"
+    port_range            = "53"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+  outbound_rule {
+    protocol              = "udp"
+    port_range            = "53"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+}
 # Resource DigitalOcean project
 resource "digitalocean_project" "example" {
   name        = format("example-%s", substr(var.environment, 0, 4))

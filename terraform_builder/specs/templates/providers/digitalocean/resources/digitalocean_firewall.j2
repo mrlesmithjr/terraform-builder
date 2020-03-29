@@ -1,0 +1,54 @@
+{%- for fw, fw_config in provider_config.resources.firewalls.items() %}
+{%-   set fw_tags = [] %}
+{%-   if fw_config.tags %}
+{%-     include 'providers/digitalocean/resources/digitalocean_tag.j2' %}
+{%-     if fw_config.tags %}
+{%-       for tag in fw_config.tags %}
+{%-         set tag_id = 'digitalocean_tag.'+tag|replace('-','_')+'.id' %}
+{%-         set _ = fw_tags.append(tag_id) %}
+{%-       endfor %}
+{%-     endif %}
+{%-   endif %}
+{%-   if fw_config.module == module %}
+{%-     set fw_resources = [] %}
+{%-     if provider_config.resources.projects %}
+{%-       for proj, proj_config in provider_config.resources.projects.items() %}
+{%-         if proj_config.module == module %}
+{%-           if proj_config.vms %}
+{%-             for vm, vm_config in proj_config.vms.items() %}
+{%-               if vm_config.firewall and vm_config.firewall == fw %}
+{%-                 set _ = fw_resources.append('digitalocean_droplet.'+vm|replace('-','_')+'.*.id') %}
+{%-               endif %}
+{%-             endfor %}
+{%-           endif %}
+{%-         endif %}
+{%-       endfor %}
+{%-     endif %}
+# Resource {{ provider }} firewall
+resource "digitalocean_firewall" "{{ fw|replace('-','_') }}" {
+  name = format("{{ fw_config.name }}-%s", var.environment)
+{%-     if fw_resources != [] %}
+  droplet_ids = concat({{ fw_resources|join(', ') }})
+{%-     endif %}
+  tags     = {{ fw_tags|replace('\'', '') }}
+
+{%-     for rule in fw_config.rules %}
+{%-       if rule.direction == 'inbound' %}
+  inbound_rule {
+    protocol         = "{{ rule.protocol }}"
+    port_range       = "{{ rule.port_range }}"
+    source_addresses = {{ rule.source_addresses|replace('\'','"') }}
+  }
+{%-       elif rule.direction == 'outbound' %}
+  outbound_rule {
+    protocol              = "{{ rule.protocol }}"
+{%-         if rule.port_range %}
+    port_range            = "{{ rule.port_range }}"
+{%-         endif %}
+    destination_addresses = {{ rule.destination_addresses|replace('\'','"') }}
+  }
+{%-       endif %}
+{%-     endfor %}
+}
+{%-   endif %}
+{%- endfor %}

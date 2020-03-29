@@ -1,6 +1,18 @@
-{%-  for tag in proj_config.tags %}
+{%- if fw_config and fw_config.tags %}
+{%-   for tag in fw_config.tags %}
+{%-     if fw_config.module == module %}
 # Resource {{ provider }} tag
 resource "digitalocean_tag" "{{ tag|replace('-','_') }}" {
   name = "{{ tag }}"
 }
-{%-  endfor %}
+{%-     endif %}
+{%-   endfor %}
+{%- endif %}
+{%- if proj_config and proj_config.tags %}
+{%-   for tag in proj_config.tags %}
+# Resource {{ provider }} tag
+resource "digitalocean_tag" "{{ tag|replace('-','_') }}" {
+  name = "{{ tag }}"
+}
+{%-   endfor %}
+{%- endif %}
