@@ -141,6 +141,63 @@ AzureRM:
       type: string
 DigitalOcean:
   resources:
+    firewalls:
+      default:
+        module: root
+        name: default-server-rules
+        rules:
+        - direction: inbound
+          port_range: 22
+          protocol: tcp
+          source_addresses: []
+        - destination_addresses:
+          - 0.0.0.0/0
+          - ::/0
+          direction: outbound
+          protocol: icmp
+        - destination_addresses:
+          - 0.0.0.0/0
+          - ::/0
+          direction: outbound
+          port_range: 1-65535
+          protocol: tcp
+        - destination_addresses:
+          - 0.0.0.0/0
+          - ::/0
+          direction: outbound
+          port_range: 1-65535
+          protocol: udp
+        tags:
+        - default-firewall
+      web:
+        create: true
+        module: root
+        name: web-server-rules
+        rules:
+        - direction: inbound
+          port_range: 22
+          protocol: tcp
+          source_addresses: []
+        - direction: inbound
+          port_range: 80
+          protocol: tcp
+          source_addresses: []
+        - direction: inbound
+          port_range: 443
+          protocol: tcp
+          source_addresses: []
+        - destination_addresses:
+          - 0.0.0.0/0
+          - ::/0
+          direction: outbound
+          port_range: 53
+          protocol: tcp
+        - destination_addresses:
+          - 0.0.0.0/0
+          - ::/0
+          direction: outbound
+          port_range: 53
+          protocol: udp
     projects:
       example:
         create: true
@@ -155,6 +212,7 @@ DigitalOcean:
         vms:
           example-vm:
             count: 1
+            firewall: default
             image: ubuntu-18-04-x64
             memory: 1024
             num_cpus: 1

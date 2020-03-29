@@ -1,3 +1,6 @@
+{%- if provider_config.resources.firewalls %}
+{%-   include 'providers/digitalocean/resources/digitalocean_firewall.j2' %}
+{%- endif %}
 {%-  if provider_config.resources.projects %}
 {%-    for proj, proj_config in provider_config.resources.projects.items() %}
 {%-      if proj_config.module == module %}
