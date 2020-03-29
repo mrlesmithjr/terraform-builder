@@ -8,6 +8,7 @@ project_name: example
 required_version: 0.12.0
 
 # Define backends
+# Currently only local and limited Consul support
 backends:
   local:
     path: terraform.tfstate
@@ -79,9 +80,9 @@ providers:
           module: root
           virtual_networks:
             example-net:
+              create: true
               address_space:
                 - 10.0.0.0/16
-              create: true
               subnets:
                 - 10.0.1.0/24
                 - 10.0.2.0/24
@@ -190,6 +191,7 @@ providers:
     resources:
       datacenters:
         example-dc:
+          create: true
           clusters:
             example-cluster:
               create: true
@@ -212,16 +214,24 @@ providers:
                 example-vm-from-template:
                   count: 1
                   memory: 2048
-                  network: example-pg
+                  # Need a way to decide how to select either data.vsphere_network
+                  # or other
+                  network: example-network
                   num_cpus: 1
                   tags:
                     - example-vsphere
                   template: ubuntu-18-04-x64
-          create: true
           module: root
+          # Define existing networks to consume, not create
+          networks:
+            - example-network
+          # Define existing templates to consume, not create
           templates:
             - ubuntu-16-04-x64
             - ubuntu-18-04-x64
+          # Define virtual switches to create
+          # If false, they will just be skipped
+          # Only works with hosts that are created
           virtual_switches:
             example-switch:
               create: true
@@ -234,11 +244,14 @@ providers:
               standby_nics:
                 - vmnic1
               teaming_policy: loadbalance_srcid
+              # Define port groups to create
+              # If false, they will just be skipped
               port_groups:
                 example-pg:
                   create: true
       tag_categories:
         example-category:
+          create: true
           associable_types:
             - ClusterComputeResource
             - Datacenter
@@ -246,7 +259,6 @@ providers:
             - HostSystem
             - VirtualMachine
           cardinality: SINGLE
-          create: true
           module: root
           tags:
             - example-vsphere

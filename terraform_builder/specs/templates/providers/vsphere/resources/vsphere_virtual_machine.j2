@@ -1,6 +1,11 @@
 {%-  for vm, vm_config in cluster_config.vms.items() %}
 {%-    set memory = (vm_config.memory|default(1024)/1024)|round|int|string %}
 {%-    set cpus = (vm_config.num_cpus)|default(1)|string %}
+{%-    if vm_config.network in dc_config.networks %}
+{%       set network_id = 'data.vsphere_network.'+vm_config.network|replace('-','_')+'.id' %}
+{%-    else %}
+{%       set network_id = 'vsphere_host_port_group.'+vm_config.network|replace('-','_')+'.id' %}
+{%-    endif %}
 # Resource {{ provider }} virtual machine
 resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
   count            = {{ vm_config.count|default(1) }}
@@ -16,7 +21,7 @@ resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
   guest_id         = data.vsphere_virtual_machine.{{ vm_config.template|replace('-','_') }}.guest_id
   scsi_type        = data.vsphere_virtual_machine.{{ vm_config.template|replace('-','_') }}.scsi_type
   network_interface {
-    network_id   = vsphere_host_port_group.{{ vm_config.network|replace('-','_') }}.id
+    network_id   = {{ network_id }}
     adapter_type = data.vsphere_virtual_machine.{{ vm_config.template|replace('-','_') }}.network_interface_types[0]
   }
   disk {
@@ -30,7 +35,7 @@ resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
   }
 {%-    else %}
   network_interface {
-    network_id = vsphere_host_port_group.{{ vm_config.network|replace('-','_') }}.id
+    network_id = {{ network_id }}
   }
 {%-    endif %}
 {%-    if vm_config.tags %}

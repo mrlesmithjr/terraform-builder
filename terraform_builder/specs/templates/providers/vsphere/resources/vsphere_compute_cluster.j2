@@ -3,15 +3,25 @@
 # Resource {{ provider }} compute cluster
 resource "vsphere_compute_cluster" "{{ cluster|replace('-','_') }}" {
   name          = "{{ cluster }}"
-{%-  if dc_config.create %}
+{%-      if dc_config.create %}
   datacenter_id = vsphere_datacenter.{{ dc|replace('-','_') }}.id
-{%-  else %}
+{%-      else %}
   datacenter_id = data.vsphere_datacenter.{{ dc|replace('-','_') }}.id
-{%-  endif %}
+{%-      endif %}
   # host_system_ids     = ["${data.vsphere_host.hosts.*.id}"]
   drs_enabled          = {{ cluster_config.drs_enabled|lower }}
   drs_automation_level = "{{ cluster_config.drs_automation_level }}"
   ha_enabled           = {{ cluster_config.ha_enabled|lower }}
+}
+{%-    else %}
+# Data {{ provider }} compute cluster
+data "vsphere_compute_cluster" "{{ cluster|replace('-','_') }}" {
+  name          = "{{ cluster }}"
+{%-      if dc_config.create %}
+  datacenter_id = vsphere_datacenter.{{ dc|replace('-','_') }}.id
+{%-      else %}
+  datacenter_id = data.vsphere_datacenter.{{ dc|replace('-','_') }}.id
+{%-      endif %}
 }
 {%-    endif %}
 {%-    if cluster_config.hosts %}
