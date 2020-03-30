@@ -19,9 +19,6 @@ data "digitalocean_project" "{{ proj|replace('-','_') }}" {
 {%-     if proj_config.domains %}
 {%-       include 'providers/digitalocean/resources/digitalocean_domain.j2' %}
 {%-     endif %}
-{%-     if proj_config.tags %}
-{%-       include 'providers/digitalocean/resources/digitalocean_tag.j2' %}
-{%-     endif %}
 {%-     if provider_config.resources.vms %}
 {%-       for vm, vm_config in provider_config.resources.vms.items() %}
 {%-         if vm_config.module == module %}

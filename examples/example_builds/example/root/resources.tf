@@ -61,15 +61,11 @@ resource "azurerm_virtual_machine" "example_vm_root" {
   }
   tags = {"environment": "${var.environment}"}
 }
-# Resource DigitalOcean tag
-resource "digitalocean_tag" "default_firewall" {
-  name = "default-firewall"
-}
 # Resource DigitalOcean firewall
 resource "digitalocean_firewall" "default" {
   name = format("default-server-rules-%s", var.environment)
   droplet_ids = concat(digitalocean_droplet.example_vm.*.id)
-  tags     = [digitalocean_tag.default_firewall.id]
+  tags     = [digitalocean_tag.default_firewall.id, digitalocean_tag.default_firewall_env.id]
   inbound_rule {
     protocol         = "tcp"
     port_range       = "22"
@@ -120,6 +116,22 @@ resource "digitalocean_firewall" "web" {
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
 }
+# Resource DigitalOcean tag
+resource "digitalocean_tag" "default_firewall" {
+  name = "default-firewall"
+}
+# Resource DigitalOcean tag
+resource "digitalocean_tag" "default_firewall_env" {
+  name = format("default-firewall-%s", var.environment)
+}
+# Resource DigitalOcean tag
+resource "digitalocean_tag" "example_digitalocean" {
+  name = "example-digitalocean"
+}
+# Resource DigitalOcean tag
+resource "digitalocean_tag" "example_digitalocean_env" {
+  name = format("example-digitalocean-%s", var.environment)
+}
 # Resource DigitalOcean virtual machine
 resource "digitalocean_droplet" "example_vm" {
   count    = 1
@@ -128,7 +140,7 @@ resource "digitalocean_droplet" "example_vm" {
   region   = var.do_region
   size     = "s-1vcpu-1gb"
   ssh_keys = var.do_ssh_keys
-  tags     = [digitalocean_tag.example_digitalocean.id]
+  tags     = [digitalocean_tag.example_digitalocean.id, digitalocean_tag.example_digitalocean_env.id]
 }
 # Resource DigitalOcean project
 resource "digitalocean_project" "example" {
@@ -141,10 +153,6 @@ resource "digitalocean_project" "example" {
 # Resource DigitalOcean domain
 resource "digitalocean_domain" "example_org" {
   name = "example.org"
-}
-# Resource DigitalOcean tag
-resource "digitalocean_tag" "example_digitalocean" {
-  name = "example-digitalocean"
 }
 # Obtain list of project resources as local and use
 locals {

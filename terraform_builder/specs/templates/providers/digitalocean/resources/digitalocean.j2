@@ -1,6 +1,9 @@
 {%- if provider_config.resources.firewalls %}
 {%-   include 'providers/digitalocean/resources/digitalocean_firewall.j2' %}
 {%- endif %}
+{%- if provider_config.resources.tags %}
+{%-   include 'providers/digitalocean/resources/digitalocean_tag.j2' %}
+{%- endif %}
 {%- if provider_config.resources.vms %}
 {%-   include 'providers/digitalocean/resources/digitalocean_droplet.j2' %}
 {%- endif %}

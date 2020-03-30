@@ -4,6 +4,7 @@
 {%-      if provider == 'AzureRM' %}
 {%-        include 'providers/azurerm/resources/azurerm.j2' %}
 {%-     elif provider == 'DigitalOcean' %}
+{%-        set do_tags = [] %}
 {%-        include 'providers/digitalocean/resources/digitalocean.j2' %}
 {%-     elif provider == 'vSphere' %}
 {%-        include 'providers/vsphere/resources/vsphere.j2' %}
