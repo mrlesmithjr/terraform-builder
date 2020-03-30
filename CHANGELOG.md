@@ -1,4 +1,36 @@
-commit 2c4658990f44e1a35ab6cdaec66dbf9b02d89fd4
+commit 0e0a0878064ff61418bec20208c57eef8b91b22e
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sun Mar 29 13:25:58 2020 -0400
+
+    Added initial DigitalOcean firewall support
+    
+    This is just the beginning portion. Will add more functionality later
+    Closes #26
+
+commit 50ce6acab86154d5a530afa6dfc97bcbdc208cc9
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sat Mar 28 23:13:43 2020 -0400
+
+    Tweaked vSphere networks, etc.
+    
+    vSphere networking was only working if a vSwitch and portgroup were
+    created. Consuming existing networks did not work. This has been added
+    and needs a bit more testing to ensure most scenarios are validated
+    based on current functionality.
+    
+    Closes #24
+
+commit 8878330fb5beca01be2b9ea009d13c78edefb6cc
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sat Mar 28 17:42:33 2020 -0400
+
+    Changed modules to include environment as part of their name
+    
+    This will ensure that there is not any confusion over which environment.
+    We also still include the environment var as part of the module.
+    But this will ensure we follow best practices.
+
+commit 15fe83284dcef730ea01caddef2f26c9985ea386
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Sat Mar 28 17:42:33 2020 -0400
 

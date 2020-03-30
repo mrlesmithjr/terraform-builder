@@ -1,4 +1,7 @@
-{%-  if proj_config.create %}
+{%- for proj, proj_config in provider_config.resources.projects.items() %}
+{%-   if proj_config.module == module %}
+{%-     set project_resources = [] %}
+{%-     if proj_config.create %}
 # Resource {{ provider }} project
 resource "digitalocean_project" "{{ proj|replace('-','_') }}" {
   name        = format("{{ proj }}-%s", substr(var.environment, 0, 4))
@@ -7,9 +10,30 @@ resource "digitalocean_project" "{{ proj|replace('-','_') }}" {
   environment = var.environment
   resources   = [for resource in flatten(local.project_resources) : resource]
 }
-{%-  else %}
+{%-     else %}
 # Data {{ provider }} project
 data "digitalocean_project" "{{ proj|replace('-','_') }}" {
   name        = format("{{ proj }}-%s", substr(var.environment, 0, 4))
 }
-{%-  endif %}
+{%-     endif %}
+{%-     if proj_config.domains %}
+{%-       include 'providers/digitalocean/resources/digitalocean_domain.j2' %}
+{%-     endif %}
+{%-     if proj_config.tags %}
+{%-       include 'providers/digitalocean/resources/digitalocean_tag.j2' %}
+{%-     endif %}
+{%-     if provider_config.resources.vms %}
+{%-       for vm, vm_config in provider_config.resources.vms.items() %}
+{%-         if vm_config.module == module %}
+{%-           if vm_config.project and vm_config.project == proj %}
+{%-             set _ = project_resources.append('digitalocean_droplet.'+vm.split('.')[0]|replace('-','_')+'.*.urn') %}
+{%-           endif %}
+{%-         endif %}
+{%-       endfor %}
+{%-     endif %}
+# Obtain list of project resources as local and use
+locals {
+  project_resources = {{ project_resources|replace('\'','') }}
+}
+{%-   endif %}
+{%- endfor %}

@@ -149,11 +149,13 @@ providers:
   DigitalOcean:
     resources:
       firewalls:
-        # droplets will select firewall rules by name. However, the firewall
-        # rule module also needs to match the module for the project in which the
-        # VM resides within. Otherwise, they will not map.
+        # droplets will select firewall rules by name. Under modules, add any
+        # modules which you'd like the firewall available within. This allows
+        # us to define a single firewall, and make it available across modules.
+        # Therefore, reducing the number of firewalls to configure.
         default:
-          module: root
+          modules:
+            - root
           name: default-server-rules
           rules:
             - protocol: tcp
@@ -175,7 +177,8 @@ providers:
             - default-firewall
         web:
           create: true
-          module: root
+          modules:
+            - root
           name: web-server-rules
           rules:
             - protocol: tcp
@@ -209,15 +212,19 @@ providers:
           purpose: Just to demonstrate an example project
           tags:
             - example-digitalocean
-          vms:
-            example-vm:
-              count: 1
-              firewall: default
-              image: ubuntu-18-04-x64
-              memory: 1024
-              num_cpus: 1
-              tags:
-                - example-digitalocean
+      vms:
+        # Define firewall to apply, if applicable.
+        # Define project to add VM to, if applicable.
+        example-vm:
+          count: 1
+          firewall: default
+          image: ubuntu-18-04-x64
+          memory: 1024
+          module: root
+          project: example
+          num_cpus: 1
+          tags:
+            - example-digitalocean
     variables:
       do_api_endpoint:
         type: string

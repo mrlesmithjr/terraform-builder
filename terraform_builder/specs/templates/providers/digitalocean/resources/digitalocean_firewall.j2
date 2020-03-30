@@ -9,17 +9,13 @@
 {%-       endfor %}
 {%-     endif %}
 {%-   endif %}
-{%-   if fw_config.module == module %}
+{%-   if module in fw_config.modules %}
 {%-     set fw_resources = [] %}
-{%-     if provider_config.resources.projects %}
-{%-       for proj, proj_config in provider_config.resources.projects.items() %}
-{%-         if proj_config.module == module %}
-{%-           if proj_config.vms %}
-{%-             for vm, vm_config in proj_config.vms.items() %}
-{%-               if vm_config.firewall and vm_config.firewall == fw %}
-{%-                 set _ = fw_resources.append('digitalocean_droplet.'+vm|replace('-','_')+'.*.id') %}
-{%-               endif %}
-{%-             endfor %}
+{%-     if provider_config.resources.vms %}
+{%-       for vm, vm_config in provider_config.resources.vms.items() %}
+{%-         if vm_config.module == module %}
+{%-           if vm_config.firewall and vm_config.firewall == fw %}
+{%-             set _ = fw_resources.append('digitalocean_droplet.'+vm|replace('-','_')+'.*.id') %}
 {%-           endif %}
 {%-         endif %}
 {%-       endfor %}

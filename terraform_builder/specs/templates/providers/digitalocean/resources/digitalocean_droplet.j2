@@ -1,4 +1,5 @@
-{%-  for vm, vm_config in proj_config.vms.items() %}
+{%- for vm, vm_config in provider_config.resources.vms.items() %}
+{%-   if vm_config.module == module %}
 {%-    set memory = (vm_config.memory|default(1024)/1024)|round|int|string %}
 {%-    set cpus = (vm_config.num_cpus)|default(1)|string %}
 # Resource {{ provider }} virtual machine
@@ -18,5 +19,5 @@ resource "digitalocean_droplet" "{{ vm.split('.')[0]|replace('-','_') }}" {
   tags     = {{ tags|replace('\'', '') }}
 {%-    endif %}
 }
-{%-      set _ = project_resources.append('digitalocean_droplet.'+vm.split('.')[0]|replace('-','_')+'.*.urn') %}
-{%-  endfor %}
+{%-   endif %}
+{%- endfor %}

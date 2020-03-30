@@ -1,6 +1,6 @@
 {%- if fw_config and fw_config.tags %}
 {%-   for tag in fw_config.tags %}
-{%-     if fw_config.module == module %}
+{%-     if module in fw_config.modules %}
 # Resource {{ provider }} tag
 resource "digitalocean_tag" "{{ tag|replace('-','_') }}" {
   name = "{{ tag }}"
