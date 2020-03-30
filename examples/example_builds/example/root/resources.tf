@@ -120,6 +120,16 @@ resource "digitalocean_firewall" "web" {
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
 }
+# Resource DigitalOcean virtual machine
+resource "digitalocean_droplet" "example_vm" {
+  count    = 1
+  name     = format("example-vm-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+  image    = "ubuntu-18-04-x64"
+  region   = var.do_region
+  size     = "s-1vcpu-1gb"
+  ssh_keys = var.do_ssh_keys
+  tags     = [digitalocean_tag.example_digitalocean.id]
+}
 # Resource DigitalOcean project
 resource "digitalocean_project" "example" {
   name        = format("example-%s", substr(var.environment, 0, 4))
@@ -135,16 +145,6 @@ resource "digitalocean_domain" "example_org" {
 # Resource DigitalOcean tag
 resource "digitalocean_tag" "example_digitalocean" {
   name = "example-digitalocean"
-}
-# Resource DigitalOcean virtual machine
-resource "digitalocean_droplet" "example_vm" {
-  count    = 1
-  name     = format("example-vm-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
-  image    = "ubuntu-18-04-x64"
-  region   = var.do_region
-  size     = "s-1vcpu-1gb"
-  ssh_keys = var.do_ssh_keys
-  tags     = [digitalocean_tag.example_digitalocean.id]
 }
 # Obtain list of project resources as local and use
 locals {

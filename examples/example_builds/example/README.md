@@ -143,7 +143,8 @@ DigitalOcean:
   resources:
     firewalls:
       default:
-        module: root
+        modules:
+        - root
         name: default-server-rules
         rules:
         - direction: inbound
@@ -171,7 +172,8 @@ DigitalOcean:
         - default-firewall
       web:
         create: true
-        module: root
+        modules:
+        - root
         name: web-server-rules
         rules:
         - direction: inbound
@@ -209,15 +211,17 @@ DigitalOcean:
         purpose: Just to demonstrate an example project
         tags:
         - example-digitalocean
-        vms:
-          example-vm:
-            count: 1
-            firewall: default
-            image: ubuntu-18-04-x64
-            memory: 1024
-            num_cpus: 1
-            tags:
-            - example-digitalocean
+    vms:
+      example-vm:
+        count: 1
+        firewall: default
+        image: ubuntu-18-04-x64
+        memory: 1024
+        module: root
+        num_cpus: 1
+        project: example
+        tags:
+        - example-digitalocean
   variables:
     do_api_endpoint:
       default: https://api.digitalocean.com
