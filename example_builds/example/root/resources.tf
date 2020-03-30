@@ -61,6 +61,75 @@ resource "azurerm_virtual_machine" "example_vm_root" {
   }
   tags = {"environment": "${var.environment}"}
 }
+# Resource DigitalOcean tag
+resource "digitalocean_tag" "default_firewall" {
+  name = "default-firewall"
+}
+# Resource DigitalOcean firewall
+resource "digitalocean_firewall" "default" {
+  name = format("default-server-rules-%s", var.environment)
+  droplet_ids = concat(digitalocean_droplet.example_vm.*.id)
+  tags     = [digitalocean_tag.default_firewall.id]
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "22"
+    source_addresses = []
+  }
+  outbound_rule {
+    protocol              = "icmp"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+  outbound_rule {
+    protocol              = "tcp"
+    port_range            = "1-65535"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+  outbound_rule {
+    protocol              = "udp"
+    port_range            = "1-65535"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+}
+# Resource DigitalOcean firewall
+resource "digitalocean_firewall" "web" {
+  name = format("web-server-rules-%s", var.environment)
+  tags     = []
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "22"
+    source_addresses = []
+  }
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "80"
+    source_addresses = []
+  }
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "443"
+    source_addresses = []
+  }
+  outbound_rule {
+    protocol              = "tcp"
+    port_range            = "53"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+  outbound_rule {
+    protocol              = "udp"
+    port_range            = "53"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+}
+# Resource DigitalOcean virtual machine
+resource "digitalocean_droplet" "example_vm" {
+  count    = 1
+  name     = format("example-vm-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+  image    = "ubuntu-18-04-x64"
+  region   = var.do_region
+  size     = "s-1vcpu-1gb"
+  ssh_keys = var.do_ssh_keys
+  tags     = [digitalocean_tag.example_digitalocean.id]
+}
 # Resource DigitalOcean project
 resource "digitalocean_project" "example" {
   name        = format("example-%s", substr(var.environment, 0, 4))
@@ -76,16 +145,6 @@ resource "digitalocean_domain" "example_org" {
 # Resource DigitalOcean tag
 resource "digitalocean_tag" "example_digitalocean" {
   name = "example-digitalocean"
-}
-# Resource DigitalOcean virtual machine
-resource "digitalocean_droplet" "example_vm" {
-  count    = 1
-  name     = format("example-vm-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
-  image    = "ubuntu-18-04-x64"
-  region   = var.do_region
-  size     = "s-1vcpu-1gb"
-  ssh_keys = var.do_ssh_keys
-  tags     = [digitalocean_tag.example_digitalocean.id]
 }
 # Obtain list of project resources as local and use
 locals {
