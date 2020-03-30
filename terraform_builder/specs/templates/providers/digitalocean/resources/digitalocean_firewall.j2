@@ -1,11 +1,12 @@
 {%- for fw, fw_config in provider_config.resources.firewalls.items() %}
 {%-   set fw_tags = [] %}
 {%-   if fw_config.tags %}
-{%-     include 'providers/digitalocean/resources/digitalocean_tag.j2' %}
 {%-     if fw_config.tags %}
 {%-       for tag in fw_config.tags %}
 {%-         set tag_id = 'digitalocean_tag.'+tag|replace('-','_')+'.id' %}
 {%-         set _ = fw_tags.append(tag_id) %}
+{%-         set tag_id_env = 'digitalocean_tag.'+tag|replace('-','_')+'_env.id' %}
+{%-         set _ = fw_tags.append(tag_id_env) %}
 {%-       endfor %}
 {%-     endif %}
 {%-   endif %}

@@ -15,6 +15,8 @@ resource "digitalocean_droplet" "{{ vm.split('.')[0]|replace('-','_') }}" {
 {%-      for tag in vm_config.tags %}
 {%-        set tag_id = 'digitalocean_tag.'+tag|replace('-','_')+'.id' %}
 {%-        set _ = tags.append(tag_id) %}
+{%-        set tag_id_env = 'digitalocean_tag.'+tag|replace('-','_')+'_env.id' %}
+{%-        set _ = tags.append(tag_id_env) %}
 {%-      endfor %}
   tags     = {{ tags|replace('\'', '') }}
 {%-    endif %}

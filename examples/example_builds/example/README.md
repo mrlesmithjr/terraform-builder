@@ -211,6 +211,9 @@ DigitalOcean:
         purpose: Just to demonstrate an example project
         tags:
         - example-digitalocean
+    tags:
+    - default-firewall
+    - example-digitalocean
     vms:
       example-vm:
         count: 1
