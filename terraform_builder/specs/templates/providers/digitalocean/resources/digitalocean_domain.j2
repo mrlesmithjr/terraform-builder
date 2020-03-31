@@ -1,14 +1,13 @@
-{%- for domain, domain_config in proj_config.domains.items() %}
-{%-   if domain_config.create %}
-# Resource {{ provider }} domain
-resource "digitalocean_domain" "{{ domain|replace('-','_')|replace('.','_') }}" {
-  name = "{{ domain }}"
+
+{%- if args.modules[module]['variables']['do_domain'] %}
+# Resource {{ provider }} default domain
+resource "digitalocean_domain" "default_env" {
+  name = format("%s.%s", var.environment, var.do_domain)
 }
-{%-     set _ = project_resources.append('digitalocean_domain.'+domain|replace('-','_')|replace('.','_')+'.urn') %}
-{%-   else %}
-# Data {{ provider }} domain
-data "digitalocean_domain" "{{ domain|replace('-','_')|replace('.','_') }}" {
-  name = "{{ domain }}"
+{%- set _ = project_resources.append('digitalocean_domain.default_env.urn') %}
+# Resource {{ provider }} default internal domain
+resource "digitalocean_domain" "default_env_internal" {
+  name = format("%s.%s.%s", "internal", var.environment, var.do_domain)
 }
-{%-   endif %}
-{%- endfor %}
+{%- set _ = project_resources.append('digitalocean_domain.default_env_internal.urn') %}
+{%- endif %}

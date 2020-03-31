@@ -15,17 +15,14 @@ Environments represent such things as: `development`, `staging`, and `production
 development:
   variables:
     azurerm_location: East US
-    do_domain: dev.example.org
     do_region: nyc1
 production:
   variables:
     azurerm_location: West US 2
-    do_domain: prd.example.org
-    do_region: sfo1
+    do_region: sfo2
 staging:
   variables:
     azurerm_location: North Central US
-    do_domain: stg.example.org
     do_region: ams3
 
 ```
@@ -192,25 +189,25 @@ DigitalOcean:
           - 0.0.0.0/0
           - ::/0
           direction: outbound
-          port_range: 53
+          protocol: icmp
+        - destination_addresses:
+          - 0.0.0.0/0
+          - ::/0
+          direction: outbound
+          port_range: 1-65535
           protocol: tcp
         - destination_addresses:
           - 0.0.0.0/0
           - ::/0
           direction: outbound
-          port_range: 53
+          port_range: 1-65535
           protocol: udp
     projects:
       example:
         create: true
         description: Example project
-        domains:
-          example.org:
-            create: true
         module: root
         purpose: Just to demonstrate an example project
-        tags:
-        - example-digitalocean
     tags:
     - default-firewall
     - example-digitalocean
@@ -222,7 +219,7 @@ DigitalOcean:
         memory: 1024
         module: root
         num_cpus: 1
-        project: example
+        private_networking: true
         tags:
         - example-digitalocean
   variables:
@@ -351,18 +348,20 @@ physical objects.
 
 ```yaml
 network:
-  variables: {}
+  variables:
+    do_domain: network.example.org
+    do_ssh_keys:
+    - 12121212
 root:
-  variables: {}
+  variables:
+    do_domain: example.org
+    do_ssh_keys:
+    - 12121212
 services:
-  variables: {}
-
-```
-
-## Global Variables
-
-```yaml
-{}
+  variables:
+    do_domain: services.example.org
+    do_ssh_keys:
+    - 12121212
 
 ```
 

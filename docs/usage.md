@@ -632,9 +632,6 @@ environments:
   production: {}
   staging: {}
 
-# Define global variables
-global_variables: {}
-
 # Define modules - Structure will be project_name/modules/{module}
 # root needs to always exist
 modules:

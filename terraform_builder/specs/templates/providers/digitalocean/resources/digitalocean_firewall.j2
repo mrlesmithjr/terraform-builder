@@ -23,7 +23,7 @@
 {%-     endif %}
 # Resource {{ provider }} firewall
 resource "digitalocean_firewall" "{{ fw|replace('-','_') }}" {
-  name = format("{{ fw_config.name }}-%s", var.environment)
+  name = format("{{ fw_config.name+'-'+module }}-%s", var.environment)
 {%-     if fw_resources != [] %}
   droplet_ids = concat({{ fw_resources|join(', ') }})
 {%-     endif %}
@@ -33,7 +33,9 @@ resource "digitalocean_firewall" "{{ fw|replace('-','_') }}" {
 {%-       if rule.direction == 'inbound' %}
   inbound_rule {
     protocol         = "{{ rule.protocol }}"
+{%-         if rule.port_range %}
     port_range       = "{{ rule.port_range }}"
+{%-         endif %}
     source_addresses = {{ rule.source_addresses|replace('\'','"') }}
   }
 {%-       elif rule.direction == 'outbound' %}
