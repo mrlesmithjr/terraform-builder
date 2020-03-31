@@ -4,7 +4,10 @@
 
 ```yaml
 services:
-  variables: {}
+  variables:
+    do_domain: services.example.org
+    do_ssh_keys:
+    - 12121212
 
 ```
 

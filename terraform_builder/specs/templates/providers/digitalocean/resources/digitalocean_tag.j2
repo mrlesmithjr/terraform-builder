@@ -6,7 +6,7 @@ resource "digitalocean_tag" "{{ tag|replace('-','_') }}" {
 }
 # Resource {{ provider }} tag
 resource "digitalocean_tag" "{{ tag|replace('-','_')+'_env' }}" {
-  name = format("{{ tag }}-%s", var.environment)
+  name = format("%s", var.environment)
 }
 {%-     set _ = do_tags.append(tag) %}
 {%-   endif %}

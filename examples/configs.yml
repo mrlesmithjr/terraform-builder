@@ -26,21 +26,15 @@ environments:
   development:
     variables:
       azurerm_location: East US
-      do_domain: dev.example.org
       do_region: nyc1
   production:
     variables:
       azurerm_location: West US 2
-      do_domain: prd.example.org
-      do_region: sfo1
+      do_region: sfo2
   staging:
     variables:
       azurerm_location: North Central US
-      do_domain: stg.example.org
       do_region: ams3
-
-# Define global variables - Not used at this point
-global_variables: {}
 
 # Define modules - Structure will be project_name/modules/{module}
 # root needs to always exist
@@ -53,18 +47,16 @@ global_variables: {}
 modules:
   root:
     variables:
-      {}
-      # environment: test
+      do_domain: example.org
+      do_ssh_keys: [12121212]
   network:
     variables:
-      {}
-      # environment: test
+      do_domain: network.example.org
+      do_ssh_keys: [12121212]
   services:
-    variables: {}
-
-# Defines default root environment to use for vars.
-# production|staging|development
-default_root_module_env: production
+    variables:
+      do_domain: services.example.org
+      do_ssh_keys: [12121212]
 
 # Define providers and variables
 # For variable definitions, keep the default as undefined and use either modules
@@ -193,25 +185,23 @@ providers:
               port_range: 443
               source_addresses: []
               direction: inbound
+            - protocol: icmp
+              destination_addresses: ["0.0.0.0/0", "::/0"]
+              direction: outbound
             - protocol: tcp
-              port_range: 53
+              port_range: 1-65535
               destination_addresses: ["0.0.0.0/0", "::/0"]
               direction: outbound
             - protocol: udp
-              port_range: 53
+              port_range: 1-65535
               destination_addresses: ["0.0.0.0/0", "::/0"]
               direction: outbound
       projects:
         example:
           create: true
           description: Example project
-          domains:
-            example.org:
-              create: true
           module: root
           purpose: Just to demonstrate an example project
-          tags:
-            - example-digitalocean
       # Define tags that need to be available across all modules. Then you can
       # define the applicable tags to the respective resources. An additional
       # tag will be created that will append each environment to the tag name.
@@ -224,14 +214,17 @@ providers:
       vms:
         # Define firewall to apply, if applicable.
         # Define project to add VM to, if applicable.
+        # Define private networking if you'd like internal addressing. Setting
+        # this to true, will also create an internal domain name if
+        # modules[module]['do_domain'] is defined.
         example-vm:
           count: 1
           firewall: default
           image: ubuntu-18-04-x64
           memory: 1024
           module: root
-          project: example
           num_cpus: 1
+          private_networking: true
           tags:
             - example-digitalocean
     variables:

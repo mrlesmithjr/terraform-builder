@@ -6,7 +6,6 @@
 development:
   variables:
     azurerm_location: East US
-    do_domain: dev.example.org
     do_region: nyc1
 
 ```

@@ -6,7 +6,6 @@
 staging:
   variables:
     azurerm_location: North Central US
-    do_domain: stg.example.org
     do_region: ams3
 
 ```

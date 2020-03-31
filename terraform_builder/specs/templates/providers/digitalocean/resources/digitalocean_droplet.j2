@@ -5,11 +5,12 @@
 # Resource {{ provider }} virtual machine
 resource "digitalocean_droplet" "{{ vm.split('.')[0]|replace('-','_') }}" {
   count    = {{ vm_config.count|default(1) }}
-  name     = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+  name     = format("{{ vm.split('.')[0] }}-%02s.%s.%s", count.index + 1, var.environment, var.do_domain)
   image    = "{{ vm_config.image }}"
   region   = var.do_region
   size     = "{{ 's-'+cpus+'vcpu-'+memory+'gb' }}"
   ssh_keys = var.do_ssh_keys
+  private_networking = {{ vm_config.private_networking|default(false)|lower }}
 {%-    if vm_config.tags %}
 {%-      set tags = [] %}
 {%-      for tag in vm_config.tags %}

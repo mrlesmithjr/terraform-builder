@@ -4,7 +4,10 @@
 
 ```yaml
 network:
-  variables: {}
+  variables:
+    do_domain: network.example.org
+    do_ssh_keys:
+    - 12121212
 
 ```
 

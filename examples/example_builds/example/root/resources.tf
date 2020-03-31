@@ -63,7 +63,7 @@ resource "azurerm_virtual_machine" "example_vm_root" {
 }
 # Resource DigitalOcean firewall
 resource "digitalocean_firewall" "default" {
-  name = format("default-server-rules-%s", var.environment)
+  name = format("default-server-rules-root-%s", var.environment)
   droplet_ids = concat(digitalocean_droplet.example_vm.*.id)
   tags     = [digitalocean_tag.default_firewall.id, digitalocean_tag.default_firewall_env.id]
   inbound_rule {
@@ -88,7 +88,7 @@ resource "digitalocean_firewall" "default" {
 }
 # Resource DigitalOcean firewall
 resource "digitalocean_firewall" "web" {
-  name = format("web-server-rules-%s", var.environment)
+  name = format("web-server-rules-root-%s", var.environment)
   tags     = []
   inbound_rule {
     protocol         = "tcp"
@@ -106,13 +106,17 @@ resource "digitalocean_firewall" "web" {
     source_addresses = []
   }
   outbound_rule {
+    protocol              = "icmp"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+  outbound_rule {
     protocol              = "tcp"
-    port_range            = "53"
+    port_range            = "1-65535"
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
   outbound_rule {
     protocol              = "udp"
-    port_range            = "53"
+    port_range            = "1-65535"
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
 }
@@ -122,7 +126,7 @@ resource "digitalocean_tag" "default_firewall" {
 }
 # Resource DigitalOcean tag
 resource "digitalocean_tag" "default_firewall_env" {
-  name = format("default-firewall-%s", var.environment)
+  name = format("%s", var.environment)
 }
 # Resource DigitalOcean tag
 resource "digitalocean_tag" "example_digitalocean" {
@@ -130,33 +134,46 @@ resource "digitalocean_tag" "example_digitalocean" {
 }
 # Resource DigitalOcean tag
 resource "digitalocean_tag" "example_digitalocean_env" {
-  name = format("example-digitalocean-%s", var.environment)
+  name = format("%s", var.environment)
 }
 # Resource DigitalOcean virtual machine
 resource "digitalocean_droplet" "example_vm" {
   count    = 1
-  name     = format("example-vm-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+  name     = format("example-vm-%02s.%s.%s", count.index + 1, var.environment, var.do_domain)
   image    = "ubuntu-18-04-x64"
   region   = var.do_region
   size     = "s-1vcpu-1gb"
   ssh_keys = var.do_ssh_keys
+  private_networking = true
   tags     = [digitalocean_tag.example_digitalocean.id, digitalocean_tag.example_digitalocean_env.id]
+}
+# Resource DigitalOcean default domain
+resource "digitalocean_domain" "default_env" {
+  name = format("%s.%s", var.environment, var.do_domain)
+}
+# Resource DigitalOcean default internal domain
+resource "digitalocean_domain" "default_env_internal" {
+  name = format("%s.%s.%s", "internal", var.environment, var.do_domain)
+}
+# Resource DigitalOcean internal DNS record
+resource "digitalocean_record" "example_vm_internal" {
+  count  = 1
+  domain = format("%s.%s.%s", "internal", var.environment, var.do_domain)
+  type   = "A"
+  name   = format("example_vm-%02s", count.index + 1)
+  value  = digitalocean_droplet.example_vm[count.index].ipv4_address_private
 }
 # Resource DigitalOcean project
 resource "digitalocean_project" "example" {
-  name        = format("example-%s", substr(var.environment, 0, 4))
+  name        = format("example-%s", var.environment)
   description = format("Example project - %s", var.environment)
   purpose     = format("Just to demonstrate an example project - %s", var.environment)
   environment = var.environment
   resources   = [for resource in flatten(local.project_resources) : resource]
 }
-# Resource DigitalOcean domain
-resource "digitalocean_domain" "example_org" {
-  name = "example.org"
-}
 # Obtain list of project resources as local and use
 locals {
-  project_resources = [digitalocean_domain.example_org.urn, digitalocean_droplet.example_vm.*.urn]
+  project_resources = [digitalocean_domain.default_env.urn, digitalocean_domain.default_env_internal.urn, digitalocean_droplet.example_vm.*.urn]
 }
 # Resource vSphere datacenter
 resource "vsphere_datacenter" "example_dc" {
