@@ -1,3 +1,67 @@
+commit 6992729ba243e86457f11437bbf5e5fcb0cd461d
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Wed Apr 1 01:04:29 2020 -0400
+
+    Added functionality to add DigitalOcean domains, records to parent root
+    
+    These changes allow DigitalOcean resources to be create in the project
+    root and outside of the environments modules.
+    
+    Closes #36
+
+commit b3406671ab709116c33d0b65de5dad4ab89ff4c5
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Mon Mar 30 22:59:07 2020 -0400
+
+    A lot of DigitalOcean enhancements here
+    
+    This PR will:
+    - Closes #32
+    - Closes #33
+    - Closes #34
+    
+    There are a lot of DigitalOcean enhancements here. Including:
+    - Domains managed when defining in modules[module]['do_domain']
+    - Internal domain "internal.modules[module]['do_domain'] added for
+      internal communications
+    - Internal DNS A record for VMs when private_networking: true
+    - Firewall rules now named with module name appended to get around
+      duplicated rule names when multiple modules consume the firewall
+    - Droplet names now have environment and domain appended to create a
+      FQDN name for VM
+    - Tag added to droplets for environment by default
+
+commit 098f646c787e448ba7258d0b778ab06a5bc1c754
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sun Mar 29 23:57:15 2020 -0400
+
+    Fixed DigitalOcean tags
+    
+    DigitalOcean tags are now appropriately added across modules. For every
+    tag defined, a respective tag will be created for each environment. And
+    then for each droplet, etc. which can have tags applied will also have a
+    tag added for the environment as well. This will allow tagging to not
+    only work for just the defined tag, but also for the tag-environment as
+    well.
+    
+    Closes #30
+
+commit 675de588c46261c623e7076f4bda5404838e6ac1
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sun Mar 29 22:29:58 2020 -0400
+
+    Moved VMs from underneath projects
+    
+    Because DigitalOcean does not require anything to be in place to start
+    creating VMs, we have moved VMs out to their own structure under
+    resources. This also affected how firewalls, etc. are applied to VMs.
+    So, some additional tweaks were required to accomplish this.
+    
+    There is still an issue with tags between modules if a VM moves. Will
+    address this in another issue.
+    
+    Closes #27
+
 commit 0e0a0878064ff61418bec20208c57eef8b91b22e
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Sun Mar 29 13:25:58 2020 -0400

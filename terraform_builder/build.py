@@ -4,6 +4,7 @@ import logging
 import os
 import shutil
 import subprocess
+from subprocess import PIPE
 import sys
 import jinja2
 from graphviz import Source
@@ -173,7 +174,7 @@ class Build:
 
         self.logger.info('Initializing config in: %s', self.project_root)
         initialize = subprocess.run(
-            ['terraform', 'init'], check=False, capture_output=True)
+            ['terraform', 'init'], check=False, stderr=PIPE, stdout=PIPE)
 
         if initialize.returncode != 0:
             self.logger.error('terraform init: %s',
@@ -192,7 +193,7 @@ class Build:
 
         # Validate configuration
         validation = subprocess.run(
-            ['terraform', 'validate'], check=False, capture_output=True)
+            ['terraform', 'validate'], check=False, stderr=PIPE, stdout=PIPE)
 
         if validation.returncode != 0:
             self.logger.error('terraform validate: %s',
@@ -215,7 +216,7 @@ class Build:
         # Execute terraform graph to capture dot source
         terraform_graph = subprocess.run(
             ['terraform', 'graph'], check=False,
-            stdout=subprocess.PIPE)
+            stdout=PIPE)
 
         # Extract terraform graph source
         source = Source(terraform_graph.stdout.decode('utf-8'))
