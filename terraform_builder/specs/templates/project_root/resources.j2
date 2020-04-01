@@ -1,0 +1,32 @@
+{%- for provider, config in args.providers.items() %}
+{%-   if config != {} %}
+{%-     if provider == 'DigitalOcean' %}
+{%-       if config.project_root and config.project_root.resources %}
+{%-         if config.project_root.resources.domains %}
+{%-           for domain in config.project_root.resources.domains %}
+# Resource {{ provider }} domain
+resource "digitalocean_domain" "{{ domain|replace('.', '_') }}" {
+  name = "{{ domain }}"
+}
+{%-           endfor %}
+{%-         endif %}
+{%-         if config.project_root.resources.dns_records %}
+{%-           for record in config.project_root.resources.dns_records %}
+{%-             if record.name == '@' %}
+{%-               set resource_name = 'default_'+record.domain|replace('.', '_') %}
+{%-             else %}
+{%-               set resource_name = record.name+'_'+record.domain|replace('.', '_') %}
+{%-             endif %}
+# Resource {{ provider }} DNS record
+resource "digitalocean_record" "{{ resource_name }}" {
+  domain = digitalocean_domain.{{ record.domain|replace('.', '_') }}.name
+  type   = "{{ record.type|upper }}"
+  name   = "{{ record.name }}"
+  value  = "{{ record.value }}"
+}
+{%-           endfor %}
+{%-         endif %}
+{%-       endif %}
+{%-     endif %}
+{%-   endif %}
+{%- endfor %}
