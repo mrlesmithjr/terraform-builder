@@ -27,14 +27,20 @@ environments:
     variables:
       azurerm_location: East US
       do_region: nyc1
+      vsphere_allow_unverified_ssl: "true"
+      vsphere_server: vc.development.example.org
   production:
     variables:
       azurerm_location: West US 2
       do_region: sfo2
+      vsphere_allow_unverified_ssl: "false"
+      vsphere_server: vc.production.example.org
   staging:
     variables:
       azurerm_location: North Central US
       do_region: ams3
+      vsphere_allow_unverified_ssl: "true"
+      vsphere_server: vc.staging.example.org
 
 # Define modules - Structure will be project_name/modules/{module}
 # root needs to always exist
@@ -296,15 +302,20 @@ providers:
                   num_cpus: 1
                   tags:
                     - example-vsphere
-                  template: ubuntu-18-04-x64
+                  template: ubuntu1804_x64
           module: root
           # Define existing networks to consume, not create
           networks:
             - example-network
           # Define existing templates to consume, not create
+          # Because Terraform 0.12.x does not support SATA we need to define
+          # whether or not the controller is sata to add logic. Should this be
+          # a boolean instead?
           templates:
-            - ubuntu-16-04-x64
-            - ubuntu-18-04-x64
+            ubuntu1604_x64:
+              controller: scsi
+            ubuntu1804_x64:
+              controller: sata
           # Define virtual switches to create
           # If false, they will just be skipped
           # Only works with hosts that are created

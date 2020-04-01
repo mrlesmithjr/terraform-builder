@@ -7,6 +7,8 @@ development:
   variables:
     azurerm_location: East US
     do_region: nyc1
+    vsphere_allow_unverified_ssl: 'true'
+    vsphere_server: vc.development.example.org
 
 ```
 

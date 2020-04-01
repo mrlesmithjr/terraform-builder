@@ -1,6 +1,6 @@
 {%-  for network in dc_config.networks %}
 # Data {{ provider }} network
-data "vsphere_network" "{{ network|replace('-','_') }}" {
+data "vsphere_network" "{{ network|replace('-','_')|replace('|','_') }}" {
   name          = "{{ network }}"
 {%-    if dc_config.create %}
   datacenter_id = vsphere_datacenter.{{ dc|replace('-','_') }}.id

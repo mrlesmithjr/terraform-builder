@@ -4,9 +4,10 @@
 # Local .terraform directories
 **/.terraform/*
 
+# Ignore Terraform state files if not keeping in version control
 # .tfstate files
-*.tfstate
-*.tfstate.*
+# *.tfstate
+# *.tfstate.*
 
 # Crash log files
 crash.log

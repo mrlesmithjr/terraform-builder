@@ -16,14 +16,20 @@ development:
   variables:
     azurerm_location: East US
     do_region: nyc1
+    vsphere_allow_unverified_ssl: 'true'
+    vsphere_server: vc.development.example.org
 production:
   variables:
     azurerm_location: West US 2
     do_region: sfo2
+    vsphere_allow_unverified_ssl: 'false'
+    vsphere_server: vc.production.example.org
 staging:
   variables:
     azurerm_location: North Central US
     do_region: ams3
+    vsphere_allow_unverified_ssl: 'true'
+    vsphere_server: vc.staging.example.org
 
 ```
 
@@ -286,14 +292,16 @@ vSphere:
                 num_cpus: 1
                 tags:
                 - example-vsphere
-                template: ubuntu-18-04-x64
+                template: ubuntu1804_x64
         create: true
         module: root
         networks:
         - example-network
         templates:
-        - ubuntu-16-04-x64
-        - ubuntu-18-04-x64
+          ubuntu1604_x64:
+            controller: scsi
+          ubuntu1804_x64:
+            controller: sata
         virtual_switches:
           example-switch:
             active_nics:

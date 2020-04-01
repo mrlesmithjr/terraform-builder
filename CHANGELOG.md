@@ -1,3 +1,31 @@
+commit fbbbd1acff91563da05be2dbb4139a6bdf09908a
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Wed Apr 1 09:25:09 2020 -0400
+
+    Urgent fix for project .gitignore
+    
+    Just ran into an issue where existing Terraform state for a project caused dup environment
+
+commit 5660382119a735a1f1aacd51aa5b2efd0cc78e46
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Wed Apr 1 09:01:07 2020 -0400
+
+    Implemented fix for Python 3.6 subprocess.run
+    
+    capture_ouput was introduced in Python 3.7. So, versions prior to this are broke.
+    
+    Resolves #39
+
+commit 380e63e5c6db809475d486a6cbdc1d046dbfec46
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Wed Apr 1 09:01:07 2020 -0400
+
+    Implemented fix for Python 3.6 subprocess.run
+    
+    capture_ouput was introduced in Python 3.7. So, versions prior to this are broke.
+    
+    Resolves #39
+
 commit 6992729ba243e86457f11437bbf5e5fcb0cd461d
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Wed Apr 1 01:04:29 2020 -0400

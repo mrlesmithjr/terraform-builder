@@ -1,4 +1,4 @@
-{%-  for template in dc_config.templates %}
+{%-  for template, template_config in dc_config.templates.items() %}
 # Data {{ provider }} virtual machine template
 data "vsphere_virtual_machine" "{{ template|replace('-','_') }}" {
   name          = "{{ template }}"
