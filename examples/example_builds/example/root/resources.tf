@@ -65,7 +65,7 @@ resource "azurerm_virtual_machine" "example_vm_root" {
 resource "digitalocean_firewall" "default" {
   name = format("default-server-rules-root-%s", var.environment)
   droplet_ids = concat(digitalocean_droplet.example_vm.*.id)
-  tags = [digitalocean_tag.default_firewall.id, digitalocean_tag.default_firewall_env.id]
+  tags     = [digitalocean_tag.default_firewall.id, digitalocean_tag.default_firewall_env.id]
   inbound_rule {
     protocol         = "tcp"
     port_range       = "22"
@@ -89,7 +89,7 @@ resource "digitalocean_firewall" "default" {
 # Resource DigitalOcean firewall
 resource "digitalocean_firewall" "web" {
   name = format("web-server-rules-root-%s", var.environment)
-  tags = []
+  tags     = []
   inbound_rule {
     protocol         = "tcp"
     port_range       = "22"
@@ -138,14 +138,14 @@ resource "digitalocean_tag" "example_digitalocean_env" {
 }
 # Resource DigitalOcean virtual machine
 resource "digitalocean_droplet" "example_vm" {
-  count              = 1
-  name               = format("example-vm-%02s.%s.%s", count.index + 1, var.environment, var.do_domain)
-  image              = "ubuntu-18-04-x64"
-  region             = var.do_region
-  size               = "s-1vcpu-1gb"
-  ssh_keys           = var.do_ssh_keys
+  count    = 1
+  name     = format("example-vm-%02s.%s.%s", count.index + 1, var.environment, var.do_domain)
+  image    = "ubuntu-18-04-x64"
+  region   = var.do_region
+  size     = "s-1vcpu-1gb"
+  ssh_keys = var.do_ssh_keys
   private_networking = true
-  tags               = [digitalocean_tag.example_digitalocean.id, digitalocean_tag.example_digitalocean_env.id]
+  tags     = [digitalocean_tag.example_digitalocean.id, digitalocean_tag.example_digitalocean_env.id]
 }
 # Resource DigitalOcean default domain
 resource "digitalocean_domain" "default_env" {
@@ -188,13 +188,13 @@ resource "vsphere_datacenter" "example_dc" {
   name = "example-dc"
 }
 # Data vSphere virtual machine template
-data "vsphere_virtual_machine" "ubuntu_16_04_x64" {
-  name          = "ubuntu-16-04-x64"
+data "vsphere_virtual_machine" "ubuntu1604_x64" {
+  name          = "ubuntu1604_x64"
   datacenter_id = vsphere_datacenter.example_dc.id
 }
 # Data vSphere virtual machine template
-data "vsphere_virtual_machine" "ubuntu_18_04_x64" {
-  name          = "ubuntu-18-04-x64"
+data "vsphere_virtual_machine" "ubuntu1804_x64" {
+  name          = "ubuntu1804_x64"
   datacenter_id = vsphere_datacenter.example_dc.id
 }
 # Resource vSphere compute cluster
@@ -233,7 +233,7 @@ resource "vsphere_virtual_machine" "example_vm" {
   count            = 1
   name             = format("example-vm-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
   num_cpus         = 1
-  memory           = 2
+  memory           = 2048
   resource_pool_id = vsphere_compute_cluster.example_cluster.resource_pool_id
   network_interface {
     network_id = vsphere_host_port_group.example_pg.id
@@ -247,22 +247,21 @@ resource "vsphere_virtual_machine" "example_vm_from_template" {
   count            = 1
   name             = format("example-vm-from-template-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
   num_cpus         = 1
-  memory           = 2
+  memory           = 2048
   resource_pool_id = vsphere_compute_cluster.example_cluster.resource_pool_id
-  guest_id         = data.vsphere_virtual_machine.ubuntu_18_04_x64.guest_id
-  scsi_type        = data.vsphere_virtual_machine.ubuntu_18_04_x64.scsi_type
+  guest_id         = data.vsphere_virtual_machine.ubuntu1804_x64.guest_id
   network_interface {
     network_id   = data.vsphere_network.example_network.id
-    adapter_type = data.vsphere_virtual_machine.ubuntu_18_04_x64.network_interface_types[0]
-  }
-  disk {
-    label            = "disk0"
-    size             = data.vsphere_virtual_machine.ubuntu_18_04_x64.disks.0.size
-    eagerly_scrub    = data.vsphere_virtual_machine.ubuntu_18_04_x64.disks.0.eagerly_scrub
-    thin_provisioned = data.vsphere_virtual_machine.ubuntu_18_04_x64.disks.0.thin_provisioned
   }
   clone {
-    template_uuid = data.vsphere_virtual_machine.ubuntu_18_04_x64.id
+    template_uuid = data.vsphere_virtual_machine.ubuntu1804_x64.id
+  }
+# https://github.com/terraform-providers/terraform-provider-vsphere/issues/523
+  disk {
+    label            = format("example-vm-from-template_%02s.vmdk", count.index + 1)
+    size             = "1"
+    thin_provisioned = "1"
+    eagerly_scrub    = "0"
   }
 
   tags = ["vsphere_tag.example_vsphere.id"]

@@ -286,14 +286,16 @@ vSphere:
                 num_cpus: 1
                 tags:
                 - example-vsphere
-                template: ubuntu-18-04-x64
+                template: ubuntu1804_x64
         create: true
         module: root
         networks:
         - example-network
         templates:
-        - ubuntu-16-04-x64
-        - ubuntu-18-04-x64
+          ubuntu1604_x64:
+            controller: scsi
+          ubuntu1804_x64:
+            controller: sata
         virtual_switches:
           example-switch:
             active_nics:
