@@ -16,14 +16,20 @@ development:
   variables:
     azurerm_location: East US
     do_region: nyc1
+    vsphere_allow_unverified_ssl: 'true'
+    vsphere_server: vc.development.example.org
 production:
   variables:
     azurerm_location: West US 2
     do_region: sfo2
+    vsphere_allow_unverified_ssl: 'false'
+    vsphere_server: vc.production.example.org
 staging:
   variables:
     azurerm_location: North Central US
     do_region: ams3
+    vsphere_allow_unverified_ssl: 'true'
+    vsphere_server: vc.staging.example.org
 
 ```
 

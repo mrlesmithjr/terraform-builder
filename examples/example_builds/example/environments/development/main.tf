@@ -5,6 +5,8 @@ module "development-root" {
   environment = "development"
   azurerm_location   = "East US"
   do_region   = "nyc1"
+  vsphere_allow_unverified_ssl   = "true"
+  vsphere_server   = "vc.development.example.org"
 }
 # Module development-network config
 module "development-network" {
@@ -12,6 +14,8 @@ module "development-network" {
   environment = "development"
   azurerm_location   = "East US"
   do_region   = "nyc1"
+  vsphere_allow_unverified_ssl   = "true"
+  vsphere_server   = "vc.development.example.org"
 }
 # Module development-services config
 module "development-services" {
@@ -19,4 +23,6 @@ module "development-services" {
   environment = "development"
   azurerm_location   = "East US"
   do_region   = "nyc1"
+  vsphere_allow_unverified_ssl   = "true"
+  vsphere_server   = "vc.development.example.org"
 }

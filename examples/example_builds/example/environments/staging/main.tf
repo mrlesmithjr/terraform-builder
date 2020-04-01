@@ -5,6 +5,8 @@ module "staging-root" {
   environment = "staging"
   azurerm_location   = "North Central US"
   do_region   = "ams3"
+  vsphere_allow_unverified_ssl   = "true"
+  vsphere_server   = "vc.staging.example.org"
 }
 # Module staging-network config
 module "staging-network" {
@@ -12,6 +14,8 @@ module "staging-network" {
   environment = "staging"
   azurerm_location   = "North Central US"
   do_region   = "ams3"
+  vsphere_allow_unverified_ssl   = "true"
+  vsphere_server   = "vc.staging.example.org"
 }
 # Module staging-services config
 module "staging-services" {
@@ -19,4 +23,6 @@ module "staging-services" {
   environment = "staging"
   azurerm_location   = "North Central US"
   do_region   = "ams3"
+  vsphere_allow_unverified_ssl   = "true"
+  vsphere_server   = "vc.staging.example.org"
 }
