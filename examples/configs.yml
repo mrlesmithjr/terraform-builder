@@ -139,6 +139,16 @@ providers:
         description: AzureRM Tenant ID
         default: ""
   DigitalOcean:
+    # Define resources, etc. only required in the project root.
+    project_root:
+      resources:
+        domains:
+          - example.org
+        dns_records:
+          - name: services
+            type: CNAME
+            domain: example.org
+            value: production.services.example.org.
     resources:
       firewalls:
         # droplets will select firewall rules by name. Under modules, add any
@@ -219,6 +229,12 @@ providers:
         # modules[module]['do_domain'] is defined.
         example-vm:
           count: 1
+          # Example DNS record for each environment's internal URL.
+          # Ensures that URL is contained internally only.
+          dns_records:
+            - name: portal
+              type: A
+              private: true
           firewall: default
           image: ubuntu-18-04-x64
           memory: 1024

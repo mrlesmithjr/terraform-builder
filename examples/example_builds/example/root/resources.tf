@@ -65,7 +65,7 @@ resource "azurerm_virtual_machine" "example_vm_root" {
 resource "digitalocean_firewall" "default" {
   name = format("default-server-rules-root-%s", var.environment)
   droplet_ids = concat(digitalocean_droplet.example_vm.*.id)
-  tags     = [digitalocean_tag.default_firewall.id, digitalocean_tag.default_firewall_env.id]
+  tags = [digitalocean_tag.default_firewall.id, digitalocean_tag.default_firewall_env.id]
   inbound_rule {
     protocol         = "tcp"
     port_range       = "22"
@@ -89,7 +89,7 @@ resource "digitalocean_firewall" "default" {
 # Resource DigitalOcean firewall
 resource "digitalocean_firewall" "web" {
   name = format("web-server-rules-root-%s", var.environment)
-  tags     = []
+  tags = []
   inbound_rule {
     protocol         = "tcp"
     port_range       = "22"
@@ -138,14 +138,14 @@ resource "digitalocean_tag" "example_digitalocean_env" {
 }
 # Resource DigitalOcean virtual machine
 resource "digitalocean_droplet" "example_vm" {
-  count    = 1
-  name     = format("example-vm-%02s.%s.%s", count.index + 1, var.environment, var.do_domain)
-  image    = "ubuntu-18-04-x64"
-  region   = var.do_region
-  size     = "s-1vcpu-1gb"
-  ssh_keys = var.do_ssh_keys
+  count              = 1
+  name               = format("example-vm-%02s.%s.%s", count.index + 1, var.environment, var.do_domain)
+  image              = "ubuntu-18-04-x64"
+  region             = var.do_region
+  size               = "s-1vcpu-1gb"
+  ssh_keys           = var.do_ssh_keys
   private_networking = true
-  tags     = [digitalocean_tag.example_digitalocean.id, digitalocean_tag.example_digitalocean_env.id]
+  tags               = [digitalocean_tag.example_digitalocean.id, digitalocean_tag.example_digitalocean_env.id]
 }
 # Resource DigitalOcean default domain
 resource "digitalocean_domain" "default_env" {
@@ -161,6 +161,14 @@ resource "digitalocean_record" "example_vm_internal" {
   domain = format("%s.%s.%s", "internal", var.environment, var.do_domain)
   type   = "A"
   name   = format("example_vm-%02s", count.index + 1)
+  value  = digitalocean_droplet.example_vm[count.index].ipv4_address_private
+}
+# Resource DigitalOcean internal DNS record
+resource "digitalocean_record" "portal_internal" {
+  count  = 1
+  domain = format("%s.%s.%s", "internal", var.environment, var.do_domain)
+  type   = "A"
+  name   = "portal"
   value  = digitalocean_droplet.example_vm[count.index].ipv4_address_private
 }
 # Resource DigitalOcean project

@@ -11,5 +11,33 @@ resource "digitalocean_record" "{{ (vm.split('.')[0]|replace('-','_'))+'_interna
   value  = digitalocean_droplet.{{ vm.split('.')[0]|replace('-','_') }}[count.index].ipv4_address_private
 }
 {%-     endif %}
+{%-     if vm_config.dns_records %}
+{%-       for record in vm_config.dns_records %}
+{%-         if record.name == '@' %}
+{%-           set resource_name = vm.split('.')[0]|replace('-','_')+'_domain_default' %}
+{%-         else %}
+{%-           set resource_name = record.name %}
+{%-         endif %}
+{%-         if record.private %}
+# Resource {{ provider }} internal DNS record
+resource "digitalocean_record" "{{ resource_name+'_internal' }}" {
+  count  = {{ vm_config.count }}
+  domain = format("%s.%s.%s", "internal", var.environment, var.do_domain)
+  type   = "{{ record.type|upper }}"
+  name   = "{{ record.name }}"
+  value  = digitalocean_droplet.{{ vm.split('.')[0]|replace('-','_') }}[count.index].ipv4_address_private
+}
+{%-         else %}
+# Resource {{ provider }} DNS record
+resource "digitalocean_record" "{{ resource_name }}" {
+  count  = {{ vm_config.count }}
+  domain = format("%s.%s", var.environment, var.do_domain)
+  type   = "{{ record.type }}"
+  name   = "{{ record.name }}"
+  value  = digitalocean_droplet.{{ vm.split('.')[0]|replace('-','_') }}[count.index].ipv4_address
+}
+{%-         endif %}
+{%-       endfor %}
+{%-     endif %}
 {%-   endif %}
 {%- endfor %}

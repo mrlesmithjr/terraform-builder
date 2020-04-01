@@ -47,6 +47,18 @@ provider "vsphere" {
   vsphere_server       = var.vsphere_server
 }
 
+# Resource DigitalOcean domain
+resource "digitalocean_domain" "example_org" {
+  name = "example.org"
+}
+# Resource DigitalOcean DNS record
+resource "digitalocean_record" "services_example_org" {
+  domain = digitalocean_domain.example_org.name
+  type   = "CNAME"
+  name   = "services"
+  value  = "production.services.example.org."
+}
+
 # Setting required Terraform version or greater
 terraform {
   required_version = ">= 0.12.0"

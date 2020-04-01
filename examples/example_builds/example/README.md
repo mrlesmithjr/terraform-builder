@@ -137,6 +137,15 @@ AzureRM:
       description: AzureRM Tenant ID
       type: string
 DigitalOcean:
+  project_root:
+    resources:
+      dns_records:
+      - domain: example.org
+        name: services
+        type: CNAME
+        value: production.services.example.org.
+      domains:
+      - example.org
   resources:
     firewalls:
       default:
@@ -214,6 +223,10 @@ DigitalOcean:
     vms:
       example-vm:
         count: 1
+        dns_records:
+        - name: portal
+          private: true
+          type: A
         firewall: default
         image: ubuntu-18-04-x64
         memory: 1024
