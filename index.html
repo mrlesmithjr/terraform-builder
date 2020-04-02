@@ -5,11 +5,11 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="None">
+  
   
   
   <link rel="shortcut icon" href="img/favicon.ico">
-  <title>Terraform Builder</title>
+  <title>Terraform Builder - Terraform Builder</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
 
   <link rel="stylesheet" href="css/theme.css" />
@@ -47,83 +47,51 @@
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <p class="caption"><span class="caption-text">Terraform Builder</span></p>
                 <ul class="current">
                     <li class="toctree-l1 current"><a class="reference internal current" href=".">Terraform Builder</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#about-terraform-builder">About Terraform Builder</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#why-terraform-builder">Why Terraform Builder</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#problems-that-terraform-builder-solves">Problems That Terraform Builder Solves</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#concepts">Concepts</a>
+    </li>
     </ul>
                     </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="about/">About Terraform Builder</a>
+                    <li class="toctree-l1"><a class="reference internal" href="01_setup/">Setup Guide</a>
                     </li>
-                </ul>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="usage/">Terraform Builder Usage</a>
+                    <li class="toctree-l1"><a class="reference internal" href="#">Configuration</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="02_configuration/">Configuration Constructs</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="02_configuration/guide/">Configuration Guide</a>
+                </li>
+    </ul>
                     </li>
-                </ul>
-                <p class="caption"><span class="caption-text">Example builds</span></p>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="#">Example</a>
+                    <li class="toctree-l1"><a class="reference internal" href="#">Usage</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="03_usage/">Command Line Usage</a>
+                </li>
+    </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="#">Examples</a>
     <ul>
                 <li class="toctree-l2"><a class="reference internal" href="example_builds/example/">Terraform Project - example</a>
                 </li>
-                <li class="toctree-l2"><a class="reference internal" href="example_builds/example/LICENSE/">LICENSE</a>
+                <li class="toctree-l2"><a class="reference internal" href="example_builds/example/environments/development/">Terraform Project - example - Module development</a>
                 </li>
-                <li class="toctree-l2"><a class="reference internal" href="#">Environments</a>
-    <ul>
-                <li class="toctree-l3"><a class="reference internal" href="#">Development</a>
-    <ul>
-                <li class="toctree-l4"><a class="reference internal" href="example_builds/example/environments/development/">Terraform Project - example - Module development</a>
+                <li class="toctree-l2"><a class="reference internal" href="example_builds/example/environments/production/">Terraform Project - example - Module production</a>
                 </li>
-                <li class="toctree-l4"><a class="reference internal" href="example_builds/example/environments/development/LICENSE/">LICENSE</a>
+                <li class="toctree-l2"><a class="reference internal" href="example_builds/example/environments/staging/">Terraform Project - example - Module staging</a>
                 </li>
-    </ul>
+                <li class="toctree-l2"><a class="reference internal" href="example_builds/example/modules/network/">Terraform Project - example - Module network</a>
                 </li>
-                <li class="toctree-l3"><a class="reference internal" href="#">Production</a>
-    <ul>
-                <li class="toctree-l4"><a class="reference internal" href="example_builds/example/environments/production/">Terraform Project - example - Module production</a>
+                <li class="toctree-l2"><a class="reference internal" href="example_builds/example/modules/services/">Terraform Project - example - Module services</a>
                 </li>
-                <li class="toctree-l4"><a class="reference internal" href="example_builds/example/environments/production/LICENSE/">LICENSE</a>
-                </li>
-    </ul>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="#">Staging</a>
-    <ul>
-                <li class="toctree-l4"><a class="reference internal" href="example_builds/example/environments/staging/">Terraform Project - example - Module staging</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="example_builds/example/environments/staging/LICENSE/">LICENSE</a>
-                </li>
-    </ul>
-                </li>
-    </ul>
-                </li>
-                <li class="toctree-l2"><a class="reference internal" href="#">Modules</a>
-    <ul>
-                <li class="toctree-l3"><a class="reference internal" href="#">Network</a>
-    <ul>
-                <li class="toctree-l4"><a class="reference internal" href="example_builds/example/modules/network/">Terraform Project - example - Module network</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="example_builds/example/modules/network/LICENSE/">LICENSE</a>
-                </li>
-    </ul>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="#">Services</a>
-    <ul>
-                <li class="toctree-l4"><a class="reference internal" href="example_builds/example/modules/services/">Terraform Project - example - Module services</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="example_builds/example/modules/services/LICENSE/">LICENSE</a>
-                </li>
-    </ul>
-                </li>
-    </ul>
-                </li>
-                <li class="toctree-l2"><a class="reference internal" href="#">Root</a>
-    <ul>
-                <li class="toctree-l3"><a class="reference internal" href="example_builds/example/root/">Terraform Project - example - Module root</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="example_builds/example/root/LICENSE/">LICENSE</a>
-                </li>
-    </ul>
+                <li class="toctree-l2"><a class="reference internal" href="example_builds/example/root/">Terraform Project - example - Module root</a>
                 </li>
     </ul>
                     </li>
@@ -148,6 +116,10 @@
     <li><a href=".">Docs</a> &raquo;</li>
     
       
+        
+          <li>Terraform Builder &raquo;</li>
+        
+      
     
     <li>Terraform Builder</li>
     <li class="wy-breadcrumbs-aside">
@@ -166,6 +138,42 @@ of <a href="https://github.com/mrlesmithjr/packer-builder">Packer Builder</a>.</
 <blockquote>
 <p>NOTE: This is highly under development and far from fully featured.</p>
 </blockquote>
+<h2 id="about-terraform-builder">About Terraform Builder</h2>
+<p>Terraform Builder is completely open-source, and we welcome feedback,
+contributions, and recommendations. Start using Terraform Builder now, by
+heading over to <a href="https://github.com/mrlesmithjr/terraform-builder">https://github.com/mrlesmithjr/terraform-builder</a>.</p>
+<h2 id="why-terraform-builder">Why Terraform Builder</h2>
+<p>But, Terraform is simple already right? Of course it is!</p>
+<p>So, why do we need Terraform Builder?</p>
+<p>Simple! To make generating configurations more consumable.</p>
+<p>Terraform Builder also creates a majority of the documentation, etc. for your
+project by creating <code>README.md</code> files where appropriate and other important
+files such as <code>.gitignore</code> pre-populated for Terraform usage. Explore the
+<a href="https://github.com/mrlesmithjr/terraform-builder/tree/master/examples/example_builds/example">example build</a> to see the directory structure that is
+stamped out for you.</p>
+<h2 id="problems-that-terraform-builder-solves">Problems That Terraform Builder Solves</h2>
+<p>Removing the complexities of Terraform HCL, etc. Moreover, standardizing
+Terraform configurations. By using Terraform Builder, it is easy to add or
+remove resources, etc. to ensure consistent functionality.</p>
+<h2 id="concepts">Concepts</h2>
+<p>One of the major concepts of Terraform Builder is, to keep configurations as
+agnostic as possible. For example, defining resources should be done in a way
+that is not provider specific. By simply setting a variable to the desired
+provider, the magic happens on the backend for the translation.</p>
+<p>With Terraform Builder, everything is a module. Therefore, all configurations
+are based off of this concept. This is not a new concept, as Terraform already
+assumes that a single directory of configurations is a module. This module
+is the <code>root</code> module. So, with the <code>root</code> module being the foundation to all
+other modules. However, we hang the root module off of the parent root (project root). Therefore the parent root becomes the passthrough module.</p>
+<p>The other concept enforced with Terraform Builder is environments. By default,
+environments are implemented as modules as well. These environments are:
+<code>development</code>, <code>staging</code>, and <code>production</code>. By automatically stitching these
+environments together with all other modules, removes the complexity of trying
+to do it manually. And at the same time ensuring that, by default we have our
+different environments accounted for from the start.</p>
+<p>Does any of this mean that Terraform Builder is the right tool for everyone? Absolutely not! However, it will hopefully enable those who may be starting out
+new with Terraform to implement best practices as part of their learning. As
+well as, their implementations.</p>
               
             </div>
           </div>
@@ -173,7 +181,7 @@ of <a href="https://github.com/mrlesmithjr/packer-builder">Packer Builder</a>.</
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="about/" class="btn btn-neutral float-right" title="About Terraform Builder">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="01_setup/" class="btn btn-neutral float-right" title="Setup Guide">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
     </div>
@@ -201,7 +209,7 @@ of <a href="https://github.com/mrlesmithjr/packer-builder">Packer Builder</a>.</
       
       
       
-        <span style="margin-left: 15px"><a href="about/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="01_setup/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
@@ -216,8 +224,3 @@ of <a href="https://github.com/mrlesmithjr/packer-builder">Packer Builder</a>.</
 
 </body>
 </html>
-
-<!--
-MkDocs version : 1.1
-Build Date UTC : 2020-03-31 03:07:52
--->

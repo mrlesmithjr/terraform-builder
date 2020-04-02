@@ -1,12 +1,6 @@
 # Generated using https://github.com/mrlesmithjr/terraform-builder
 # Project root main.tf
 
-# Backend local config
-terraform {
-  backend "local" {
-    path = "terraform.tfstate"
-  }
-}
 
 # Module development config
 module "development" {
@@ -45,6 +39,18 @@ provider "vsphere" {
   password             = var.vsphere_password
   user                 = var.vsphere_username
   vsphere_server       = var.vsphere_server
+}
+
+# Resource DigitalOcean domain
+resource "digitalocean_domain" "example_org" {
+  name = "example.org"
+}
+# Resource DigitalOcean DNS record
+resource "digitalocean_record" "services_example_org" {
+  domain = digitalocean_domain.example_org.name
+  type   = "CNAME"
+  name   = "services"
+  value  = "production.services.example.org."
 }
 
 # Setting required Terraform version or greater

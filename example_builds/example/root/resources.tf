@@ -163,6 +163,14 @@ resource "digitalocean_record" "example_vm_internal" {
   name   = format("example_vm-%02s", count.index + 1)
   value  = digitalocean_droplet.example_vm[count.index].ipv4_address_private
 }
+# Resource DigitalOcean internal DNS record
+resource "digitalocean_record" "portal_internal" {
+  count  = 1
+  domain = format("%s.%s.%s", "internal", var.environment, var.do_domain)
+  type   = "A"
+  name   = "portal"
+  value  = digitalocean_droplet.example_vm[count.index].ipv4_address_private
+}
 # Resource DigitalOcean project
 resource "digitalocean_project" "example" {
   name        = format("example-%s", var.environment)
@@ -180,13 +188,13 @@ resource "vsphere_datacenter" "example_dc" {
   name = "example-dc"
 }
 # Data vSphere virtual machine template
-data "vsphere_virtual_machine" "ubuntu_16_04_x64" {
-  name          = "ubuntu-16-04-x64"
+data "vsphere_virtual_machine" "ubuntu1604_x64" {
+  name          = "ubuntu1604_x64"
   datacenter_id = vsphere_datacenter.example_dc.id
 }
 # Data vSphere virtual machine template
-data "vsphere_virtual_machine" "ubuntu_18_04_x64" {
-  name          = "ubuntu-18-04-x64"
+data "vsphere_virtual_machine" "ubuntu1804_x64" {
+  name          = "ubuntu1804_x64"
   datacenter_id = vsphere_datacenter.example_dc.id
 }
 # Resource vSphere compute cluster
@@ -225,7 +233,7 @@ resource "vsphere_virtual_machine" "example_vm" {
   count            = 1
   name             = format("example-vm-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
   num_cpus         = 1
-  memory           = 2
+  memory           = 2048
   resource_pool_id = vsphere_compute_cluster.example_cluster.resource_pool_id
   network_interface {
     network_id = vsphere_host_port_group.example_pg.id
@@ -239,22 +247,21 @@ resource "vsphere_virtual_machine" "example_vm_from_template" {
   count            = 1
   name             = format("example-vm-from-template-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
   num_cpus         = 1
-  memory           = 2
+  memory           = 2048
   resource_pool_id = vsphere_compute_cluster.example_cluster.resource_pool_id
-  guest_id         = data.vsphere_virtual_machine.ubuntu_18_04_x64.guest_id
-  scsi_type        = data.vsphere_virtual_machine.ubuntu_18_04_x64.scsi_type
+  guest_id         = data.vsphere_virtual_machine.ubuntu1804_x64.guest_id
   network_interface {
     network_id   = data.vsphere_network.example_network.id
-    adapter_type = data.vsphere_virtual_machine.ubuntu_18_04_x64.network_interface_types[0]
-  }
-  disk {
-    label            = "disk0"
-    size             = data.vsphere_virtual_machine.ubuntu_18_04_x64.disks.0.size
-    eagerly_scrub    = data.vsphere_virtual_machine.ubuntu_18_04_x64.disks.0.eagerly_scrub
-    thin_provisioned = data.vsphere_virtual_machine.ubuntu_18_04_x64.disks.0.thin_provisioned
   }
   clone {
-    template_uuid = data.vsphere_virtual_machine.ubuntu_18_04_x64.id
+    template_uuid = data.vsphere_virtual_machine.ubuntu1804_x64.id
+  }
+# https://github.com/terraform-providers/terraform-provider-vsphere/issues/523
+  disk {
+    label            = format("example-vm-from-template_%02s.vmdk", count.index + 1)
+    size             = "1"
+    thin_provisioned = "1"
+    eagerly_scrub    = "0"
   }
 
   tags = ["vsphere_tag.example_vsphere.id"]

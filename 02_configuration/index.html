@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Configuration Constructs - Terraform Builder</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Configuration Constructs";
+    var mkdocs_page_input_path = "02_configuration/index.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Terraform Builder</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <p class="caption"><span class="caption-text">Terraform Builder</span></p>
+                <ul class="current">
+                    <li class="toctree-l1"><a class="reference internal" href="..">Terraform Builder</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../01_setup/">Setup Guide</a>
+                    </li>
+                    <li class="toctree-l1 current"><a class="reference internal current" href="#">Configuration</a>
+    <ul class="current">
+                <li class="toctree-l2 current"><a class="reference internal current" href="./">Configuration Constructs</a>
+    <ul class="current">
+    <li class="toctree-l3"><a class="reference internal" href="#configs">Configs</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#secrets">Secrets</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#backends">Backends</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#environments">Environments</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#modules">Modules</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#providers">Providers</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#resources">Resources</a>
+    </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="guide/">Configuration Guide</a>
+                </li>
+    </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="#">Usage</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../03_usage/">Command Line Usage</a>
+                </li>
+    </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="#">Examples</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../example_builds/example/">Terraform Project - example</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../example_builds/example/environments/development/">Terraform Project - example - Module development</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../example_builds/example/environments/production/">Terraform Project - example - Module production</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../example_builds/example/environments/staging/">Terraform Project - example - Module staging</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../example_builds/example/modules/network/">Terraform Project - example - Module network</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../example_builds/example/modules/services/">Terraform Project - example - Module services</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../example_builds/example/root/">Terraform Project - example - Module root</a>
+                </li>
+    </ul>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Terraform Builder</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Configuration &raquo;</li>
+        
+      
+        
+          <li>Terraform Builder &raquo;</li>
+        
+      
+    
+    <li>Configuration Constructs</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="configuration-constructs">Configuration Constructs</h1>
+<h2 id="configs">Configs</h2>
+<p>Configurations are defined in YAML, and must follow a specific format. By doing
+this, we can ensure that we have consistency in our Terraform configurations. We
+use <code>configs.yml</code> but the filename can be anything you wish. However, the
+content must be consistent.</p>
+<h2 id="secrets">Secrets</h2>
+<p>Secrets are also defined in YAML, but are meant to be completely separate from
+configs to ensure they are indeed kept secret. We use <code>secrets.yml</code>, but once
+again, this can be anything you wish. Anything placed in <code>secrets.yml</code> will be
+created in the parent root folder as <code>terraform.tfvars.json</code>.</p>
+<h2 id="backends">Backends</h2>
+<p>We can configure different Terraform backends to use for our Terraform state.
+Initially this functionality is limited to the default <code>local</code> and <code>Consul</code>.
+<code>Consul</code> support is limited and under development now. But you can use it for
+testing purposes until fully implemented.</p>
+<h2 id="environments">Environments</h2>
+<p>Environments ensure that we account for each of: <code>development</code>, <code>production</code>,
+and <code>staging</code>. One major premise behind Terraform Builder is that environments
+are not an afterthought. Therefore, they are accounted for from the very beginning.
+Variable definitions can be specified differently for each environment
+as applicable as well.</p>
+<h2 id="modules">Modules</h2>
+<p>Another major premise behind Terraform Builder is leveraging modules from the
+very beginning as well. We define our modules as desired, and they are
+automatically stitched together with our environments. As in environments,
+variable definitions can be specified differently between modules. The only
+required module is root. The root module is where all resources will be added
+if no other modules are defined. As mentioned before, in Terraform Builder, the
+root module hangs off of our parent root (project root).</p>
+<h2 id="providers">Providers</h2>
+<p>Providers is where all of our Terrarom provider constructs are defined. The
+data model used for providers follows as closely to the native way of constructing
+objects as possible. This means that for example, you need to spin up a VM
+using the vSphere provider. The data model to get to the VM defintion, follows
+the order of parent objects required to do so.</p>
+<h2 id="resources">Resources</h2>
+<p>Resources are where we can defined things such as VMs, resource groups, etc. For
+example, VMs are defined in an agnostic way in which you can cut/paste VM resources
+between providers. When doing this, the backend configurations are handled for
+us to translate to the specific provider. Therefore, minimizing the level of
+effort to port a VM. This is extremely poweful, and will likely transpire into
+other resource portability such as firewalls, load balancers, etc.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="guide/" class="btn btn-neutral float-right" title="Configuration Guide">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../01_setup/" class="btn btn-neutral" title="Setup Guide"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../01_setup/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="guide/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Command Line Usage - Terraform Builder</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Command Line Usage";
+    var mkdocs_page_input_path = "03_usage/index.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Terraform Builder</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <p class="caption"><span class="caption-text">Terraform Builder</span></p>
+                <ul class="current">
+                    <li class="toctree-l1"><a class="reference internal" href="..">Terraform Builder</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../01_setup/">Setup Guide</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="#">Configuration</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../02_configuration/">Configuration Constructs</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../02_configuration/guide/">Configuration Guide</a>
+                </li>
+    </ul>
+                    </li>
+                    <li class="toctree-l1 current"><a class="reference internal current" href="#">Usage</a>
+    <ul class="current">
+                <li class="toctree-l2 current"><a class="reference internal current" href="./">Command Line Usage</a>
+    <ul class="current">
+    <li class="toctree-l3"><a class="reference internal" href="#help">Help</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#showing-version">Showing Version</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#execution">Execution</a>
+    </li>
+    </ul>
+                </li>
+    </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="#">Examples</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../example_builds/example/">Terraform Project - example</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../example_builds/example/environments/development/">Terraform Project - example - Module development</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../example_builds/example/environments/production/">Terraform Project - example - Module production</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../example_builds/example/environments/staging/">Terraform Project - example - Module staging</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../example_builds/example/modules/network/">Terraform Project - example - Module network</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../example_builds/example/modules/services/">Terraform Project - example - Module services</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../example_builds/example/root/">Terraform Project - example - Module root</a>
+                </li>
+    </ul>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Terraform Builder</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Usage &raquo;</li>
+        
+      
+        
+          <li>Terraform Builder &raquo;</li>
+        
+      
+    
+    <li>Command Line Usage</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="command-line-usage">Command Line Usage</h1>
+<p>The following will provide some of the command line options available with
+Terraform Builder.</p>
+<h2 id="help">Help</h2>
+<p>You can get Terraform Builder help:</p>
+<pre><code class="bash">python -m terraform_builder -h
+...
+usage: __main__.py [-h] [--config CONFIG] [--outputdir OUTPUTDIR]
+                   [--secrets SECRETS] [--version]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --config CONFIG       Configuration (YAML) to load
+  --outputdir OUTPUTDIR
+                        Define path to save configs.
+  --secrets SECRETS     Path to secrets
+  --version             show program's version number and exit
+</code></pre>
+
+<h2 id="showing-version">Showing Version</h2>
+<pre><code class="bash">python -m terraform_builder --version
+...
+terraform_builder 0.1.0
+</code></pre>
+
+<h2 id="execution">Execution</h2>
+<p>To execute Terraform Builder simply provide the <code>--config</code>, <code>--secrets</code>, and
+<code>--outputdir</code> arguments.</p>
+<pre><code class="bash">python -m terraform_builder --config examples/configs.yml --outputdir examples/example_builds
+...
+Initializing modules...
+
+Initializing the backend...
+
+Initializing provider plugins...
+
+The following providers do not have any version constraints in configuration,
+so the latest version was installed.
+
+To prevent automatic upgrades to new major versions that may contain breaking
+changes, it is recommended to add version = &quot;...&quot; constraints to the
+corresponding provider blocks in configuration, with the constraint strings
+suggested below.
+
+* provider.azurerm: version = &quot;~&gt; 2.2&quot;
+* provider.digitalocean: version = &quot;~&gt; 1.15&quot;
+* provider.vsphere: version = &quot;~&gt; 1.17&quot;
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running &quot;terraform plan&quot; to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+
+Success! The configuration is valid.
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../example_builds/example/" class="btn btn-neutral float-right" title="Terraform Project - example">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../02_configuration/guide/" class="btn btn-neutral" title="Configuration Guide"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../02_configuration/guide/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../example_builds/example/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
