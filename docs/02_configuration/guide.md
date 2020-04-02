@@ -1,27 +1,71 @@
----
-# This is an example config layout
+# Configuration Guide
 
-# Defines project name which becomes parent root directory
-project_name: example
+## Configs
 
-# Define minimum required Terraform version
-required_version: 0.12.0
+Configurations should be defined in a `configs.yml` file.
 
-# Define backends
-# Currently only local and limited Consul support
+## Secrets
+
+## Backends
+
+The following backends are supported with limited functionality.
+
+- Local(Default)
+- Consul
+
+Backends are configured in our `configs.yml` file as below:
+
+```yaml
+backends: {}
+```
+
+If our backends are configured exactly as above, we will use the default `local`
+backend.
+
+### Local
+
+If you'd like a bit more control over the [`local`](https://www.terraform.io/docs/backends/types/local.html) backend. You can define the `local` backend as below:
+
+```yaml
 backends:
-  {}
-  # local:
-  #   path: terraform.tfstate
-  # remote:
-  #   consul:
-  #     address: http://127.0.0.1:8500
-  #     scheme: http
-  #     path: example/terraform
+  local:
+    path: terraform.tfstate
+```
 
-# Define environments - Should be development, production, and staging.
-# You can define specific variables per environment to override the defaults
-# defined in providers.
+### Consul
+
+Currently [`Consul`](https://www.terraform.io/docs/backends/types/consul.html)
+backend configurations supported are limited. But will be enhanced over time.
+
+You can configurare a `Consul` backend as below:
+
+```yaml
+backends:
+  remote:
+    consul:
+      address: http://127.0.0.1:8500
+      scheme: http
+      path: example/terraform
+```
+
+## Environments
+
+As mentioned before, Terraform Builder enforces multiple environments by default
+to ensure we have proper constructs in place from the beginning.
+
+The following environments are defaults:
+
+- Development
+- Production
+- Staging
+
+We can configure environment specifics such as variables, etc. per environment.
+By defining variables within environments, we can override the defaults defined
+in our providers.
+
+Environment configurations should be configured similar to the below example:
+
+```yaml
 environments:
   development:
     variables:
@@ -41,15 +85,16 @@ environments:
       do_region: ams3
       vsphere_allow_unverified_ssl: "true"
       vsphere_server: vc.staging.example.org
+```
 
-# Define modules - Structure will be project_name/modules/{module}
-# root needs to always exist
-# Each module will be named with the respective environment appended to the
-# beginning of the module name. Example: development-root, production-root, and
-# staging-root.
-# You can define variables specific to a module which will override the
-# defaults defined in providers to allow flexibilty between modules. This needs
-# to be tested out a bit more.
+## Modules
+
+Modules allow us to construct our project into logical building blocks based on
+resources required to be used together. Structure will be project_name/modules/{module} root needs to always exist. Each module will be named with the respective environment appended to the beginning of the module name. Example: `development-root`, `production-root`, and `staging-root`. You can define variables specific to a module which will override the defaults defined in providers to allow flexibilty between modules.
+
+Module configurations should be configured similar to below:
+
+```yaml
 modules:
   root:
     variables:
@@ -63,12 +108,25 @@ modules:
     variables:
       do_domain: services.example.org
       do_ssh_keys: [12121212]
+```
 
-# Define providers and variables
-# For variable definitions, keep the default as undefined and use either modules
-# or environments to override the provider defaults.
-# Currently only the current variables for each provider are supported. So, it's
-# generally best to leave them as is.
+## Supported Providers
+
+> NOTE: The supported providers will be an iterative process. Initially the
+> provider support will be very limited to ensure that the modeling is proven
+> out. This will ensure that additional providers will follow the same modeling.
+
+Currently the following provider are supported with limited functionality.
+
+- AzureRM
+- DigitalOcean
+- vSphere
+
+Below you find examples of each supported provider with configs.
+
+### AzureRM
+
+```yaml
 providers:
   AzureRM:
     resources:
@@ -144,6 +202,12 @@ providers:
         type: string
         description: AzureRM Tenant ID
         default: ""
+```
+
+### DigitalOcean
+
+```yaml
+providers:
   DigitalOcean:
     # Define resources, etc. only required in the project root.
     project_root:
@@ -269,6 +333,12 @@ providers:
         type: string
         description: This is the DO API token
         default: ""
+```
+
+### vSphere
+
+```yaml
+providers:
   vSphere:
     resources:
       datacenters:
@@ -374,3 +444,4 @@ providers:
         type: string
         description: Username for vSphere API operations
         default: ""
+```

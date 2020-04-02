@@ -1,12 +1,14 @@
-{%-  if not args.backends.remote or (args.backends.remote and args.backends.remote == {}) %}
+{%- if not args.backends.remote or (args.backends.remote and args.backends.remote == {}) %}
+{%-   if args.backends.local %}
 # Backend local config
 terraform {
   backend "local" {
     path = "{{ args.backends.local.path }}"
   }
 }
-{%-  else %}
-{%-    if args.backends.remote.consul %}
-{%-      include 'backends/consul.j2' %}
-{%-    endif %}
-{%-  endif %}
+{%-   endif %}
+{%- else %}
+{%-   if args.backends.remote.consul %}
+{%-     include 'backends/consul.j2' %}
+{%-   endif %}
+{%- endif %}
