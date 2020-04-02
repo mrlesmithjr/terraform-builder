@@ -1,7 +1,19 @@
 site_name: Terraform Builder
 theme: readthedocs
-# nav:
-#   - Home: index.md
-#   - About Terraform Builder: about.md
-#   - Terraform Builder Usage: usage.md
-#   - Terraform Builder Examples: example_builds/example
+nav:
+  - Terraform Builder:
+      - index.md
+      - 01_setup/index.md
+      - Configuration:
+          - 02_configuration/index.md
+          - 02_configuration/guide.md
+      - Usage:
+          - 03_usage/index.md
+      - Examples:
+          - example_builds/example/README.md
+          - example_builds/example/environments/development/README.md
+          - example_builds/example/environments/production/README.md
+          - example_builds/example/environments/staging/README.md
+          - example_builds/example/modules/network/README.md
+          - example_builds/example/modules/services/README.md
+          - example_builds/example/root/README.md

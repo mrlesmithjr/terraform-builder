@@ -1,12 +1,6 @@
 # Generated using https://github.com/mrlesmithjr/terraform-builder
 # Project root main.tf
 
-# Backend local config
-terraform {
-  backend "local" {
-    path = "terraform.tfstate"
-  }
-}
 
 # Module development config
 module "development" {
