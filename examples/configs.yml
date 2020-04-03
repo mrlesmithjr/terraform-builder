@@ -307,6 +307,16 @@ providers:
                   tags:
                     - example-vsphere
                   template: ubuntu1804_x64
+                example-win-vm-from-template:
+                  count: 1
+                  memory: 2048
+                  network_interfaces:
+                    - network: example-pg
+                      address_allocation: dynamic
+                  num_cpus: 1
+                  tags:
+                    - example-vsphere
+                  template: windows2019_x64
           module: root
           # Define existing networks to consume, not create
           # Add subnet info associated with network
@@ -319,11 +329,17 @@ providers:
           # Because Terraform 0.12.x does not support SATA we need to define
           # whether or not the controller is sata to add logic. Should this be
           # a boolean instead?
+          # Define os as either linux or windows
           templates:
             ubuntu1604_x64:
               controller: scsi
+              os: linux
             ubuntu1804_x64:
               controller: sata
+              os: linux
+            windows2019_x64:
+              controller: sata
+              os: windows
           # Define virtual switches to create
           # If false, they will just be skipped
           # Only works with hosts that are created
@@ -364,6 +380,10 @@ providers:
         type: bool
         description: Boolean that can be set to true to disable SSL certificate verification
         default: "false"
+      vsphere_domain:
+        type: string
+        description: Define vSphere DNS domain - Used for VMs
+        default: ""
       vsphere_host_password:
         type: string
         description: Password for vSphere hosts

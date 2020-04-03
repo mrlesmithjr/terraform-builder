@@ -295,6 +295,16 @@ vSphere:
                 tags:
                 - example-vsphere
                 template: ubuntu1804_x64
+              example-win-vm-from-template:
+                count: 1
+                memory: 2048
+                network_interfaces:
+                - address_allocation: dynamic
+                  network: example-pg
+                num_cpus: 1
+                tags:
+                - example-vsphere
+                template: windows2019_x64
         create: true
         module: root
         networks:
@@ -305,8 +315,13 @@ vSphere:
         templates:
           ubuntu1604_x64:
             controller: scsi
+            os: linux
           ubuntu1804_x64:
             controller: sata
+            os: linux
+          windows2019_x64:
+            controller: sata
+            os: windows
         virtual_switches:
           example-switch:
             active_nics:
@@ -340,6 +355,10 @@ vSphere:
       default: 'false'
       description: Boolean that can be set to true to disable SSL certificate verification
       type: bool
+    vsphere_domain:
+      default: ''
+      description: Define vSphere DNS domain - Used for VMs
+      type: string
     vsphere_host_password:
       default: ''
       description: Password for vSphere hosts

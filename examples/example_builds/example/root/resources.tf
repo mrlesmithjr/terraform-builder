@@ -197,6 +197,11 @@ data "vsphere_virtual_machine" "ubuntu1804_x64" {
   name          = "ubuntu1804_x64"
   datacenter_id = vsphere_datacenter.example_dc.id
 }
+# Data vSphere virtual machine template
+data "vsphere_virtual_machine" "windows2019_x64" {
+  name          = "windows2019_x64"
+  datacenter_id = vsphere_datacenter.example_dc.id
+}
 # Data vSphere network
 data "vsphere_network" "example_pg" {
   name          = "example-pg"
@@ -259,6 +264,10 @@ resource "vsphere_virtual_machine" "example_vm_from_template" {
   clone {
     template_uuid = data.vsphere_virtual_machine.ubuntu1804_x64.id
     customize {
+      linux_options {
+      host_name = format("example-vm-from-template-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+      domain    = var.vsphere_domain
+      }
       network_interface {
         ipv4_address = cidrhost("192.168.250.0/24", 1 + count.index + var.environment_index)
         ipv4_netmask = 24
@@ -269,6 +278,37 @@ resource "vsphere_virtual_machine" "example_vm_from_template" {
   # https://github.com/terraform-providers/terraform-provider-vsphere/issues/523
   disk {
     label            = format("example-vm-from-template_%02s.vmdk", count.index + 1)
+    size             = "1"
+    thin_provisioned = "1"
+    eagerly_scrub    = "0"
+  }
+
+  tags = ["vsphere_tag.example_vsphere.id"]
+}
+# Resource vSphere virtual machine
+resource "vsphere_virtual_machine" "example_win_vm_from_template" {
+  count    = 1
+  name     = format("example-win-vm-from-template-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+  num_cpus = 1
+  memory   = 2048
+  network_interface {
+    network_id = data.vsphere_network.example_pg.id
+  }
+  resource_pool_id = vsphere_compute_cluster.example_cluster.resource_pool_id
+  guest_id         = data.vsphere_virtual_machine.windows2019_x64.guest_id
+  clone {
+    template_uuid = data.vsphere_virtual_machine.windows2019_x64.id
+    customize {
+      windows_options {
+        computer_name  = format("example-win-vm-from-template-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+#        workgroup      = "test"
+#        admin_password = "VMw4re"
+      }
+    }
+  }
+  # https://github.com/terraform-providers/terraform-provider-vsphere/issues/523
+  disk {
+    label            = format("example-win-vm-from-template_%02s.vmdk", count.index + 1)
     size             = "1"
     thin_provisioned = "1"
     eagerly_scrub    = "0"
