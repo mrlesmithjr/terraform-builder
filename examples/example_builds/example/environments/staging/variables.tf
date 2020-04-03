@@ -95,6 +95,12 @@ variable "vsphere_allow_unverified_ssl" {
     description = "Boolean that can be set to true to disable SSL certificate verification"
     default = "false"
 }
+# Variable vsphere_domain config
+variable "vsphere_domain" {
+    type = string
+    description = "Define vSphere DNS domain - Used for VMs"
+    default = ""
+}
 # Variable vsphere_host_password config
 variable "vsphere_host_password" {
     type = string

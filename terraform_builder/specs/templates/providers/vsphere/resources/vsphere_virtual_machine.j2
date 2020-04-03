@@ -32,6 +32,10 @@ resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
       host_name = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
       domain    = var.vsphere_domain
       }
+{%-      elif dc_config.templates[vm_config.template]['os']|lower == 'windows' %}
+      windows_options {
+        computer_name  = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+      }
 {%-      endif %}
 {%-      for interface in vm_config.network_interfaces %}
 {%-        if interface.address_allocation|lower == 'static' %}
