@@ -6,19 +6,16 @@
 module "development" {
   source            = "./environments/development"
   environment       = "development"
-  environment_index = 1
 }
 # Module production config
 module "production" {
   source            = "./environments/production"
   environment       = "production"
-  environment_index = 2
 }
 # Module staging config
 module "staging" {
   source            = "./environments/staging"
   environment       = "staging"
-  environment_index = 3
 }
 # Generated using https://github.com/mrlesmithjr/terraform-builder
 

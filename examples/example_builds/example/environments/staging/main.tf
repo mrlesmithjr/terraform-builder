@@ -3,6 +3,7 @@
 module "staging-root" {
   source      = "../../root"
   environment = "staging"
+  environment_index = "2"
   azurerm_location   = "North Central US"
   do_region   = "ams3"
   vsphere_allow_unverified_ssl   = "true"
@@ -12,6 +13,7 @@ module "staging-root" {
 module "staging-network" {
   source      = "../../modules/network"
   environment = "staging"
+  environment_index = "2"
   azurerm_location   = "North Central US"
   do_region   = "ams3"
   vsphere_allow_unverified_ssl   = "true"
@@ -21,6 +23,7 @@ module "staging-network" {
 module "staging-services" {
   source      = "../../modules/services"
   environment = "staging"
+  environment_index = "2"
   azurerm_location   = "North Central US"
   do_region   = "ams3"
   vsphere_allow_unverified_ssl   = "true"

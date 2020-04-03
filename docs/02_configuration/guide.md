@@ -126,6 +126,8 @@ Below you find examples of each supported provider with configs.
 
 ### AzureRM
 
+> NOTE: Need to add context for resource usage
+
 ```yaml
 providers:
   AzureRM:
@@ -205,6 +207,8 @@ providers:
 ```
 
 ### DigitalOcean
+
+> NOTE: Need to add context for resource usage
 
 ```yaml
 providers:
@@ -337,6 +341,8 @@ providers:
 
 ### vSphere
 
+> NOTE: Need to add context for resource usage
+
 ```yaml
 providers:
   vSphere:
@@ -358,7 +364,9 @@ providers:
                 example-vm:
                   count: 1
                   memory: 2048
-                  network: example-pg
+                  network_interfaces:
+                    - network: example-pg
+                      address_allocation: dynamic
                   num_cpus: 1
                   tags:
                     - example-vsphere
@@ -368,7 +376,9 @@ providers:
                   memory: 2048
                   # Need a way to decide how to select either data.vsphere_network
                   # or other
-                  network: example-network
+                  network_interfaces:
+                    - network: example-pg
+                      address_allocation: static
                   num_cpus: 1
                   tags:
                     - example-vsphere
@@ -376,7 +386,10 @@ providers:
           module: root
           # Define existing networks to consume, not create
           networks:
-            - example-network
+            example-pg:
+              subnet: 192.168.250.0
+              cidr: 24
+              gateway: 192.168.250.1
           # Define existing templates to consume, not create
           # Because Terraform 0.12.x does not support SATA we need to define
           # whether or not the controller is sata to add logic. Should this be
@@ -389,6 +402,8 @@ providers:
           # Define virtual switches to create
           # If false, they will just be skipped
           # Only works with hosts that are created
+          # Still need to add subnet info associated with port_groups to allow
+          # static IP assignments as we do with existing networks
           virtual_switches:
             example-switch:
               create: true
