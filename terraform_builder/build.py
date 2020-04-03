@@ -30,7 +30,8 @@ class Build:
         # Log project root
         self.logger.info('project_root: %s', self.project_root)
 
-    def template(self, args, secrets, module, file):
+    # pylint: disable=too-many-arguments
+    def template(self, args, secrets, module, index, file):
         """Renders template and returns the config."""
 
         # Defines absolute path to templates directory
@@ -49,7 +50,8 @@ class Build:
 
         # Defines which template to get from file including .j2 extension
         template = template_env.get_template(
-            f'{file}.j2').render(args=args, secrets=secrets, module=module)
+            f'{file}.j2').render(args=args, secrets=secrets, module=module,
+                                 index=index)
 
         return template
 
@@ -117,7 +119,7 @@ class Build:
         for file in ['main.tf', 'terraform.tfvars.json', 'variables.tf']:
             template_file = f'project_root/{file}'
             template = self.template(
-                self.configs, secrets=self.secrets, module='root',
+                self.configs, secrets=self.secrets, module='root', index=0,
                 file=template_file)
             file_path = os.path.join(self.project_root, f'{file}')
             with open(file_path, 'w') as config:
@@ -128,6 +130,7 @@ class Build:
         """Configures environments."""
 
         environments = self.configs['environments']
+        index = 0
         for env, _env_config in environments.items():
             env_dir = os.path.join(self.project_root, 'environments', env)
             if not os.path.isdir(env_dir):
@@ -138,11 +141,13 @@ class Build:
                 template_file = f'environments/{file}'
                 template = self.template(
                     self.configs, secrets=self.secrets, module=env,
-                    file=template_file)
+                    index=index, file=template_file)
                 file_path = os.path.join(env_dir, f'{file}')
                 with open(file_path, 'w') as config:
                     self.logger.info('Creating: %s', file_path)
                     config.write(template)
+
+            index += 1
 
     def modules(self):
         """Configures modules."""
@@ -162,7 +167,7 @@ class Build:
                 template_file = f'modules/{file}'
                 template = self.template(
                     self.configs, secrets=self.secrets, module=module,
-                    file=template_file)
+                    index=0, file=template_file)
                 file_path = os.path.join(
                     module_dir, f'{file}')
                 with open(file_path, 'w') as config:

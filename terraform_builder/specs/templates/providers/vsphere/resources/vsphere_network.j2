@@ -1,4 +1,5 @@
 {%-  for network in dc_config.networks %}
+{%-    set _ = networks.update({network: {'addresses': 0}}) %}
 # Data {{ provider }} network
 data "vsphere_network" "{{ network|replace('-','_')|replace('|','_') }}" {
   name          = "{{ network }}"

@@ -1,17 +1,22 @@
 {%-  for vm, vm_config in cluster_config.vms.items() %}
 {%-    set memory = vm_config.memory|default(1024)|round|int|string %}
 {%-    set cpus = (vm_config.num_cpus)|default(1)|string %}
-{%-    if vm_config.network in dc_config.networks %}
-{%       set network_id = 'data.vsphere_network.'+vm_config.network|replace('-','_')|replace('|','_')+'.id' %}
-{%-    else %}
-{%       set network_id = 'vsphere_host_port_group.'+vm_config.network|replace('-','_')|replace('|','_')+'.id' %}
-{%-    endif %}
 # Resource {{ provider }} virtual machine
 resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
-  count            = {{ vm_config.count|default(1) }}
-  name             = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
-  num_cpus         = {{ cpus }}
-  memory           = {{ memory }}
+  count    = {{ vm_config.count|default(1) }}
+  name     = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+  num_cpus = {{ cpus }}
+  memory   = {{ memory }}
+{%-    for interface in vm_config.network_interfaces %}
+{%-      if interface.network in dc_config.networks %}
+{%-        set network_id = 'data.vsphere_network.'+interface.network|replace('-','_')|replace('|','_')+'.id' %}
+{%-      else %}
+{%-        set network_id = 'vsphere_host_port_group.'+interface.network|replace('-','_')|replace('|','_')+'.id' %}
+{%-      endif %}
+  network_interface {
+    network_id = {{ network_id }}
+  }
+{%-    endfor %}
 {%-    if cluster_config.create %}
   resource_pool_id = vsphere_compute_cluster.{{ cluster|replace('-','_') }}.resource_pool_id
 {%-    else %}
@@ -19,14 +24,30 @@ resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
 {%-    endif %}
 {%-    if vm_config.template %}
   guest_id         = data.vsphere_virtual_machine.{{ vm_config.template|replace('-','_') }}.guest_id
-  network_interface {
-    network_id   = {{ network_id }}
-  }
   clone {
     template_uuid = data.vsphere_virtual_machine.{{ vm_config.template|replace('-','_') }}.id
+    customize {
+{%-      if dc_config.templates[vm_config.template]['os']|lower == 'linux' %}
+      linux_options {
+      host_name = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+      domain    = var.vsphere_domain
+      }
+{%-      endif %}
+{%-      for interface in vm_config.network_interfaces %}
+{%-        if interface.address_allocation|lower == 'static' %}
+{%-          set subnet = dc_config.networks[interface.network]['subnet']+'/'+dc_config.networks[interface.network]['cidr']|string %}
+{%-          set _ = networks[interface.network].update({'addresses': networks[interface.network]['addresses']+(vm_config.count)}) %}
+      network_interface {
+        ipv4_address = cidrhost("{{ subnet }}", {{ networks[interface.network]['addresses'] }} + count.index + var.environment_index)
+        ipv4_netmask = {{ dc_config.networks[interface.network]['cidr'] }}
+      }
+      ipv4_gateway = "{{ dc_config.networks[interface.network]['gateway'] }}"
+{%-        endif %}
+{%-      endfor %}
+    }
   }
 {%-      if dc_config.templates[vm_config.template]['controller']|lower == 'sata' %}
-# https://github.com/terraform-providers/terraform-provider-vsphere/issues/523
+  # https://github.com/terraform-providers/terraform-provider-vsphere/issues/523
   disk {
     label            = format("{{ vm.split('.')[0] }}_%02s.vmdk", count.index + 1)
     size             = "1"
@@ -42,10 +63,6 @@ resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
     thin_provisioned = data.vsphere_virtual_machine.{{ vm_config.template|replace('-','_') }}.disks.0.thin_provisioned
   }
 {%-      endif %}
-{%-    else %}
-  network_interface {
-    network_id = {{ network_id }}
-  }
 {%-    endif %}
 {%-    if vm_config.tags %}
 {%-      set tags = [] %}
