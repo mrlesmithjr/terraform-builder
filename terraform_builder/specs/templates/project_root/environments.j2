@@ -1,7 +1,8 @@
 {%-  for environment in args.environments %}
 # Module {{ environment }} config
 module "{{ environment }}" {
-  source      = "./environments/{{ environment }}"
-  environment = "{{ environment }}"
+  source            = "./environments/{{ environment }}"
+  environment       = "{{ environment }}"
+  environment_index = {{ loop.index }}
 }
 {%-  endfor %}
