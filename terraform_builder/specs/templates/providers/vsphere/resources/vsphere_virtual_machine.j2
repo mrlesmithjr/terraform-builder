@@ -40,13 +40,13 @@ resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
 {%-      for interface in vm_config.network_interfaces %}
 {%-        if interface.address_allocation|lower == 'static' %}
 {%-          set subnet = dc_config.networks[interface.network]['subnet']+'/'+dc_config.networks[interface.network]['cidr']|string %}
-{%-          set _ = networks[interface.network].update({'addresses': networks[interface.network]['addresses']+(vm_config.count)}) %}
       network_interface {
-        ipv4_address = cidrhost("{{ subnet }}", {{ networks[interface.network]['addresses'] }} + count.index + var.environment_index)
+        ipv4_address = cidrhost("{{ subnet }}", count.index + {{ networks[interface.network]['addresses'] }} + ((var.environment_index) * {{ vm_config.count }}))
         ipv4_netmask = {{ dc_config.networks[interface.network]['cidr'] }}
       }
       ipv4_gateway = "{{ dc_config.networks[interface.network]['gateway'] }}"
 {%-        endif %}
+{%-          set _ = networks[interface.network].update({'addresses': networks[interface.network]['addresses']+(vm_config.count * args.environments|length)}) %}
 {%-      endfor %}
     }
   }

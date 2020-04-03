@@ -269,7 +269,7 @@ resource "vsphere_virtual_machine" "example_vm_from_template" {
       domain    = var.vsphere_domain
       }
       network_interface {
-        ipv4_address = cidrhost("192.168.250.0/24", 1 + count.index + var.environment_index)
+        ipv4_address = cidrhost("192.168.250.0/24", count.index + 1 + ((var.environment_index) * 1))
         ipv4_netmask = 24
       }
       ipv4_gateway = "192.168.250.1"
@@ -301,8 +301,6 @@ resource "vsphere_virtual_machine" "example_win_vm_from_template" {
     customize {
       windows_options {
         computer_name  = format("example-win-vm-from-template-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
-#        workgroup      = "test"
-#        admin_password = "VMw4re"
       }
     }
   }
