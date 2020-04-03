@@ -1,3 +1,28 @@
+commit dc4ed34e4554ac600a238502787f621d1802c194
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Thu Apr 2 12:30:10 2020 -0400
+
+    First commit of more useful docs
+    
+    Closes #38
+
+commit dbcaf3888256313ed8bc6dd0744b5d22e6ae6be6
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Wed Apr 1 17:25:28 2020 -0400
+
+    Updated examples to show var usage for vSphere in environments
+    
+    Example updated to demonstrate how to define vSphere vars differently
+    between environments.
+
+commit 393a2abc2ab5f2a11d22b6c881b3bfbf39d7dfa9
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Wed Apr 1 15:42:03 2020 -0400
+
+    First commit to address vSphere issues
+    
+    This is to address #41
+
 commit fbbbd1acff91563da05be2dbb4139a6bdf09908a
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Wed Apr 1 09:25:09 2020 -0400

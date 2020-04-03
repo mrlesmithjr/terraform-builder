@@ -1,6 +1,6 @@
 # Generated using https://github.com/mrlesmithjr/terraform-builder
 {%- set vars = {} %}
-{%- set _ = vars.update({'environment': {'type': 'string', 'default': ''}}) %}
+{%- set _ = vars.update({'environment': {'type': 'string', 'default': ''},'environment_index': {'type': 'number','default': 0}}) %}
 {%- for provider, provider_config in args.providers.items() %}
 {%-   if provider_config != {} -%}
 {%-     if provider_config['variables'] -%}
