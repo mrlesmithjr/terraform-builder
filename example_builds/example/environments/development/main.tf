@@ -3,6 +3,7 @@
 module "development-root" {
   source      = "../../root"
   environment = "development"
+  environment_index = "0"
   azurerm_location   = "East US"
   do_region   = "nyc1"
   vsphere_allow_unverified_ssl   = "true"
@@ -12,6 +13,7 @@ module "development-root" {
 module "development-network" {
   source      = "../../modules/network"
   environment = "development"
+  environment_index = "0"
   azurerm_location   = "East US"
   do_region   = "nyc1"
   vsphere_allow_unverified_ssl   = "true"
@@ -21,6 +23,7 @@ module "development-network" {
 module "development-services" {
   source      = "../../modules/services"
   environment = "development"
+  environment_index = "0"
   azurerm_location   = "East US"
   do_region   = "nyc1"
   vsphere_allow_unverified_ssl   = "true"

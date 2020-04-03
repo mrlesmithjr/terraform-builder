@@ -3,6 +3,7 @@
 module "production-root" {
   source      = "../../root"
   environment = "production"
+  environment_index = "1"
   azurerm_location   = "West US 2"
   do_region   = "sfo2"
   vsphere_allow_unverified_ssl   = "false"
@@ -12,6 +13,7 @@ module "production-root" {
 module "production-network" {
   source      = "../../modules/network"
   environment = "production"
+  environment_index = "1"
   azurerm_location   = "West US 2"
   do_region   = "sfo2"
   vsphere_allow_unverified_ssl   = "false"
@@ -21,6 +23,7 @@ module "production-network" {
 module "production-services" {
   source      = "../../modules/services"
   environment = "production"
+  environment_index = "1"
   azurerm_location   = "West US 2"
   do_region   = "sfo2"
   vsphere_allow_unverified_ssl   = "false"

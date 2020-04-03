@@ -4,6 +4,10 @@ variable "environment" {
     type = string
     default = ""
 }
+# Variable environment_index config
+variable "environment_index" {
+    default = ""
+}
 # Variable azurerm_client_id config
 variable "azurerm_client_id" {
     type = string
