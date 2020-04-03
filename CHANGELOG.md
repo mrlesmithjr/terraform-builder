@@ -1,3 +1,25 @@
+commit 6fb0da48ba4b6c5182002e8c42de6cd59f34e807
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Apr 3 11:06:38 2020 -0400
+
+    These changes are the start of fixing environment index
+    
+    This is the initial fix to ensure vSphere static IP addressing is
+    correct between environments, etc.
+
+commit 86a981ca2b19a3fd7c929c8d344eb771060d9ec0
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Apr 3 08:56:21 2020 -0400
+
+    Added environment index variable
+    
+    This variable will be added automatically on the backend configurations.
+    This will be something that we can tap into using between each
+    environment: development, production, and staging. For example, static
+    IP addresses could be defined by cidrhost("10.0.0.0/16", count.index +
+    var.environment_index). This might need to be tweaked a bit as more
+    testing occurs.
+
 commit dc4ed34e4554ac600a238502787f621d1802c194
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Thu Apr 2 12:30:10 2020 -0400

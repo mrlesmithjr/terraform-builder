@@ -6,8 +6,7 @@ variable "environment" {
 }
 # Variable environment_index config
 variable "environment_index" {
-    type = number
-    default = "0"
+    default = ""
 }
 # Variable azurerm_client_id config
 variable "azurerm_client_id" {

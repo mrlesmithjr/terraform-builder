@@ -3,6 +3,5 @@
 module "{{ environment }}" {
   source            = "./environments/{{ environment }}"
   environment       = "{{ environment }}"
-  environment_index = {{ loop.index }}
 }
 {%-  endfor %}

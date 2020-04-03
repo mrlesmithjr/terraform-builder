@@ -278,7 +278,9 @@ vSphere:
               example-vm:
                 count: 1
                 memory: 2048
-                network: example-pg
+                network_interfaces:
+                - address_allocation: dynamic
+                  network: example-pg
                 num_cpus: 1
                 tags:
                 - example-vsphere
@@ -286,7 +288,9 @@ vSphere:
               example-vm-from-template:
                 count: 1
                 memory: 2048
-                network: example-network
+                network_interfaces:
+                - address_allocation: static
+                  network: example-pg
                 num_cpus: 1
                 tags:
                 - example-vsphere
@@ -294,7 +298,10 @@ vSphere:
         create: true
         module: root
         networks:
-        - example-network
+          example-pg:
+            cidr: 24
+            gateway: 192.168.250.1
+            subnet: 192.168.250.0
         templates:
           ubuntu1604_x64:
             controller: scsi
