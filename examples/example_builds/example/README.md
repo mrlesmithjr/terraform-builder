@@ -14,22 +14,46 @@ Environments represent such things as: `development`, `staging`, and `production
 ```yaml
 development:
   variables:
-    azurerm_location: East US
-    do_region: nyc1
-    vsphere_allow_unverified_ssl: 'true'
-    vsphere_server: vc.development.example.org
+    azurerm_admin_password:
+      default: P@55w0rd1
+      description: Default admin password
+      type: string
+    azurerm_admin_username:
+      default: terraformadmin
+      description: Default admin username
+      type: string
+    azurerm_location:
+      default: West US
+      description: Default AzureRM location/region
+      type: string
 production:
   variables:
-    azurerm_location: West US 2
-    do_region: sfo2
-    vsphere_allow_unverified_ssl: 'false'
-    vsphere_server: vc.production.example.org
+    azurerm_admin_password:
+      default: P@55w0rd1
+      description: Default admin password
+      type: string
+    azurerm_admin_username:
+      default: terraformadmin
+      description: Default admin username
+      type: string
+    azurerm_location:
+      default: East US
+      description: Default AzureRM location/region
+      type: string
 staging:
   variables:
-    azurerm_location: North Central US
-    do_region: ams3
-    vsphere_allow_unverified_ssl: 'true'
-    vsphere_server: vc.staging.example.org
+    azurerm_admin_password:
+      default: P@55w0rd1
+      description: Default admin password
+      type: string
+    azurerm_admin_username:
+      default: terraformadmin
+      description: Default admin username
+      type: string
+    azurerm_location:
+      default: Central US
+      description: Default AzureRM location/region
+      type: string
 
 ```
 
@@ -73,6 +97,19 @@ records.
 ```yaml
 AzureRM:
   resources:
+    images:
+      ubuntu-16-04-x64:
+        offer: UbuntuServer
+        os: linux
+        sku: 16.04-LTS
+        ublisher: Canonical
+        version: latest
+      ubuntu-18-04-x64:
+        offer: UbuntuServer
+        os: linux
+        publisher: Canonical
+        sku: 18.04-LTS
+        version: latest
     resource_groups:
       example-rg-root:
         create: true
@@ -96,49 +133,15 @@ AzureRM:
             tags:
               environment: ${var.environment}
   variables:
-    azurerm_client_id:
-      default: ''
-      description: Default AzureRM client id
+    azurerm_admin_password:
+      description: Default admin password
       type: string
-    azurerm_client_secret:
-      default: ''
-      description: Default AzureRM client secret
+    azurerm_admin_username:
+      description: Default admin username
       type: string
-    azurerm_domain:
-      default: ''
-      description: Default AzureRM domain for resources
-      type: string
-    azurerm_environment:
-      default: public
-      description: AzureRM Environment
-      type: string
-    azurerm_features:
-      default: {}
-      description: Customize the behaviour of certain Azure Provider resources.
-    azurerm_image_reference:
-      default:
-        ubuntu-16-04-x64:
-          offer: UbuntuServer
-          publisher: Canonical
-          sku: 16.04-LTS
-          version: latest
-        ubuntu-18-04-x64:
-          offer: UbuntuServer
-          publisher: Canonical
-          sku: 18.04-LTS
-          version: latest
-      description: Default OS image reference lookups
     azurerm_location:
       default: ''
       description: Default AzureRM location/region
-      type: string
-    azurerm_subscription_id:
-      default: ''
-      description: AzureRM Subscription ID
-      type: string
-    azurerm_tenant_id:
-      default: ''
-      description: AzureRM Tenant ID
       type: string
 DigitalOcean:
   project_root:
@@ -393,20 +396,27 @@ physical objects.
 
 ```yaml
 network:
-  variables:
-    do_domain: network.example.org
-    do_ssh_keys:
-    - 12121212
+  variables: {}
 root:
   variables:
-    do_domain: example.org
-    do_ssh_keys:
-    - 12121212
+    azurerm_client_id:
+      description: Default AzureRM client id
+      type: string
+    azurerm_client_secret:
+      description: Default AzureRM client secret
+      type: string
+    azurerm_environment:
+      default: public
+      description: AzureRM Environment
+      type: string
+    azurerm_subscription_id:
+      description: AzureRM Subscription ID
+      type: string
+    azurerm_tenant_id:
+      description: AzureRM Tenant ID
+      type: string
 services:
-  variables:
-    do_domain: services.example.org
-    do_ssh_keys:
-    - 12121212
+  variables: {}
 
 ```
 

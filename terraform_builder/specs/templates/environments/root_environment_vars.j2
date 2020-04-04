@@ -1,5 +1,5 @@
-{%-  if args.environments[module_env]['variables'] %}
-{%-    for key, value in args.environments[module_env]['variables'].items() %}
+{%- if args.modules.root.variables %}
+{%-   for key, value in args.modules.root.variables.items() %}
 {%-      if value.default %}
 {%-        if value.default is iterable and value.default is not string %}
   {{ key }} = {{ value.default }}
@@ -11,5 +11,5 @@
 {%-      else %}
   {{ key }} = ""
 {%-      endif %}
-{%-    endfor %}
-{%-  endif %}
+{%-   endfor %}
+{%- endif %}

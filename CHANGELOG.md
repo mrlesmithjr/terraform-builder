@@ -1,3 +1,92 @@
+commit f1c6393e92931689e3873996b51a2f001d6f053b
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sat Apr 4 01:25:39 2020 -0400
+
+    Variables for environments have been removed
+    
+    This reflects that change for the example
+
+commit 8f175d564f7182d8a2a62fca99e3c6855c322cde
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sat Apr 4 01:24:29 2020 -0400
+
+    Added specific variables just for root module
+    
+    Root module is different then other variables. So, it made sense to split this out
+
+commit b9e25d18e9f226afe82d6fa119b1875adaba312f
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sat Apr 4 01:23:39 2020 -0400
+
+    Removed environment vars template
+    
+    - We do not need to defined variables in variables.tf for environments
+    - They are defined in the module config now
+
+commit 2e423a4800cc192f0f16ab969437a773bb199ccd
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sat Apr 4 01:19:38 2020 -0400
+
+    Changed environment vars format to look for default
+    
+    Becase we now define the environment vars as dictionaries, this needed changed.
+
+commit f99728b42bb5464bbe609bb84f0751373ee5733c
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sat Apr 4 01:18:13 2020 -0400
+
+    Changed images to be defined outside of variables
+    
+    This didn't make sense in the format we are going towards now.
+
+commit ac05f22b5a34a975bea4abef436bf82782b10b48
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sat Apr 4 01:17:09 2020 -0400
+
+    Changed way to define module vars
+    
+    Because we are not adding just a var with a single value now.
+    We need to capture the values as a dictionary
+
+commit bf3de7cde4942d8ac3e199882668813f85009ac5
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sat Apr 4 01:14:47 2020 -0400
+
+    Removed environment as it isn't needed here
+
+commit 16bb31f10edf969862a2465e9352d86deb6e70ed
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Apr 3 14:18:22 2020 -0400
+
+    Resolved issue with incrementing static IP assignments
+    
+    This resolves the vSphere VM incrementing static IP assignments issue
+    when defining multiple VM sets. This method will eventually make its way
+    into the other providers as needed. So, this will likely be tweaked
+    again at that time.
+    
+    Resolves #50
+
+commit 698eef45cdd23f3e598517535759cb00243c72ff
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Apr 3 11:52:06 2020 -0400
+
+    Fixed vSphere template OS parameter
+    
+    This resolves the issue where a VM from template obtains it's
+    appropriate template options for Linux and Windows.
+    
+    Resolves #48
+
+commit fd398664fd4ec98e4ee33f83e0ee8333f689a122
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri Apr 3 11:08:42 2020 -0400
+
+    Updated example after environment indexing issues
+    
+    These are the example configurations after making changes to address
+    environment index for vSphere.
+
 commit 6fb0da48ba4b6c5182002e8c42de6cd59f34e807
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Fri Apr 3 11:06:38 2020 -0400

@@ -5,17 +5,14 @@
 # Module development config
 module "development" {
   source            = "./environments/development"
-  environment       = "development"
 }
 # Module production config
 module "production" {
   source            = "./environments/production"
-  environment       = "production"
 }
 # Module staging config
 module "staging" {
   source            = "./environments/staging"
-  environment       = "staging"
 }
 # Generated using https://github.com/mrlesmithjr/terraform-builder
 
