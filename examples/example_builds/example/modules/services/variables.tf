@@ -8,57 +8,21 @@ variable "environment" {
 variable "environment_index" {
     default = ""
 }
-# Variable azurerm_client_id config
-variable "azurerm_client_id" {
-    type = string
-    description = "Default AzureRM client id"
-    default = ""
-}
-# Variable azurerm_client_secret config
-variable "azurerm_client_secret" {
-    type = string
-    description = "Default AzureRM client secret"
-    default = ""
-}
-# Variable azurerm_domain config
-variable "azurerm_domain" {
-    type = string
-    description = "Default AzureRM domain for resources"
-    default = ""
-}
-# Variable azurerm_environment config
-variable "azurerm_environment" {
-    type = string
-    description = "AzureRM Environment"
-    default = "public"
-}
-# Variable azurerm_features config
-variable "azurerm_features" {
-    description = "Customize the behaviour of certain Azure Provider resources."
-    default = {}
-}
-# Variable azurerm_image_reference config
-variable "azurerm_image_reference" {
-    description = "Default OS image reference lookups"
-    default = {"ubuntu-16-04-x64": {"publisher": "Canonical", "offer": "UbuntuServer", "sku": "16.04-LTS", "version": "latest"}, "ubuntu-18-04-x64": {"publisher": "Canonical", "offer": "UbuntuServer", "sku": "18.04-LTS", "version": "latest"}}
-}
 # Variable azurerm_location config
 variable "azurerm_location" {
     type = string
     description = "Default AzureRM location/region"
     default = ""
 }
-# Variable azurerm_subscription_id config
-variable "azurerm_subscription_id" {
+# Variable azurerm_admin_password config
+variable "azurerm_admin_password" {
     type = string
-    description = "AzureRM Subscription ID"
-    default = ""
+    description = "Default admin password"
 }
-# Variable azurerm_tenant_id config
-variable "azurerm_tenant_id" {
+# Variable azurerm_admin_username config
+variable "azurerm_admin_username" {
     type = string
-    description = "AzureRM Tenant ID"
-    default = ""
+    description = "Default admin username"
 }
 # Variable do_api_endpoint config
 variable "do_api_endpoint" {
@@ -68,7 +32,9 @@ variable "do_api_endpoint" {
 }
 # Variable do_domain config
 variable "do_domain" {
-    default = "services.example.org"
+    type = string
+    description = "Default DigitalOcean domain for resources"
+    default = ""
 }
 # Variable do_region config
 variable "do_region" {
@@ -78,7 +44,8 @@ variable "do_region" {
 }
 # Variable do_ssh_keys config
 variable "do_ssh_keys" {
-    default = [12121212]
+    description = "DigitalOcean SSH keys to deploy to new droplets"
+    default = []
 }
 # Variable do_token config
 variable "do_token" {

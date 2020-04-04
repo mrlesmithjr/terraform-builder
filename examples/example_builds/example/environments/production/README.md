@@ -5,10 +5,18 @@
 ```yaml
 production:
   variables:
-    azurerm_location: West US 2
-    do_region: sfo2
-    vsphere_allow_unverified_ssl: 'false'
-    vsphere_server: vc.production.example.org
+    azurerm_admin_password:
+      default: P@55w0rd1
+      description: Default admin password
+      type: string
+    azurerm_admin_username:
+      default: terraformadmin
+      description: Default admin username
+      type: string
+    azurerm_location:
+      default: East US
+      description: Default AzureRM location/region
+      type: string
 
 ```
 

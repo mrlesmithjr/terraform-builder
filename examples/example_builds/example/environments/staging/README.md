@@ -5,10 +5,18 @@
 ```yaml
 staging:
   variables:
-    azurerm_location: North Central US
-    do_region: ams3
-    vsphere_allow_unverified_ssl: 'true'
-    vsphere_server: vc.staging.example.org
+    azurerm_admin_password:
+      default: P@55w0rd1
+      description: Default admin password
+      type: string
+    azurerm_admin_username:
+      default: terraformadmin
+      description: Default admin username
+      type: string
+    azurerm_location:
+      default: Central US
+      description: Default AzureRM location/region
+      type: string
 
 ```
 

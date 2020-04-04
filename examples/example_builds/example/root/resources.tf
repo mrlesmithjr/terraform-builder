@@ -48,10 +48,18 @@ resource "azurerm_virtual_machine" "example_vm_root" {
   network_interface_ids = [azurerm_network_interface.example_vm_root[count.index].id]
 
   storage_image_reference {
-    publisher = lookup(var.azurerm_image_reference.ubuntu-18-04-x64, "publisher")
-    offer     = lookup(var.azurerm_image_reference.ubuntu-18-04-x64, "offer")
-    sku       = lookup(var.azurerm_image_reference.ubuntu-18-04-x64, "sku")
-    version   = lookup(var.azurerm_image_reference.ubuntu-18-04-x64, "version")
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "18.04-LTS"
+    version   = "latest"
+  }
+  os_profile {
+    computer_name  = format("example-vm-root-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+    admin_username = var.azurerm_admin_username
+    admin_password = var.azurerm_admin_password
+  }
+  os_profile_linux_config {
+    disable_password_authentication = false
   }
   storage_os_disk {
     name              = format("example-vm-root-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
@@ -147,14 +155,6 @@ resource "digitalocean_droplet" "example_vm" {
   private_networking = true
   tags     = [digitalocean_tag.example_digitalocean.id, digitalocean_tag.example_digitalocean_env.id]
 }
-# Resource DigitalOcean default domain
-resource "digitalocean_domain" "default_env" {
-  name = format("%s.%s", var.environment, var.do_domain)
-}
-# Resource DigitalOcean default internal domain
-resource "digitalocean_domain" "default_env_internal" {
-  name = format("%s.%s.%s", "internal", var.environment, var.do_domain)
-}
 # Resource DigitalOcean internal DNS record
 resource "digitalocean_record" "example_vm_internal" {
   count  = 1
@@ -181,7 +181,7 @@ resource "digitalocean_project" "example" {
 }
 # Obtain list of project resources as local and use
 locals {
-  project_resources = [digitalocean_domain.default_env.urn, digitalocean_domain.default_env_internal.urn, digitalocean_droplet.example_vm.*.urn]
+  project_resources = [digitalocean_droplet.example_vm.*.urn]
 }
 # Resource vSphere datacenter
 resource "vsphere_datacenter" "example_dc" {
