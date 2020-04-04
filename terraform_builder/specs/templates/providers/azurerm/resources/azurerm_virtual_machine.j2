@@ -2,18 +2,18 @@
 {%-    include 'providers/azurerm/resources/azurerm_network_interface.j2' %}
 {%-    set memory = (vm_config.memory|default(1024)/1024)|round|int|string %}
 {%-    set cpus = (vm_config.num_cpus)|default(1)|string %}
-{%-    if cpus|int < 2 and memory|int < 7 %}
-{%-      set vm_size = 'Standard_DS1_v2' %}
-{%-    elif cpus|int < 4 and memory|int < 14 %}
-{%-      set vm_size = 'Standard_DS2_v2' %}
-{%-    elif cpus|int < 8 and memory|int < 28 %}
-{%-      set vm_size = 'Standard_DS3_v2' %}
-{%-    elif cpus|int < 16 and memory|int < 56 %}
-{%-      set vm_size = 'Standard_DS4_v2' %}
-{%-    elif cpus|int >= 16 and memory|int >= 56 %}
-{%-      set vm_size = 'Standard_DS5_v2' %}
+{%-    if cpus|int == 1 and memory|int < 1 %}
+{%-      set vm_size = 'Standard_B1ls' %}
+{%-    elif cpus|int == 1 and memory|int < 2 %}
+{%-      set vm_size = 'Standard_B1s' %}
+{%-    elif cpus|int == 1 and memory|int <= 2 %}
+{%-      set vm_size = 'Standard_B1ms' %}
+{%-    elif cpus|int == 2 and memory|int <= 4 %}
+{%-      set vm_size = 'Standard_B2s' %}
+{%-    elif cpus|int == 2 and memory|int <= 8 %}
+{%-      set vm_size = 'Standard_B2s' %}
 {%-    else %}
-{%-      set vm_size = 'Standard_DS1_v2' %}
+{%-      set vm_size = 'Standard_B1s' %}
 {%-    endif %}
 # Resource {{ provider }} virtual machine
 resource "azurerm_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
