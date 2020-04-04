@@ -1,11 +1,15 @@
 {%-  if args.environments[module_env]['variables'] %}
 {%-    for key, value in args.environments[module_env]['variables'].items() %}
-{%-      if value is iterable and value is not string %}
-  {{ key }}   = {{ value }}
-{%-      elif value is mapping %}
-  {{ key }}   = {{ value }}
+{%-      if value.default %}
+{%-        if value.default is iterable and value.default is not string %}
+  {{ key }} = {{ value.default }}
+{%-        elif value.default is mapping %}
+  {{ key }} = {{ value.default }}
+{%-        else %}
+  {{ key }} = "{{ value.default }}"
+{%-        endif %}
 {%-      else %}
-  {{ key }}   = "{{ value }}"
+  {{ key }} = ""
 {%-      endif %}
 {%-    endfor %}
 {%-  endif %}
