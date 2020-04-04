@@ -1,0 +1,15 @@
+{%- if args.modules.root.variables %}
+{%-   for key, value in args.modules.root.variables.items() %}
+{%-      if value.default %}
+{%-        if value.default is iterable and value.default is not string %}
+  {{ key }} = {{ value.default }}
+{%-        elif value.default is mapping %}
+  {{ key }} = {{ value.default }}
+{%-        else %}
+  {{ key }} = "{{ value.default }}"
+{%-        endif %}
+{%-      else %}
+  {{ key }} = ""
+{%-      endif %}
+{%-   endfor %}
+{%- endif %}
