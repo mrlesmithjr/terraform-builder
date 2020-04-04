@@ -13,7 +13,7 @@
 {%- if args.modules[module] %}
 {%-   if args.modules[module]['variables'] %}
 {%-     for key, value in args.modules[module]['variables'].items() %}
-{%-       set _ = vars.update({key: {'default': value}}) %}
+{%-       set _ = vars.update({key: value}) %}
 {%-     endfor %}
 {%-   endif %}
 {%- endif %}
