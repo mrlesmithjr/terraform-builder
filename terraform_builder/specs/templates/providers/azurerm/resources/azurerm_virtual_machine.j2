@@ -25,11 +25,21 @@ resource "azurerm_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
   network_interface_ids = [azurerm_network_interface.{{ vm|replace('-','_') }}[count.index].id]
 
   storage_image_reference {
-    publisher = lookup(var.azurerm_image_reference.{{ vm_config.image }}, "publisher")
-    offer     = lookup(var.azurerm_image_reference.{{ vm_config.image }}, "offer")
-    sku       = lookup(var.azurerm_image_reference.{{ vm_config.image }}, "sku")
-    version   = lookup(var.azurerm_image_reference.{{ vm_config.image }}, "version")
+    publisher = "{{ provider_config.resources.images[vm_config.image]['publisher'] }}"
+    offer     = "{{ provider_config.resources.images[vm_config.image]['offer'] }}"
+    sku       = "{{ provider_config.resources.images[vm_config.image]['sku'] }}"
+    version   = "{{ provider_config.resources.images[vm_config.image]['version'] }}"
   }
+  os_profile {
+    computer_name  = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+    admin_username = var.azurerm_admin_username
+    admin_password = var.azurerm_admin_password
+  }
+{%-    if provider_config.resources.images[vm_config.image]['os']|lower == 'linux' %}
+  os_profile_linux_config {
+    disable_password_authentication = false
+  }
+{%-    endif %}
   storage_os_disk {
     name              = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
     caching           = "ReadWrite"
