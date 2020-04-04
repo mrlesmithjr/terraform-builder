@@ -30,7 +30,11 @@ variable "{{ variable }}" {
 {%-           elif value is mapping %}
     {{ key }} = {{ value|replace('\'', '\"') }}
 {%-           else %}
+{%-             if value.startswith('var.') %}
+    {{ key }} = {{ value }}
+{%-             else %}
     {{ key }} = "{{ value }}"
+{%-             endif %}
 {%-         endif %}
 {%-       endif %}
 {%-     endfor %}

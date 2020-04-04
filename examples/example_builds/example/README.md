@@ -15,11 +15,11 @@ Environments represent such things as: `development`, `staging`, and `production
 development:
   variables:
     azurerm_admin_password:
-      default: P@55w0rd1
+      default: var.azurerm_admin_password
       description: Default admin password
       type: string
     azurerm_admin_username:
-      default: terraformadmin
+      default: var.azurerm_admin_username
       description: Default admin username
       type: string
     azurerm_location:
@@ -29,11 +29,11 @@ development:
 production:
   variables:
     azurerm_admin_password:
-      default: P@55w0rd1
+      default: var.azurerm_admin_password
       description: Default admin password
       type: string
     azurerm_admin_username:
-      default: terraformadmin
+      default: var.azurerm_admin_username
       description: Default admin username
       type: string
     azurerm_location:
@@ -43,11 +43,11 @@ production:
 staging:
   variables:
     azurerm_admin_password:
-      default: P@55w0rd1
+      default: var.azurerm_admin_password
       description: Default admin password
       type: string
     azurerm_admin_username:
-      default: terraformadmin
+      default: var.azurerm_admin_username
       description: Default admin username
       type: string
     azurerm_location:

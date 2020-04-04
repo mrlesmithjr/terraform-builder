@@ -6,7 +6,11 @@
 {%-        elif value.default is mapping %}
   {{ key }} = {{ value.default }}
 {%-        else %}
+{%-          if value.default.startswith('var.') %}
+  {{ key }} = {{ value.default }}
+{%-          else %}
   {{ key }} = "{{ value.default }}"
+{%-          endif %}
 {%-        endif %}
 {%-      else %}
   {{ key }} = ""
