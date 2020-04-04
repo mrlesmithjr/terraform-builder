@@ -137,7 +137,7 @@ class Build:
                 self.logger.info('Creating environment: %s', env_dir)
                 os.makedirs(env_dir)
 
-            for file in ['main.tf', 'resources.tf']:
+            for file in ['main.tf', 'resources.tf', 'variables.tf']:
                 template_file = f'environments/{file}'
                 template = self.template(
                     self.configs, secrets=self.secrets, module=env,

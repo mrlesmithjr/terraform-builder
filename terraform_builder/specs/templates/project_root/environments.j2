@@ -1,6 +1,7 @@
-{%-  for environment in args.environments %}
+{%- for environment in args.environments %}
 # Module {{ environment }} config
 module "{{ environment }}" {
   source            = "./environments/{{ environment }}"
+{%-  include 'project_root/environment_vars.j2' %}
 }
-{%-  endfor %}
+{%- endfor %}

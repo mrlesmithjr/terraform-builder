@@ -1,0 +1,19 @@
+{%- if args.environments[environment]['variables'] %}
+{%-   for key, value in args.environments[environment]['variables'].items() %}
+{%-     if value.default %}
+{%-       if value.default is iterable and value.default is not string %}
+  {{ key }} = {{ value.default }}
+{%-       elif value.default is mapping %}
+  {{ key }} = {{ value.default }}
+{%-       else %}
+{%-         if value.default.startswith('var.') %}
+  {{ key }} = {{ value.default }}
+{%-         else %}
+  {{ key }} = "{{ value.default }}"
+{%-         endif %}
+{%-       endif %}
+{%-     else %}
+  {{ key }} = ""
+{%-     endif %}
+{%-   endfor %}
+{%- endif %}

@@ -28,11 +28,11 @@ environments:
       azurerm_admin_password:
         type: string
         description: Default admin password
-        default: P@55w0rd1
+        default: var.azurerm_admin_password
       azurerm_admin_username:
         type: string
         description: Default admin username
-        default: terraformadmin
+        default: var.azurerm_admin_username
       azurerm_location:
         type: string
         description: Default AzureRM location/region
@@ -42,11 +42,11 @@ environments:
       azurerm_admin_password:
         type: string
         description: Default admin password
-        default: P@55w0rd1
+        default: var.azurerm_admin_password
       azurerm_admin_username:
         type: string
         description: Default admin username
-        default: terraformadmin
+        default: var.azurerm_admin_username
       azurerm_location:
         type: string
         description: Default AzureRM location/region
@@ -56,11 +56,11 @@ environments:
       azurerm_admin_password:
         type: string
         description: Default admin password
-        default: P@55w0rd1
+        default: var.azurerm_admin_password
       azurerm_admin_username:
         type: string
         description: Default admin username
-        default: terraformadmin
+        default: var.azurerm_admin_username
       azurerm_location:
         type: string
         description: Default AzureRM location/region
