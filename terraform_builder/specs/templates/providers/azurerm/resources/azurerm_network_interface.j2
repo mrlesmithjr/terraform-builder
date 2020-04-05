@@ -10,5 +10,8 @@ resource "azurerm_network_interface" "{{ vm|replace('-','_') }}" {
     name                          = format("{{ vm }}-%02s-ip-config", count.index + 1)
     subnet_id                     = azurerm_subnet.{{ vm_config.network|replace('-','_')+'_subnet_'+rg_config.virtual_networks[vm_config.network].subnets.index(vm_config.subnet)|string }}.id
     private_ip_address_allocation = "Dynamic"
+{%- if vm_config.public_ip %}
+    public_ip_address_id          = azurerm_public_ip.{{ vm|replace('-','_') }}[count.index].id
+{%- endif %}
   }
 }

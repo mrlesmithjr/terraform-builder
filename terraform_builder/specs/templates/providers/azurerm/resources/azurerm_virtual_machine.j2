@@ -1,4 +1,7 @@
 {%-  for vm, vm_config in rg_config.vms.items() %}
+{%-    if vm_config.public_ip %}
+{%-      include 'providers/azurerm/resources/azurerm_public_ip.j2' %}
+{%-    endif %}
 {%-    include 'providers/azurerm/resources/azurerm_network_interface.j2' %}
 {%-    set memory = (vm_config.memory|default(1024)/1024)|round|int|string %}
 {%-    set cpus = (vm_config.num_cpus)|default(1)|string %}

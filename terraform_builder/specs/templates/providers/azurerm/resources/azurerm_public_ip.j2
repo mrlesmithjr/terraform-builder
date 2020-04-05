@@ -1,0 +1,13 @@
+
+# Resource {{ provider }} public IP
+resource "azurerm_public_ip" "{{ vm|replace('-','_') }}" {
+  count               = {{ vm_config.count|default(1) }}
+  name                = format("{{ vm }}-%02s-nic-%s", count.index + 1, substr(var.environment, 0, 4))
+  location            = var.azurerm_location
+  resource_group_name = azurerm_resource_group.{{ rg|replace('-','_') }}.name
+  allocation_method   = "Dynamic"
+
+  tags = {
+    environment = var.environment
+  }
+}
