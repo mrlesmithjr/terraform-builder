@@ -10,6 +10,7 @@ module "staging-root" {
   azurerm_subscription_id = ""
   azurerm_tenant_id = ""
   azurerm_admin_password = var.azurerm_admin_password
+  azurerm_admin_public_key = var.azurerm_admin_public_key
   azurerm_admin_username = var.azurerm_admin_username
   azurerm_location = "Central US"
 }
@@ -19,6 +20,7 @@ module "staging-network" {
   environment = "staging"
   environment_index = "2"
   azurerm_admin_password = var.azurerm_admin_password
+  azurerm_admin_public_key = var.azurerm_admin_public_key
   azurerm_admin_username = var.azurerm_admin_username
   azurerm_location = "Central US"
 }
@@ -28,6 +30,7 @@ module "staging-services" {
   environment = "staging"
   environment_index = "2"
   azurerm_admin_password = var.azurerm_admin_password
+  azurerm_admin_public_key = var.azurerm_admin_public_key
   azurerm_admin_username = var.azurerm_admin_username
   azurerm_location = "Central US"
 }

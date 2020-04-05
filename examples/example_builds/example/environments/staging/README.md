@@ -9,6 +9,10 @@ staging:
       default: var.azurerm_admin_password
       description: Default admin password
       type: string
+    azurerm_admin_public_key:
+      default: var.azurerm_admin_public_key
+      description: Default admin SSH public key
+      type: string
     azurerm_admin_username:
       default: var.azurerm_admin_username
       description: Default admin username

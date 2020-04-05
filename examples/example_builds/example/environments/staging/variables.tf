@@ -19,6 +19,11 @@ variable "azurerm_admin_password" {
     type = string
     description = "Default admin password"
 }
+# Variable azurerm_admin_public_key config
+variable "azurerm_admin_public_key" {
+    type = string
+    description = "Default admin SSH public key"
+}
 # Variable azurerm_admin_username config
 variable "azurerm_admin_username" {
     type = string

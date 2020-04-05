@@ -18,6 +18,10 @@ development:
       default: var.azurerm_admin_password
       description: Default admin password
       type: string
+    azurerm_admin_public_key:
+      default: var.azurerm_admin_public_key
+      description: Default admin SSH public key
+      type: string
     azurerm_admin_username:
       default: var.azurerm_admin_username
       description: Default admin username
@@ -32,6 +36,10 @@ production:
       default: var.azurerm_admin_password
       description: Default admin password
       type: string
+    azurerm_admin_public_key:
+      default: var.azurerm_admin_public_key
+      description: Default admin SSH public key
+      type: string
     azurerm_admin_username:
       default: var.azurerm_admin_username
       description: Default admin username
@@ -45,6 +53,10 @@ staging:
     azurerm_admin_password:
       default: var.azurerm_admin_password
       description: Default admin password
+      type: string
+    azurerm_admin_public_key:
+      default: var.azurerm_admin_public_key
+      description: Default admin SSH public key
       type: string
     azurerm_admin_username:
       default: var.azurerm_admin_username
@@ -126,15 +138,19 @@ AzureRM:
           example-vm-root:
             count: 1
             image: ubuntu-18-04-x64
-            memory: 1024
+            memory: 512
             network: example-net
             num_cpus: 1
+            public_ip: true
             subnet: 10.0.2.0/24
             tags:
               environment: ${var.environment}
   variables:
     azurerm_admin_password:
       description: Default admin password
+      type: string
+    azurerm_admin_public_key:
+      description: Default admin SSH public key
       type: string
     azurerm_admin_username:
       description: Default admin username

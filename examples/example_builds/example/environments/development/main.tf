@@ -10,6 +10,7 @@ module "development-root" {
   azurerm_subscription_id = ""
   azurerm_tenant_id = ""
   azurerm_admin_password = var.azurerm_admin_password
+  azurerm_admin_public_key = var.azurerm_admin_public_key
   azurerm_admin_username = var.azurerm_admin_username
   azurerm_location = "West US"
 }
@@ -19,6 +20,7 @@ module "development-network" {
   environment = "development"
   environment_index = "0"
   azurerm_admin_password = var.azurerm_admin_password
+  azurerm_admin_public_key = var.azurerm_admin_public_key
   azurerm_admin_username = var.azurerm_admin_username
   azurerm_location = "West US"
 }
@@ -28,6 +30,7 @@ module "development-services" {
   environment = "development"
   environment_index = "0"
   azurerm_admin_password = var.azurerm_admin_password
+  azurerm_admin_public_key = var.azurerm_admin_public_key
   azurerm_admin_username = var.azurerm_admin_username
   azurerm_location = "West US"
 }

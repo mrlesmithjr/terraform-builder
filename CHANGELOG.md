@@ -1,3 +1,34 @@
+commit 567b7186aee4ae28bb5b2739caac48d4538639b6
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sat Apr 4 18:30:02 2020 -0400
+
+    Tweaked AzureRM VM sizing
+    
+    May need to look at alternatives
+
+commit 97b34a5d73576b29ea3765c9062bf53c1c6deef3
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sat Apr 4 10:34:39 2020 -0400
+
+    Now able to pass variables between modules/environments
+    
+    For the first time we are able to pass variables between
+    modules/environments correctly. This also includes variables defined as
+    secrets!
+    
+    Resolves #54
+
+commit 9fee9e15fb31ef13ce228f10bdac8abe01113377
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sat Apr 4 01:29:17 2020 -0400
+
+    Updated example build based on changes made
+    
+    The example build has been updated to reflect the changes made in this
+    PR.
+    
+    Resolves #52
+
 commit f1c6393e92931689e3873996b51a2f001d6f053b
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Sat Apr 4 01:25:39 2020 -0400
