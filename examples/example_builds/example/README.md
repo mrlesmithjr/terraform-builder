@@ -113,8 +113,8 @@ AzureRM:
       ubuntu-16-04-x64:
         offer: UbuntuServer
         os: linux
+        publisher: Canonical
         sku: 16.04-LTS
-        ublisher: Canonical
         version: latest
       ubuntu-18-04-x64:
         offer: UbuntuServer
