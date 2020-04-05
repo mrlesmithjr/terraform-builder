@@ -1,53 +1,24 @@
 {%-  for vm, vm_config in rg_config.vms.items() %}
+{%-    if vm_config.public_ip %}
+{%-      include 'providers/azurerm/resources/azurerm_public_ip.j2' %}
+{%-    endif %}
 {%-    include 'providers/azurerm/resources/azurerm_network_interface.j2' %}
 {%-    set memory = (vm_config.memory|default(1024)/1024)|round|int|string %}
 {%-    set cpus = (vm_config.num_cpus)|default(1)|string %}
-{%-    if cpus|int < 2 and memory|int < 7 %}
-{%-      set vm_size = 'Standard_DS1_v2' %}
-{%-    elif cpus|int < 4 and memory|int < 14 %}
-{%-      set vm_size = 'Standard_DS2_v2' %}
-{%-    elif cpus|int < 8 and memory|int < 28 %}
-{%-      set vm_size = 'Standard_DS3_v2' %}
-{%-    elif cpus|int < 16 and memory|int < 56 %}
-{%-      set vm_size = 'Standard_DS4_v2' %}
-{%-    elif cpus|int >= 16 and memory|int >= 56 %}
-{%-      set vm_size = 'Standard_DS5_v2' %}
+{%-    if cpus|int == 1 and memory|int < 1 %}
+{%-      set vm_size = 'Standard_B1ls' %}
+{%-    elif cpus|int == 1 and memory|int < 2 %}
+{%-      set vm_size = 'Standard_B1s' %}
+{%-    elif cpus|int == 1 and memory|int <= 2 %}
+{%-      set vm_size = 'Standard_B1ms' %}
+{%-    elif cpus|int == 2 and memory|int <= 4 %}
+{%-      set vm_size = 'Standard_B2s' %}
+{%-    elif cpus|int == 2 and memory|int <= 8 %}
+{%-      set vm_size = 'Standard_B2s' %}
 {%-    else %}
-{%-      set vm_size = 'Standard_DS1_v2' %}
+{%-      set vm_size = 'Standard_B1s' %}
 {%-    endif %}
-# Resource {{ provider }} virtual machine
-resource "azurerm_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
-  count                 = {{ vm_config.count|default(1) }}
-  name                  = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
-  vm_size               = "{{ vm_size }}"
-  location              = var.azurerm_location
-  resource_group_name   = azurerm_resource_group.{{ rg|replace('-','_') }}.name
-  network_interface_ids = [azurerm_network_interface.{{ vm|replace('-','_') }}[count.index].id]
-
-  storage_image_reference {
-    publisher = "{{ provider_config.resources.images[vm_config.image]['publisher'] }}"
-    offer     = "{{ provider_config.resources.images[vm_config.image]['offer'] }}"
-    sku       = "{{ provider_config.resources.images[vm_config.image]['sku'] }}"
-    version   = "{{ provider_config.resources.images[vm_config.image]['version'] }}"
-  }
-  os_profile {
-    computer_name  = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
-    admin_username = var.azurerm_admin_username
-    admin_password = var.azurerm_admin_password
-  }
 {%-    if provider_config.resources.images[vm_config.image]['os']|lower == 'linux' %}
-  os_profile_linux_config {
-    disable_password_authentication = false
-  }
+{%-      include 'providers/azurerm/resources/azurerm_linux_virtual_machine.j2' %}
 {%-    endif %}
-  storage_os_disk {
-    name              = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
-  }
-{%-    if vm_config.tags %}
-  tags = {{ vm_config.tags|replace('\'','"') }}
-{%-    endif %}
-}
 {%-  endfor %}

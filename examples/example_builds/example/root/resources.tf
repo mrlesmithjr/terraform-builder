@@ -25,6 +25,18 @@ resource "azurerm_subnet" "example_net_subnet_1" {
   virtual_network_name = azurerm_virtual_network.example_net.name
   address_prefix       = "10.0.2.0/24"
 }
+# Resource AzureRM public IP
+resource "azurerm_public_ip" "example_vm_root" {
+  count               = 1
+  name                = format("example-vm-root-%02s-nic-%s", count.index + 1, substr(var.environment, 0, 4))
+  location            = var.azurerm_location
+  resource_group_name = azurerm_resource_group.example_rg_root.name
+  allocation_method   = "Dynamic"
+
+  tags = {
+    environment = var.environment
+  }
+}
 # Resource AzureRM network interface
 resource "azurerm_network_interface" "example_vm_root" {
   count               = 1
@@ -36,36 +48,35 @@ resource "azurerm_network_interface" "example_vm_root" {
     name                          = format("example-vm-root-%02s-ip-config", count.index + 1)
     subnet_id                     = azurerm_subnet.example_net_subnet_1.id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.example_vm_root[count.index].id
   }
-}
-# Resource AzureRM virtual machine
-resource "azurerm_virtual_machine" "example_vm_root" {
+}# Resource AzureRM virtual machine
+resource "azurerm_linux_virtual_machine" "example_vm_root" {
   count                 = 1
   name                  = format("example-vm-root-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
-  vm_size               = "Standard_DS1_v2"
+  size                  = "Standard_B1ls"
   location              = var.azurerm_location
   resource_group_name   = azurerm_resource_group.example_rg_root.name
   network_interface_ids = [azurerm_network_interface.example_vm_root[count.index].id]
 
-  storage_image_reference {
+  source_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
     sku       = "18.04-LTS"
     version   = "latest"
   }
-  os_profile {
-    computer_name  = format("example-vm-root-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
-    admin_username = var.azurerm_admin_username
-    admin_password = var.azurerm_admin_password
+
+  os_disk {
+    name                 = format("example-vm-root-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
   }
-  os_profile_linux_config {
-    disable_password_authentication = false
-  }
-  storage_os_disk {
-    name              = format("example-vm-root-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
+
+  admin_username      = var.azurerm_admin_username
+
+  admin_ssh_key {
+    username   = var.azurerm_admin_username
+    public_key = file(var.azurerm_admin_public_key)
   }
   tags = {"environment": "${var.environment}"}
 }

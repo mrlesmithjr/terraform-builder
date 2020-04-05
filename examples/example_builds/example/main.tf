@@ -6,6 +6,7 @@
 module "development" {
   source            = "./environments/development"
   azurerm_admin_password = var.azurerm_admin_password
+  azurerm_admin_public_key = var.azurerm_admin_public_key
   azurerm_admin_username = var.azurerm_admin_username
   azurerm_location = "West US"
 }
@@ -13,6 +14,7 @@ module "development" {
 module "production" {
   source            = "./environments/production"
   azurerm_admin_password = var.azurerm_admin_password
+  azurerm_admin_public_key = var.azurerm_admin_public_key
   azurerm_admin_username = var.azurerm_admin_username
   azurerm_location = "East US"
 }
@@ -20,6 +22,7 @@ module "production" {
 module "staging" {
   source            = "./environments/staging"
   azurerm_admin_password = var.azurerm_admin_password
+  azurerm_admin_public_key = var.azurerm_admin_public_key
   azurerm_admin_username = var.azurerm_admin_username
   azurerm_location = "Central US"
 }

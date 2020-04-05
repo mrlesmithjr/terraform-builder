@@ -29,6 +29,10 @@ environments:
         type: string
         description: Default admin password
         default: var.azurerm_admin_password
+      azurerm_admin_public_key:
+        type: string
+        description: Default admin SSH public key
+        default: var.azurerm_admin_public_key
       azurerm_admin_username:
         type: string
         description: Default admin username
@@ -43,6 +47,10 @@ environments:
         type: string
         description: Default admin password
         default: var.azurerm_admin_password
+      azurerm_admin_public_key:
+        type: string
+        description: Default admin SSH public key
+        default: var.azurerm_admin_public_key
       azurerm_admin_username:
         type: string
         description: Default admin username
@@ -57,6 +65,10 @@ environments:
         type: string
         description: Default admin password
         default: var.azurerm_admin_password
+      azurerm_admin_public_key:
+        type: string
+        description: Default admin SSH public key
+        default: var.azurerm_admin_public_key
       azurerm_admin_username:
         type: string
         description: Default admin username
@@ -109,7 +121,7 @@ providers:
       # Define image references
       images:
         ubuntu-16-04-x64:
-          ublisher: Canonical
+          publisher: Canonical
           offer: UbuntuServer
           sku: 16.04-LTS
           version: latest
@@ -136,10 +148,11 @@ providers:
             example-vm-root:
               count: 1
               image: ubuntu-18-04-x64
-              memory: 1024
+              memory: 512
               network: example-net
-              subnet: 10.0.2.0/24
+              public_ip: true
               num_cpus: 1
+              subnet: 10.0.2.0/24
               tags: { "environment": "${var.environment}" }
     variables:
       azurerm_location:
@@ -149,6 +162,9 @@ providers:
       azurerm_admin_password:
         type: string
         description: Default admin password
+      azurerm_admin_public_key:
+        type: string
+        description: Default admin SSH public key
       azurerm_admin_username:
         type: string
         description: Default admin username

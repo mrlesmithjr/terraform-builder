@@ -10,6 +10,7 @@ module "production-root" {
   azurerm_subscription_id = ""
   azurerm_tenant_id = ""
   azurerm_admin_password = var.azurerm_admin_password
+  azurerm_admin_public_key = var.azurerm_admin_public_key
   azurerm_admin_username = var.azurerm_admin_username
   azurerm_location = "East US"
 }
@@ -19,6 +20,7 @@ module "production-network" {
   environment = "production"
   environment_index = "1"
   azurerm_admin_password = var.azurerm_admin_password
+  azurerm_admin_public_key = var.azurerm_admin_public_key
   azurerm_admin_username = var.azurerm_admin_username
   azurerm_location = "East US"
 }
@@ -28,6 +30,7 @@ module "production-services" {
   environment = "production"
   environment_index = "1"
   azurerm_admin_password = var.azurerm_admin_password
+  azurerm_admin_public_key = var.azurerm_admin_public_key
   azurerm_admin_username = var.azurerm_admin_username
   azurerm_location = "East US"
 }
