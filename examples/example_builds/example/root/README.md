@@ -21,6 +21,25 @@ root:
     azurerm_tenant_id:
       description: AzureRM Tenant ID
       type: string
+    vsphere_allow_unverified_ssl:
+      default: 'false'
+      description: Boolean that can be set to true to disable SSL certificate verification
+      type: bool
+    vsphere_host_password:
+      description: Password for vSphere hosts
+      type: string
+    vsphere_host_username:
+      description: Username for vSphere hosts
+      type: string
+    vsphere_password:
+      description: Password for vSphere API operations
+      type: string
+    vsphere_server:
+      description: vCenter server name for vSphere API operations
+      type: string
+    vsphere_username:
+      description: Username for vSphere API operations
+      type: string
 
 ```
 

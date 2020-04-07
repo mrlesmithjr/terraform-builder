@@ -21,6 +21,10 @@ production:
       default: East US
       description: Default AzureRM location/region
       type: string
+    vsphere_domain:
+      default: example.org
+      description: Domain to use for resources
+      type: string
 
 ```
 

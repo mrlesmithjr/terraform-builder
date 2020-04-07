@@ -30,6 +30,10 @@ development:
       default: West US
       description: Default AzureRM location/region
       type: string
+    vsphere_domain:
+      default: example.org
+      description: Domain to use for resources
+      type: string
 production:
   variables:
     azurerm_admin_password:
@@ -48,6 +52,10 @@ production:
       default: East US
       description: Default AzureRM location/region
       type: string
+    vsphere_domain:
+      default: example.org
+      description: Domain to use for resources
+      type: string
 staging:
   variables:
     azurerm_admin_password:
@@ -65,6 +73,10 @@ staging:
     azurerm_location:
       default: Central US
       description: Default AzureRM location/region
+      type: string
+    vsphere_domain:
+      default: example.org
+      description: Domain to use for resources
       type: string
 
 ```
@@ -370,33 +382,9 @@ vSphere:
         tags:
         - example-vsphere
   variables:
-    vsphere_allow_unverified_ssl:
-      default: 'false'
-      description: Boolean that can be set to true to disable SSL certificate verification
-      type: bool
     vsphere_domain:
       default: ''
-      description: Define vSphere DNS domain - Used for VMs
-      type: string
-    vsphere_host_password:
-      default: ''
-      description: Password for vSphere hosts
-      type: string
-    vsphere_host_username:
-      default: ''
-      description: Username for vSphere hosts
-      type: string
-    vsphere_password:
-      default: ''
-      description: Password for vSphere API operations
-      type: string
-    vsphere_server:
-      default: ''
-      description: vCenter server name for vSphere API operations
-      type: string
-    vsphere_username:
-      default: ''
-      description: Username for vSphere API operations
+      description: Domain to use for resources
       type: string
 
 ```
@@ -430,6 +418,25 @@ root:
       type: string
     azurerm_tenant_id:
       description: AzureRM Tenant ID
+      type: string
+    vsphere_allow_unverified_ssl:
+      default: 'false'
+      description: Boolean that can be set to true to disable SSL certificate verification
+      type: bool
+    vsphere_host_password:
+      description: Password for vSphere hosts
+      type: string
+    vsphere_host_username:
+      description: Username for vSphere hosts
+      type: string
+    vsphere_password:
+      description: Password for vSphere API operations
+      type: string
+    vsphere_server:
+      description: vCenter server name for vSphere API operations
+      type: string
+    vsphere_username:
+      description: Username for vSphere API operations
       type: string
 services:
   variables: {}
