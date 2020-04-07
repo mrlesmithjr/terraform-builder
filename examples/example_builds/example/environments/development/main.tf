@@ -9,10 +9,17 @@ module "development-root" {
   azurerm_environment = "public"
   azurerm_subscription_id = ""
   azurerm_tenant_id = ""
+  vsphere_allow_unverified_ssl = "false"
+  vsphere_host_password = ""
+  vsphere_host_username = ""
+  vsphere_password = ""
+  vsphere_server = ""
+  vsphere_username = ""
   azurerm_admin_password = var.azurerm_admin_password
   azurerm_admin_public_key = var.azurerm_admin_public_key
   azurerm_admin_username = var.azurerm_admin_username
   azurerm_location = "West US"
+  vsphere_domain = "example.org"
 }
 # Module development-network config
 module "development-network" {
@@ -23,6 +30,7 @@ module "development-network" {
   azurerm_admin_public_key = var.azurerm_admin_public_key
   azurerm_admin_username = var.azurerm_admin_username
   azurerm_location = "West US"
+  vsphere_domain = "example.org"
 }
 # Module development-services config
 module "development-services" {
@@ -33,4 +41,5 @@ module "development-services" {
   azurerm_admin_public_key = var.azurerm_admin_public_key
   azurerm_admin_username = var.azurerm_admin_username
   azurerm_location = "West US"
+  vsphere_domain = "example.org"
 }

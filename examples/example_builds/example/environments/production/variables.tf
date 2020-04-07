@@ -58,45 +58,9 @@ variable "do_token" {
     description = "This is the DO API token"
     default = ""
 }
-# Variable vsphere_allow_unverified_ssl config
-variable "vsphere_allow_unverified_ssl" {
-    type = bool
-    description = "Boolean that can be set to true to disable SSL certificate verification"
-    default = "false"
-}
 # Variable vsphere_domain config
 variable "vsphere_domain" {
     type = string
-    description = "Define vSphere DNS domain - Used for VMs"
-    default = ""
-}
-# Variable vsphere_host_password config
-variable "vsphere_host_password" {
-    type = string
-    description = "Password for vSphere hosts"
-    default = ""
-}
-# Variable vsphere_host_username config
-variable "vsphere_host_username" {
-    type = string
-    description = "Username for vSphere hosts"
-    default = ""
-}
-# Variable vsphere_password config
-variable "vsphere_password" {
-    type = string
-    description = "Password for vSphere API operations"
-    default = ""
-}
-# Variable vsphere_server config
-variable "vsphere_server" {
-    type = string
-    description = "vCenter server name for vSphere API operations"
-    default = ""
-}
-# Variable vsphere_username config
-variable "vsphere_username" {
-    type = string
-    description = "Username for vSphere API operations"
+    description = "Domain to use for resources"
     default = ""
 }

@@ -69,22 +69,70 @@ Environment configurations should be configured similar to the below example:
 environments:
   development:
     variables:
-      azurerm_location: East US
-      do_region: nyc1
-      vsphere_allow_unverified_ssl: "true"
-      vsphere_server: vc.development.example.org
+      azurerm_admin_password:
+        type: string
+        description: Default admin password
+        default: var.azurerm_admin_password
+      azurerm_admin_public_key:
+        type: string
+        description: Default admin SSH public key
+        default: var.azurerm_admin_public_key
+      azurerm_admin_username:
+        type: string
+        description: Default admin username
+        default: var.azurerm_admin_username
+      azurerm_location:
+        type: string
+        description: Default AzureRM location/region
+        default: West US
+      vsphere_domain:
+        type: string
+        description: Domain to use for resources
+        default: example.org
   production:
     variables:
-      azurerm_location: West US 2
-      do_region: sfo2
-      vsphere_allow_unverified_ssl: "false"
-      vsphere_server: vc.production.example.org
+      azurerm_admin_password:
+        type: string
+        description: Default admin password
+        default: var.azurerm_admin_password
+      azurerm_admin_public_key:
+        type: string
+        description: Default admin SSH public key
+        default: var.azurerm_admin_public_key
+      azurerm_admin_username:
+        type: string
+        description: Default admin username
+        default: var.azurerm_admin_username
+      azurerm_location:
+        type: string
+        description: Default AzureRM location/region
+        default: East US
+      vsphere_domain:
+        type: string
+        description: Domain to use for resources
+        default: example.org
   staging:
     variables:
-      azurerm_location: North Central US
-      do_region: ams3
-      vsphere_allow_unverified_ssl: "true"
-      vsphere_server: vc.staging.example.org
+      azurerm_admin_password:
+        type: string
+        description: Default admin password
+        default: var.azurerm_admin_password
+      azurerm_admin_public_key:
+        type: string
+        description: Default admin SSH public key
+        default: var.azurerm_admin_public_key
+      azurerm_admin_username:
+        type: string
+        description: Default admin username
+        default: var.azurerm_admin_username
+      azurerm_location:
+        type: string
+        description: Default AzureRM location/region
+        default: Central US
+      vsphere_domain:
+        type: string
+        description: Domain to use for resources
+        default: example.org
 ```
 
 ## Modules
@@ -98,16 +146,45 @@ Module configurations should be configured similar to below:
 modules:
   root:
     variables:
-      do_domain: example.org
-      do_ssh_keys: [12121212]
+      azurerm_client_id:
+        type: string
+        description: Default AzureRM client id
+      azurerm_client_secret:
+        type: string
+        description: Default AzureRM client secret
+      azurerm_environment:
+        type: string
+        description: AzureRM Environment
+        default: public
+      azurerm_subscription_id:
+        type: string
+        description: AzureRM Subscription ID
+      azurerm_tenant_id:
+        type: string
+        description: AzureRM Tenant ID
+      vsphere_allow_unverified_ssl:
+        type: bool
+        description: Boolean that can be set to true to disable SSL certificate verification
+        default: "false"
+      vsphere_host_password:
+        type: string
+        description: Password for vSphere hosts
+      vsphere_host_username:
+        type: string
+        description: Username for vSphere hosts
+      vsphere_password:
+        type: string
+        description: Password for vSphere API operations
+      vsphere_server:
+        type: string
+        description: vCenter server name for vSphere API operations
+      vsphere_username:
+        type: string
+        description: Username for vSphere API operations
   network:
-    variables:
-      do_domain: network.example.org
-      do_ssh_keys: [12121212]
+    variables: {}
   services:
-    variables:
-      do_domain: services.example.org
-      do_ssh_keys: [12121212]
+    variables: {}
 ```
 
 ## Supported Providers
@@ -343,6 +420,11 @@ providers:
 
 > NOTE: Need to add context for resource usage
 
+#### vSphere - Creating All Resources
+
+The following is an example of where we create all resource constructs
+in preparation of consuming them for VMs.
+
 ```yaml
 providers:
   vSphere:
@@ -452,32 +534,100 @@ providers:
           tags:
             - example-vsphere
     variables:
-      vsphere_allow_unverified_ssl:
-        type: bool
-        description: Boolean that can be set to true to disable SSL certificate verification
-        default: "false"
       vsphere_domain:
         type: string
-        description: Define vSphere DNS domain - Used for VMs
+        description: Domain to use for resources
         default: ""
-      vsphere_host_password:
+```
+
+#### vSphere - Consuming Resources
+
+The following is an example of where we consume all resource constructs
+in preparation of creating VMs. In this example, we are consuming existing
+Datacenters and clusters.
+
+```yaml
+providers:
+  vSphere:
+    resources:
+      datacenters:
+        example-dc:
+          create: false
+          clusters:
+            example-cluster:
+              create: false
+              vms:
+                example-vm:
+                  count: 1
+                  memory: 2048
+                  network_interfaces:
+                    - network: example-pg
+                      address_allocation: dynamic
+                  num_cpus: 1
+                  tags:
+                    - example-vsphere
+                  template: ""
+                example-vm-from-template:
+                  count: 1
+                  memory: 2048
+                  # Need a way to decide how to select either data.vsphere_network
+                  # or other
+                  network_interfaces:
+                    - network: example-pg
+                      address_allocation: static
+                  num_cpus: 1
+                  tags:
+                    - example-vsphere
+                  template: ubuntu1804_x64
+                example-win-vm-from-template:
+                  count: 1
+                  memory: 2048
+                  network_interfaces:
+                    - network: example-pg
+                      address_allocation: dynamic
+                  num_cpus: 1
+                  tags:
+                    - example-vsphere
+                  template: windows2019_x64
+          module: root
+          # Define existing networks to consume, not create
+          # Add subnet info associated with network
+          networks:
+            example-pg:
+              subnet: 192.168.250.0
+              cidr: 24
+              gateway: 192.168.250.1
+          # Define existing templates to consume, not create
+          # Because Terraform 0.12.x does not support SATA we need to define
+          # whether or not the controller is sata to add logic. Should this be
+          # a boolean instead?
+          # Define os as either linux or windows
+          templates:
+            ubuntu1604_x64:
+              controller: scsi
+              os: linux
+            ubuntu1804_x64:
+              controller: sata
+              os: linux
+            windows2019_x64:
+              controller: sata
+              os: windows
+      tag_categories:
+        example-category:
+          create: true
+          associable_types:
+            - ClusterComputeResource
+            - Datacenter
+            - Datastore
+            - HostSystem
+            - VirtualMachine
+          cardinality: SINGLE
+          module: root
+          tags:
+            - example-vsphere
+    variables:
+      vsphere_domain:
         type: string
-        description: Password for vSphere hosts
-        default: ""
-      vsphere_host_username:
-        type: string
-        description: Username for vSphere hosts
-        default: ""
-      vsphere_password:
-        type: string
-        description: Password for vSphere API operations
-        default: ""
-      vsphere_server:
-        type: string
-        description: vCenter server name for vSphere API operations
-        default: ""
-      vsphere_username:
-        type: string
-        description: Username for vSphere API operations
+        description: Domain to use for resources
         default: ""
 ```
