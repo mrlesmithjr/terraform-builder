@@ -41,6 +41,10 @@ environments:
         type: string
         description: Default AzureRM location/region
         default: West US
+      vsphere_domain:
+        type: string
+        description: Domain to use for resources
+        default: example.org
   production:
     variables:
       azurerm_admin_password:
@@ -59,6 +63,10 @@ environments:
         type: string
         description: Default AzureRM location/region
         default: East US
+      vsphere_domain:
+        type: string
+        description: Domain to use for resources
+        default: example.org
   staging:
     variables:
       azurerm_admin_password:
@@ -77,6 +85,10 @@ environments:
         type: string
         description: Default AzureRM location/region
         default: Central US
+      vsphere_domain:
+        type: string
+        description: Domain to use for resources
+        default: example.org
 
 # Define modules - Structure will be project_name/modules/{module}
 # root needs to always exist
@@ -105,6 +117,25 @@ modules:
       azurerm_tenant_id:
         type: string
         description: AzureRM Tenant ID
+      vsphere_allow_unverified_ssl:
+        type: bool
+        description: Boolean that can be set to true to disable SSL certificate verification
+        default: "false"
+      vsphere_host_password:
+        type: string
+        description: Password for vSphere hosts
+      vsphere_host_username:
+        type: string
+        description: Username for vSphere hosts
+      vsphere_password:
+        type: string
+        description: Password for vSphere API operations
+      vsphere_server:
+        type: string
+        description: vCenter server name for vSphere API operations
+      vsphere_username:
+        type: string
+        description: Username for vSphere API operations
   network:
     variables: {}
   services:
@@ -400,31 +431,7 @@ providers:
           tags:
             - example-vsphere
     variables:
-      vsphere_allow_unverified_ssl:
-        type: bool
-        description: Boolean that can be set to true to disable SSL certificate verification
-        default: "false"
       vsphere_domain:
         type: string
-        description: Define vSphere DNS domain - Used for VMs
-        default: ""
-      vsphere_host_password:
-        type: string
-        description: Password for vSphere hosts
-        default: ""
-      vsphere_host_username:
-        type: string
-        description: Username for vSphere hosts
-        default: ""
-      vsphere_password:
-        type: string
-        description: Password for vSphere API operations
-        default: ""
-      vsphere_server:
-        type: string
-        description: vCenter server name for vSphere API operations
-        default: ""
-      vsphere_username:
-        type: string
-        description: Username for vSphere API operations
+        description: Domain to use for resources
         default: ""
