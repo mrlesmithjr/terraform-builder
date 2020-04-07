@@ -20,8 +20,10 @@ backends:
   #     path: example/terraform
 
 # Define environments - Should be development, production, and staging.
-# You can define specific variables per environment to override the defaults
-# defined in providers.
+# Variables that only apply to environments should be defined here. Use them
+# as a way to define variables differently between environments if needed.
+# If you only need one environment, simply remove or comment out the ones you
+# do not need.
 environments:
   development:
     variables:
@@ -95,9 +97,8 @@ environments:
 # Each module will be named with the respective environment appended to the
 # beginning of the module name. Example: development-root, production-root, and
 # staging-root.
-# You can define variables specific to a module which will override the
-# defaults defined in providers to allow flexibilty between modules. This needs
-# to be tested out a bit more.
+# Variables that only apply to modules should be defined here. Provider connection
+# variables are a good example.
 modules:
   root:
     variables:
@@ -141,9 +142,10 @@ modules:
   services:
     variables: {}
 
-# Define providers and variables
-# For variable definitions, keep the default as undefined and use either modules
-# or environments to override the provider defaults.
+# Define providers, resources, and variables
+# Variables defined here should be minimal in most cases. As we will likely
+# define more specific variables within environments or modules. The variables
+# defined here will be added to modules and not environments.
 # Currently only the current variables for each provider are supported. So, it's
 # generally best to leave them as is.
 providers:
@@ -163,10 +165,12 @@ providers:
           sku: 18.04-LTS
           version: latest
           os: linux
+      # Define resource groups
       resource_groups:
         example-rg-root:
           create: true
           module: root
+          # Define virtual networks
           virtual_networks:
             example-net:
               address_space:

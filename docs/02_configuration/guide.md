@@ -60,8 +60,8 @@ The following environments are defaults:
 - Staging
 
 We can configure environment specifics such as variables, etc. per environment.
-By defining variables within environments, we can override the defaults defined
-in our providers.
+Variables that only apply to environments should be defined here. Use them
+as a way to define variables differently between environments if needed.
 
 Environment configurations should be configured similar to the below example:
 
@@ -138,7 +138,8 @@ environments:
 ## Modules
 
 Modules allow us to construct our project into logical building blocks based on
-resources required to be used together. Structure will be project_name/modules/{module} root needs to always exist. Each module will be named with the respective environment appended to the beginning of the module name. Example: `development-root`, `production-root`, and `staging-root`. You can define variables specific to a module which will override the defaults defined in providers to allow flexibilty between modules.
+resources required to be used together. Structure will be project_name/modules/{module} root needs to always exist. Each module will be named with the respective environment appended to the beginning of the module name. Example: `development-root`, `production-root`, and `staging-root`. Variables that only apply to modules should be defined here. Provider connection variables are a
+good example.
 
 Module configurations should be configured similar to below:
 
@@ -209,15 +210,31 @@ Below you find examples of each supported provider with configs.
 providers:
   AzureRM:
     resources:
+      # Define image references
+      images:
+        ubuntu-16-04-x64:
+          publisher: Canonical
+          offer: UbuntuServer
+          sku: 16.04-LTS
+          version: latest
+          os: linux
+        ubuntu-18-04-x64:
+          publisher: Canonical
+          offer: UbuntuServer
+          sku: 18.04-LTS
+          version: latest
+          os: linux
+      # Define resource groups
       resource_groups:
         example-rg-root:
           create: true
           module: root
+          # Define virtual networks
           virtual_networks:
             example-net:
-              create: true
               address_space:
                 - 10.0.0.0/16
+              create: true
               subnets:
                 - 10.0.1.0/24
                 - 10.0.2.0/24
@@ -225,62 +242,26 @@ providers:
             example-vm-root:
               count: 1
               image: ubuntu-18-04-x64
-              memory: 1024
+              memory: 512
               network: example-net
-              subnet: 10.0.2.0/24
+              public_ip: true
               num_cpus: 1
+              subnet: 10.0.2.0/24
               tags: { "environment": "${var.environment}" }
     variables:
-      azurerm_client_id:
-        type: string
-        description: Default AzureRM client id
-        default: ""
-      azurerm_client_secret:
-        type: string
-        description: Default AzureRM client secret
-        default: ""
-      azurerm_domain:
-        type: string
-        description: Default AzureRM domain for resources
-        default: ""
-      azurerm_environment:
-        type: string
-        description: AzureRM Environment
-        default: public
-      azurerm_features:
-        description: Customize the behaviour of certain Azure Provider resources.
-        default: {}
-      azurerm_image_reference:
-        description: Default OS image reference lookups
-        default:
-          {
-            "ubuntu-16-04-x64":
-              {
-                "publisher": "Canonical",
-                "offer": "UbuntuServer",
-                "sku": "16.04-LTS",
-                "version": "latest",
-              },
-            "ubuntu-18-04-x64":
-              {
-                "publisher": "Canonical",
-                "offer": "UbuntuServer",
-                "sku": "18.04-LTS",
-                "version": "latest",
-              },
-          }
       azurerm_location:
         type: string
         description: Default AzureRM location/region
         default: ""
-      azurerm_subscription_id:
+      azurerm_admin_password:
         type: string
-        description: AzureRM Subscription ID
-        default: ""
-      azurerm_tenant_id:
+        description: Default admin password
+      azurerm_admin_public_key:
         type: string
-        description: AzureRM Tenant ID
-        default: ""
+        description: Default admin SSH public key
+      azurerm_admin_username:
+        type: string
+        description: Default admin username
 ```
 
 ### DigitalOcean

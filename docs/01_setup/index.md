@@ -54,6 +54,16 @@ tfenv install
 tfenv list
 ```
 
+### TFLint
+
+When using Terraform Builder and [TFLint](https://github.com/terraform-linters/tflint)
+is installed, we also ensure that the configurations pass Terraform linting.
+
+> NOTE: TFLint is a Terraform linter focused on possible errors, best practices, etc.
+
+To install TFLint head over [here](https://github.com/terraform-linters/tflint#installation)
+for the instructions to do so.
+
 ### Graphviz
 
 Terraform Builder will generate a Terraform Graph and embed it into your project

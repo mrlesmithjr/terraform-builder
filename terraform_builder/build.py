@@ -87,6 +87,15 @@ class Build:
                 # Generate Terraform graph to display in project markdown
                 self.graph()
 
+            # Check for tflint command path
+            tflint_path = shutil.which('tflint')
+            # log tflint path
+            self.logger.info('tflint_path: %s', tflint_path)
+
+            if tflint_path is not None:
+                # tflint --module
+                subprocess.run(['tflint', '--module'], check=False)
+
             # Change to project root directory
             os.chdir(current_dir)
 
