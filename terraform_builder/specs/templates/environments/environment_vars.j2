@@ -3,7 +3,7 @@
 {%-      if value.default %}
 {%-        if value.default is iterable and value.default is not string %}
   {{ key }} = {{ value.default }}
-{%-        elif value.default is mapping %}
+{%-       elif value.default is mapping or value.default is number %}
   {{ key }} = {{ value.default }}
 {%-        else %}
 {%-          if value.default.startswith('var.') %}
