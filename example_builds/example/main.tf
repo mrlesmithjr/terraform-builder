@@ -5,17 +5,29 @@
 # Module development config
 module "development" {
   source            = "./environments/development"
-  environment       = "development"
+  azurerm_admin_password = var.azurerm_admin_password
+  azurerm_admin_public_key = var.azurerm_admin_public_key
+  azurerm_admin_username = var.azurerm_admin_username
+  azurerm_location = "West US"
+  vsphere_domain = "example.org"
 }
 # Module production config
 module "production" {
   source            = "./environments/production"
-  environment       = "production"
+  azurerm_admin_password = var.azurerm_admin_password
+  azurerm_admin_public_key = var.azurerm_admin_public_key
+  azurerm_admin_username = var.azurerm_admin_username
+  azurerm_location = "East US"
+  vsphere_domain = "example.org"
 }
 # Module staging config
 module "staging" {
   source            = "./environments/staging"
-  environment       = "staging"
+  azurerm_admin_password = var.azurerm_admin_password
+  azurerm_admin_public_key = var.azurerm_admin_public_key
+  azurerm_admin_username = var.azurerm_admin_username
+  azurerm_location = "Central US"
+  vsphere_domain = "example.org"
 }
 # Generated using https://github.com/mrlesmithjr/terraform-builder
 

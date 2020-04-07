@@ -67,6 +67,8 @@
     </li>
         </ul>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#tflint">TFLint</a>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#graphviz">Graphviz</a>
     </li>
         </ul>
@@ -182,6 +184,14 @@ tfenv install
 tfenv list
 </code></pre>
 
+<h3 id="tflint">TFLint</h3>
+<p>When using Terraform Builder and <a href="https://github.com/terraform-linters/tflint">TFLint</a>
+is installed, we also ensure that the configurations pass Terraform linting.</p>
+<blockquote>
+<p>NOTE: TFLint is a Terraform linter focused on possible errors, best practices, etc.</p>
+</blockquote>
+<p>To install TFLint head over <a href="https://github.com/terraform-linters/tflint#installation">here</a>
+for the instructions to do so.</p>
 <h3 id="graphviz">Graphviz</h3>
 <p>Terraform Builder will generate a Terraform Graph and embed it into your project
 <code>README.md</code> if Graphviz is installed. So, it is recommended that you install <a href="https://graphviz.gitlab.io/download/">Graphviz</a> to get a visible graph in your project README.</p>

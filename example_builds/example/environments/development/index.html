@@ -134,10 +134,26 @@
 <h2 id="module-info">Module Info</h2>
 <pre><code class="yaml">development:
   variables:
-    azurerm_location: East US
-    do_region: nyc1
-    vsphere_allow_unverified_ssl: 'true'
-    vsphere_server: vc.development.example.org
+    azurerm_admin_password:
+      default: var.azurerm_admin_password
+      description: Default admin password
+      type: string
+    azurerm_admin_public_key:
+      default: var.azurerm_admin_public_key
+      description: Default admin SSH public key
+      type: string
+    azurerm_admin_username:
+      default: var.azurerm_admin_username
+      description: Default admin username
+      type: string
+    azurerm_location:
+      default: West US
+      description: Default AzureRM location/region
+      type: string
+    vsphere_domain:
+      default: example.org
+      description: Domain to use for resources
+      type: string
 
 </code></pre>
 

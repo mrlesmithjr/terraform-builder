@@ -25,6 +25,18 @@ resource "azurerm_subnet" "example_net_subnet_1" {
   virtual_network_name = azurerm_virtual_network.example_net.name
   address_prefix       = "10.0.2.0/24"
 }
+# Resource AzureRM public IP
+resource "azurerm_public_ip" "example_vm_root" {
+  count               = 1
+  name                = format("example-vm-root-%02s-nic-%s", count.index + 1, substr(var.environment, 0, 4))
+  location            = var.azurerm_location
+  resource_group_name = azurerm_resource_group.example_rg_root.name
+  allocation_method   = "Dynamic"
+
+  tags = {
+    environment = var.environment
+  }
+}
 # Resource AzureRM network interface
 resource "azurerm_network_interface" "example_vm_root" {
   count               = 1
@@ -36,28 +48,35 @@ resource "azurerm_network_interface" "example_vm_root" {
     name                          = format("example-vm-root-%02s-ip-config", count.index + 1)
     subnet_id                     = azurerm_subnet.example_net_subnet_1.id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.example_vm_root[count.index].id
   }
-}
-# Resource AzureRM virtual machine
-resource "azurerm_virtual_machine" "example_vm_root" {
+}# Resource AzureRM virtual machine
+resource "azurerm_linux_virtual_machine" "example_vm_root" {
   count                 = 1
   name                  = format("example-vm-root-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
-  vm_size               = "Standard_DS1_v2"
+  size                  = "Standard_B1ls"
   location              = var.azurerm_location
   resource_group_name   = azurerm_resource_group.example_rg_root.name
   network_interface_ids = [azurerm_network_interface.example_vm_root[count.index].id]
 
-  storage_image_reference {
-    publisher = lookup(var.azurerm_image_reference.ubuntu-18-04-x64, "publisher")
-    offer     = lookup(var.azurerm_image_reference.ubuntu-18-04-x64, "offer")
-    sku       = lookup(var.azurerm_image_reference.ubuntu-18-04-x64, "sku")
-    version   = lookup(var.azurerm_image_reference.ubuntu-18-04-x64, "version")
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "18.04-LTS"
+    version   = "latest"
   }
-  storage_os_disk {
-    name              = format("example-vm-root-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
+
+  os_disk {
+    name                 = format("example-vm-root-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  admin_username      = var.azurerm_admin_username
+
+  admin_ssh_key {
+    username   = var.azurerm_admin_username
+    public_key = file(var.azurerm_admin_public_key)
   }
   tags = {"environment": "${var.environment}"}
 }
@@ -147,14 +166,6 @@ resource "digitalocean_droplet" "example_vm" {
   private_networking = true
   tags     = [digitalocean_tag.example_digitalocean.id, digitalocean_tag.example_digitalocean_env.id]
 }
-# Resource DigitalOcean default domain
-resource "digitalocean_domain" "default_env" {
-  name = format("%s.%s", var.environment, var.do_domain)
-}
-# Resource DigitalOcean default internal domain
-resource "digitalocean_domain" "default_env_internal" {
-  name = format("%s.%s.%s", "internal", var.environment, var.do_domain)
-}
 # Resource DigitalOcean internal DNS record
 resource "digitalocean_record" "example_vm_internal" {
   count  = 1
@@ -181,7 +192,7 @@ resource "digitalocean_project" "example" {
 }
 # Obtain list of project resources as local and use
 locals {
-  project_resources = [digitalocean_domain.default_env.urn, digitalocean_domain.default_env_internal.urn, digitalocean_droplet.example_vm.*.urn]
+  project_resources = [digitalocean_droplet.example_vm.*.urn]
 }
 # Resource vSphere datacenter
 resource "vsphere_datacenter" "example_dc" {
@@ -195,6 +206,11 @@ data "vsphere_virtual_machine" "ubuntu1604_x64" {
 # Data vSphere virtual machine template
 data "vsphere_virtual_machine" "ubuntu1804_x64" {
   name          = "ubuntu1804_x64"
+  datacenter_id = vsphere_datacenter.example_dc.id
+}
+# Data vSphere virtual machine template
+data "vsphere_virtual_machine" "windows2019_x64" {
+  name          = "windows2019_x64"
   datacenter_id = vsphere_datacenter.example_dc.id
 }
 # Data vSphere network
@@ -259,8 +275,12 @@ resource "vsphere_virtual_machine" "example_vm_from_template" {
   clone {
     template_uuid = data.vsphere_virtual_machine.ubuntu1804_x64.id
     customize {
+      linux_options {
+      host_name = format("example-vm-from-template-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+      domain    = var.vsphere_domain
+      }
       network_interface {
-        ipv4_address = cidrhost("192.168.250.0/24", 1 + count.index + var.environment_index)
+        ipv4_address = cidrhost("192.168.250.0/24", count.index + 1 + ((var.environment_index) * 1))
         ipv4_netmask = 24
       }
       ipv4_gateway = "192.168.250.1"
@@ -269,6 +289,35 @@ resource "vsphere_virtual_machine" "example_vm_from_template" {
   # https://github.com/terraform-providers/terraform-provider-vsphere/issues/523
   disk {
     label            = format("example-vm-from-template_%02s.vmdk", count.index + 1)
+    size             = "1"
+    thin_provisioned = "1"
+    eagerly_scrub    = "0"
+  }
+
+  tags = ["vsphere_tag.example_vsphere.id"]
+}
+# Resource vSphere virtual machine
+resource "vsphere_virtual_machine" "example_win_vm_from_template" {
+  count    = 1
+  name     = format("example-win-vm-from-template-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+  num_cpus = 1
+  memory   = 2048
+  network_interface {
+    network_id = data.vsphere_network.example_pg.id
+  }
+  resource_pool_id = vsphere_compute_cluster.example_cluster.resource_pool_id
+  guest_id         = data.vsphere_virtual_machine.windows2019_x64.guest_id
+  clone {
+    template_uuid = data.vsphere_virtual_machine.windows2019_x64.id
+    customize {
+      windows_options {
+        computer_name  = format("example-win-vm-from-template-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+      }
+    }
+  }
+  # https://github.com/terraform-providers/terraform-provider-vsphere/issues/523
+  disk {
+    label            = format("example-win-vm-from-template_%02s.vmdk", count.index + 1)
     size             = "1"
     thin_provisioned = "1"
     eagerly_scrub    = "0"

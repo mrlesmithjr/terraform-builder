@@ -199,47 +199,125 @@ to ensure we have proper constructs in place from the beginning.</p>
 <li>Staging</li>
 </ul>
 <p>We can configure environment specifics such as variables, etc. per environment.
-By defining variables within environments, we can override the defaults defined
-in our providers.</p>
+Variables that only apply to environments should be defined here. Use them
+as a way to define variables differently between environments if needed.</p>
 <p>Environment configurations should be configured similar to the below example:</p>
 <pre><code class="yaml">environments:
   development:
     variables:
-      azurerm_location: East US
-      do_region: nyc1
-      vsphere_allow_unverified_ssl: &quot;true&quot;
-      vsphere_server: vc.development.example.org
+      azurerm_admin_password:
+        type: string
+        description: Default admin password
+        default: var.azurerm_admin_password
+      azurerm_admin_public_key:
+        type: string
+        description: Default admin SSH public key
+        default: var.azurerm_admin_public_key
+      azurerm_admin_username:
+        type: string
+        description: Default admin username
+        default: var.azurerm_admin_username
+      azurerm_location:
+        type: string
+        description: Default AzureRM location/region
+        default: West US
+      vsphere_domain:
+        type: string
+        description: Domain to use for resources
+        default: example.org
   production:
     variables:
-      azurerm_location: West US 2
-      do_region: sfo2
-      vsphere_allow_unverified_ssl: &quot;false&quot;
-      vsphere_server: vc.production.example.org
+      azurerm_admin_password:
+        type: string
+        description: Default admin password
+        default: var.azurerm_admin_password
+      azurerm_admin_public_key:
+        type: string
+        description: Default admin SSH public key
+        default: var.azurerm_admin_public_key
+      azurerm_admin_username:
+        type: string
+        description: Default admin username
+        default: var.azurerm_admin_username
+      azurerm_location:
+        type: string
+        description: Default AzureRM location/region
+        default: East US
+      vsphere_domain:
+        type: string
+        description: Domain to use for resources
+        default: example.org
   staging:
     variables:
-      azurerm_location: North Central US
-      do_region: ams3
-      vsphere_allow_unverified_ssl: &quot;true&quot;
-      vsphere_server: vc.staging.example.org
+      azurerm_admin_password:
+        type: string
+        description: Default admin password
+        default: var.azurerm_admin_password
+      azurerm_admin_public_key:
+        type: string
+        description: Default admin SSH public key
+        default: var.azurerm_admin_public_key
+      azurerm_admin_username:
+        type: string
+        description: Default admin username
+        default: var.azurerm_admin_username
+      azurerm_location:
+        type: string
+        description: Default AzureRM location/region
+        default: Central US
+      vsphere_domain:
+        type: string
+        description: Domain to use for resources
+        default: example.org
 </code></pre>
 
 <h2 id="modules">Modules</h2>
 <p>Modules allow us to construct our project into logical building blocks based on
-resources required to be used together. Structure will be project_name/modules/{module} root needs to always exist. Each module will be named with the respective environment appended to the beginning of the module name. Example: <code>development-root</code>, <code>production-root</code>, and <code>staging-root</code>. You can define variables specific to a module which will override the defaults defined in providers to allow flexibilty between modules.</p>
+resources required to be used together. Structure will be project_name/modules/{module} root needs to always exist. Each module will be named with the respective environment appended to the beginning of the module name. Example: <code>development-root</code>, <code>production-root</code>, and <code>staging-root</code>. Variables that only apply to modules should be defined here. Provider connection variables are a
+good example.</p>
 <p>Module configurations should be configured similar to below:</p>
 <pre><code class="yaml">modules:
   root:
     variables:
-      do_domain: example.org
-      do_ssh_keys: [12121212]
+      azurerm_client_id:
+        type: string
+        description: Default AzureRM client id
+      azurerm_client_secret:
+        type: string
+        description: Default AzureRM client secret
+      azurerm_environment:
+        type: string
+        description: AzureRM Environment
+        default: public
+      azurerm_subscription_id:
+        type: string
+        description: AzureRM Subscription ID
+      azurerm_tenant_id:
+        type: string
+        description: AzureRM Tenant ID
+      vsphere_allow_unverified_ssl:
+        type: bool
+        description: Boolean that can be set to true to disable SSL certificate verification
+        default: &quot;false&quot;
+      vsphere_host_password:
+        type: string
+        description: Password for vSphere hosts
+      vsphere_host_username:
+        type: string
+        description: Username for vSphere hosts
+      vsphere_password:
+        type: string
+        description: Password for vSphere API operations
+      vsphere_server:
+        type: string
+        description: vCenter server name for vSphere API operations
+      vsphere_username:
+        type: string
+        description: Username for vSphere API operations
   network:
-    variables:
-      do_domain: network.example.org
-      do_ssh_keys: [12121212]
+    variables: {}
   services:
-    variables:
-      do_domain: services.example.org
-      do_ssh_keys: [12121212]
+    variables: {}
 </code></pre>
 
 <h2 id="supported-providers">Supported Providers</h2>
@@ -262,15 +340,31 @@ out. This will ensure that additional providers will follow the same modeling.</
 <pre><code class="yaml">providers:
   AzureRM:
     resources:
+      # Define image references
+      images:
+        ubuntu-16-04-x64:
+          publisher: Canonical
+          offer: UbuntuServer
+          sku: 16.04-LTS
+          version: latest
+          os: linux
+        ubuntu-18-04-x64:
+          publisher: Canonical
+          offer: UbuntuServer
+          sku: 18.04-LTS
+          version: latest
+          os: linux
+      # Define resource groups
       resource_groups:
         example-rg-root:
           create: true
           module: root
+          # Define virtual networks
           virtual_networks:
             example-net:
-              create: true
               address_space:
                 - 10.0.0.0/16
+              create: true
               subnets:
                 - 10.0.1.0/24
                 - 10.0.2.0/24
@@ -278,62 +372,26 @@ out. This will ensure that additional providers will follow the same modeling.</
             example-vm-root:
               count: 1
               image: ubuntu-18-04-x64
-              memory: 1024
+              memory: 512
               network: example-net
-              subnet: 10.0.2.0/24
+              public_ip: true
               num_cpus: 1
+              subnet: 10.0.2.0/24
               tags: { &quot;environment&quot;: &quot;${var.environment}&quot; }
     variables:
-      azurerm_client_id:
-        type: string
-        description: Default AzureRM client id
-        default: &quot;&quot;
-      azurerm_client_secret:
-        type: string
-        description: Default AzureRM client secret
-        default: &quot;&quot;
-      azurerm_domain:
-        type: string
-        description: Default AzureRM domain for resources
-        default: &quot;&quot;
-      azurerm_environment:
-        type: string
-        description: AzureRM Environment
-        default: public
-      azurerm_features:
-        description: Customize the behaviour of certain Azure Provider resources.
-        default: {}
-      azurerm_image_reference:
-        description: Default OS image reference lookups
-        default:
-          {
-            &quot;ubuntu-16-04-x64&quot;:
-              {
-                &quot;publisher&quot;: &quot;Canonical&quot;,
-                &quot;offer&quot;: &quot;UbuntuServer&quot;,
-                &quot;sku&quot;: &quot;16.04-LTS&quot;,
-                &quot;version&quot;: &quot;latest&quot;,
-              },
-            &quot;ubuntu-18-04-x64&quot;:
-              {
-                &quot;publisher&quot;: &quot;Canonical&quot;,
-                &quot;offer&quot;: &quot;UbuntuServer&quot;,
-                &quot;sku&quot;: &quot;18.04-LTS&quot;,
-                &quot;version&quot;: &quot;latest&quot;,
-              },
-          }
       azurerm_location:
         type: string
         description: Default AzureRM location/region
         default: &quot;&quot;
-      azurerm_subscription_id:
+      azurerm_admin_password:
         type: string
-        description: AzureRM Subscription ID
-        default: &quot;&quot;
-      azurerm_tenant_id:
+        description: Default admin password
+      azurerm_admin_public_key:
         type: string
-        description: AzureRM Tenant ID
-        default: &quot;&quot;
+        description: Default admin SSH public key
+      azurerm_admin_username:
+        type: string
+        description: Default admin username
 </code></pre>
 
 <h3 id="digitalocean">DigitalOcean</h3>
@@ -472,6 +530,9 @@ out. This will ensure that additional providers will follow the same modeling.</
 <blockquote>
 <p>NOTE: Need to add context for resource usage</p>
 </blockquote>
+<h4 id="vsphere-creating-all-resources">vSphere - Creating All Resources</h4>
+<p>The following is an example of where we create all resource constructs
+in preparation of consuming them for VMs.</p>
 <pre><code class="yaml">providers:
   vSphere:
     resources:
@@ -511,8 +572,19 @@ out. This will ensure that additional providers will follow the same modeling.</
                   tags:
                     - example-vsphere
                   template: ubuntu1804_x64
+                example-win-vm-from-template:
+                  count: 1
+                  memory: 2048
+                  network_interfaces:
+                    - network: example-pg
+                      address_allocation: dynamic
+                  num_cpus: 1
+                  tags:
+                    - example-vsphere
+                  template: windows2019_x64
           module: root
           # Define existing networks to consume, not create
+          # Add subnet info associated with network
           networks:
             example-pg:
               subnet: 192.168.250.0
@@ -522,11 +594,17 @@ out. This will ensure that additional providers will follow the same modeling.</
           # Because Terraform 0.12.x does not support SATA we need to define
           # whether or not the controller is sata to add logic. Should this be
           # a boolean instead?
+          # Define os as either linux or windows
           templates:
             ubuntu1604_x64:
               controller: scsi
+              os: linux
             ubuntu1804_x64:
               controller: sata
+              os: linux
+            windows2019_x64:
+              controller: sata
+              os: windows
           # Define virtual switches to create
           # If false, they will just be skipped
           # Only works with hosts that are created
@@ -563,29 +641,98 @@ out. This will ensure that additional providers will follow the same modeling.</
           tags:
             - example-vsphere
     variables:
-      vsphere_allow_unverified_ssl:
-        type: bool
-        description: Boolean that can be set to true to disable SSL certificate verification
-        default: &quot;false&quot;
-      vsphere_host_password:
+      vsphere_domain:
         type: string
-        description: Password for vSphere hosts
+        description: Domain to use for resources
         default: &quot;&quot;
-      vsphere_host_username:
+</code></pre>
+
+<h4 id="vsphere-consuming-resources">vSphere - Consuming Resources</h4>
+<p>The following is an example of where we consume all resource constructs
+in preparation of creating VMs. In this example, we are consuming existing
+Datacenters and clusters.</p>
+<pre><code class="yaml">providers:
+  vSphere:
+    resources:
+      datacenters:
+        example-dc:
+          create: false
+          clusters:
+            example-cluster:
+              create: false
+              vms:
+                example-vm:
+                  count: 1
+                  memory: 2048
+                  network_interfaces:
+                    - network: example-pg
+                      address_allocation: dynamic
+                  num_cpus: 1
+                  tags:
+                    - example-vsphere
+                  template: &quot;&quot;
+                example-vm-from-template:
+                  count: 1
+                  memory: 2048
+                  # Need a way to decide how to select either data.vsphere_network
+                  # or other
+                  network_interfaces:
+                    - network: example-pg
+                      address_allocation: static
+                  num_cpus: 1
+                  tags:
+                    - example-vsphere
+                  template: ubuntu1804_x64
+                example-win-vm-from-template:
+                  count: 1
+                  memory: 2048
+                  network_interfaces:
+                    - network: example-pg
+                      address_allocation: dynamic
+                  num_cpus: 1
+                  tags:
+                    - example-vsphere
+                  template: windows2019_x64
+          module: root
+          # Define existing networks to consume, not create
+          # Add subnet info associated with network
+          networks:
+            example-pg:
+              subnet: 192.168.250.0
+              cidr: 24
+              gateway: 192.168.250.1
+          # Define existing templates to consume, not create
+          # Because Terraform 0.12.x does not support SATA we need to define
+          # whether or not the controller is sata to add logic. Should this be
+          # a boolean instead?
+          # Define os as either linux or windows
+          templates:
+            ubuntu1604_x64:
+              controller: scsi
+              os: linux
+            ubuntu1804_x64:
+              controller: sata
+              os: linux
+            windows2019_x64:
+              controller: sata
+              os: windows
+      tag_categories:
+        example-category:
+          create: true
+          associable_types:
+            - ClusterComputeResource
+            - Datacenter
+            - Datastore
+            - HostSystem
+            - VirtualMachine
+          cardinality: SINGLE
+          module: root
+          tags:
+            - example-vsphere
+    variables:
+      vsphere_domain:
         type: string
-        description: Username for vSphere hosts
-        default: &quot;&quot;
-      vsphere_password:
-        type: string
-        description: Password for vSphere API operations
-        default: &quot;&quot;
-      vsphere_server:
-        type: string
-        description: vCenter server name for vSphere API operations
-        default: &quot;&quot;
-      vsphere_username:
-        type: string
-        description: Username for vSphere API operations
+        description: Domain to use for resources
         default: &quot;&quot;
 </code></pre>
               

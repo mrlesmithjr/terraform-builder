@@ -15,11 +15,3 @@ resource "digitalocean_tag" "example_digitalocean" {
 resource "digitalocean_tag" "example_digitalocean_env" {
   name = format("%s", var.environment)
 }
-# Resource DigitalOcean default domain
-resource "digitalocean_domain" "default_env" {
-  name = format("%s.%s", var.environment, var.do_domain)
-}
-# Resource DigitalOcean default internal domain
-resource "digitalocean_domain" "default_env_internal" {
-  name = format("%s.%s.%s", "internal", var.environment, var.do_domain)
-}
