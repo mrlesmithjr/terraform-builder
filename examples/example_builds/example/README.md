@@ -341,8 +341,17 @@ vSphere:
         networks:
           example-pg:
             cidr: 24
+            dns_servers:
+            - 192.168.250.10
             gateway: 192.168.250.1
             subnet: 192.168.250.0
+          example-pg-with-start:
+            cidr: 24
+            dns_servers:
+            - 192.168.251.10
+            gateway: 192.168.251.1
+            start_address: 192.168.251.240
+            subnet: 192.168.251.0
         templates:
           ubuntu1604_x64:
             controller: scsi

@@ -218,6 +218,11 @@ data "vsphere_network" "example_pg" {
   name          = "example-pg"
   datacenter_id = vsphere_datacenter.example_dc.id
 }
+# Data vSphere network
+data "vsphere_network" "example_pg_with_start" {
+  name          = "example-pg-with-start"
+  datacenter_id = vsphere_datacenter.example_dc.id
+}
 # Resource vSphere compute cluster
 resource "vsphere_compute_cluster" "example_cluster" {
   name          = "example-cluster"
@@ -259,7 +264,7 @@ resource "vsphere_virtual_machine" "example_vm" {
   }
   resource_pool_id = vsphere_compute_cluster.example_cluster.resource_pool_id
 
-  tags = ["vsphere_tag.example_vsphere.id"]
+  tags = [vsphere_tag.example_vsphere.id, vsphere_tag.example_vsphere_env.id]
 }
 # Resource vSphere virtual machine
 resource "vsphere_virtual_machine" "example_vm_from_template" {
@@ -275,9 +280,10 @@ resource "vsphere_virtual_machine" "example_vm_from_template" {
   clone {
     template_uuid = data.vsphere_virtual_machine.ubuntu1804_x64.id
     customize {
+      dns_server_list = ["192.168.250.10"]
       linux_options {
-      host_name = format("example-vm-from-template-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
-      domain    = var.vsphere_domain
+        host_name = format("example-vm-from-template-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+        domain    = var.vsphere_domain
       }
       network_interface {
         ipv4_address = cidrhost("192.168.250.0/24", count.index + 1 + ((var.environment_index) * 1))
@@ -294,7 +300,7 @@ resource "vsphere_virtual_machine" "example_vm_from_template" {
     eagerly_scrub    = "0"
   }
 
-  tags = ["vsphere_tag.example_vsphere.id"]
+  tags = [vsphere_tag.example_vsphere.id, vsphere_tag.example_vsphere_env.id]
 }
 # Resource vSphere virtual machine
 resource "vsphere_virtual_machine" "example_win_vm_from_template" {
@@ -313,6 +319,7 @@ resource "vsphere_virtual_machine" "example_win_vm_from_template" {
       windows_options {
         computer_name  = format("example-win-vm-from-template-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
       }
+      network_interface {}
     }
   }
   # https://github.com/terraform-providers/terraform-provider-vsphere/issues/523
@@ -323,11 +330,11 @@ resource "vsphere_virtual_machine" "example_win_vm_from_template" {
     eagerly_scrub    = "0"
   }
 
-  tags = ["vsphere_tag.example_vsphere.id"]
+  tags = [vsphere_tag.example_vsphere.id, vsphere_tag.example_vsphere_env.id]
 }
 # Resource vSphere tag category
 resource "vsphere_tag_category" "example_category" {
-  name        = "example-category"
+  name        = format("example-category-%s", var.environment)
   description = "Managed by Terraform"
   cardinality = "SINGLE"
 
@@ -336,6 +343,12 @@ resource "vsphere_tag_category" "example_category" {
 # Resource vSphere tag
 resource "vsphere_tag" "example_vsphere" {
   name        = "example-vsphere"
+  category_id = vsphere_tag_category.example_category.id
+  description = "Managed by Terraform"
+}
+# Resource vSphere tag
+resource "vsphere_tag" "example_vsphere_env" {
+  name = format("example-vsphere-%s", var.environment)
   category_id = vsphere_tag_category.example_category.id
   description = "Managed by Terraform"
 }
