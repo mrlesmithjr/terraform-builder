@@ -3,7 +3,7 @@
 {%-      if tc_config.create %}
 # Resource {{ provider }} tag category
 resource "vsphere_tag_category" "{{ tc|replace('-','_') }}" {
-  name        = "{{ tc }}"
+  name        = format("{{ tc }}-%s", var.environment)
   description = "Managed by Terraform"
   cardinality = "{{ tc_config.cardinality|upper }}"
 

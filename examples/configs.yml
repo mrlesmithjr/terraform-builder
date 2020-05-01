@@ -379,11 +379,21 @@ providers:
           module: root
           # Define existing networks to consume, not create
           # Add subnet info associated with network
+          # If you'd like to start at a specific address add start_address
           networks:
             example-pg:
               subnet: 192.168.250.0
               cidr: 24
               gateway: 192.168.250.1
+              dns_servers:
+                - 192.168.250.10
+            example-pg-with-start:
+              subnet: 192.168.251.0
+              cidr: 24
+              gateway: 192.168.251.1
+              start_address: 192.168.251.240
+              dns_servers:
+                - 192.168.251.10
           # Define existing templates to consume, not create
           # Because Terraform 0.12.x does not support SATA we need to define
           # whether or not the controller is sata to add logic. Should this be

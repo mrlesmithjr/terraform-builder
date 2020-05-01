@@ -7,9 +7,15 @@ resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
   name     = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
   num_cpus = {{ cpus }}
   memory   = {{ memory }}
+{%-    set dns_servers = [] %}
 {%-    for interface in vm_config.network_interfaces %}
 {%-      if interface.network in dc_config.networks %}
 {%-        set network_id = 'data.vsphere_network.'+interface.network|replace('-','_')|replace('|','_')+'.id' %}
+{%-        if interface.address_allocation|lower == 'static' %}
+{%-          for dns_server in dc_config.networks[interface.network]['dns_servers'] %}
+{%-            set _ = dns_servers.append(dns_server) %}
+{%-          endfor %}
+{%-        endif %}
 {%-      else %}
 {%-        set network_id = 'vsphere_host_port_group.'+interface.network|replace('-','_')|replace('|','_')+'.id' %}
 {%-      endif %}
@@ -27,10 +33,13 @@ resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
   clone {
     template_uuid = data.vsphere_virtual_machine.{{ vm_config.template|replace('-','_') }}.id
     customize {
+{%-      if dns_servers != [] %}
+      dns_server_list = {{ dns_servers|replace('\'', '"') }}
+{%-      endif %}
 {%-      if dc_config.templates[vm_config.template]['os']|lower == 'linux' %}
       linux_options {
-      host_name = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
-      domain    = var.vsphere_domain
+        host_name = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+        domain    = var.vsphere_domain
       }
 {%-      elif dc_config.templates[vm_config.template]['os']|lower == 'windows' %}
       windows_options {
@@ -41,12 +50,19 @@ resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
 {%-        if interface.address_allocation|lower == 'static' %}
 {%-          set subnet = dc_config.networks[interface.network]['subnet']+'/'+dc_config.networks[interface.network]['cidr']|string %}
       network_interface {
+{%-          if dc_config.networks[interface.network]['start_address'] %}
+{%-            set hostnum = dc_config.networks[interface.network]['start_address'].split('.')[3]|int - 1 %}
+        ipv4_address = cidrhost("{{ subnet }}", count.index + {{ hostnum }} + {{ networks[interface.network]['addresses'] }} + ((var.environment_index) * {{ vm_config.count }}))
+{%-          else %}
         ipv4_address = cidrhost("{{ subnet }}", count.index + {{ networks[interface.network]['addresses'] }} + ((var.environment_index) * {{ vm_config.count }}))
+{%-          endif %}
         ipv4_netmask = {{ dc_config.networks[interface.network]['cidr'] }}
       }
       ipv4_gateway = "{{ dc_config.networks[interface.network]['gateway'] }}"
+{%-        else %}
+      network_interface {}
 {%-        endif %}
-{%-          set _ = networks[interface.network].update({'addresses': networks[interface.network]['addresses']+(vm_config.count * args.environments|length)}) %}
+{%-        set _ = networks[interface.network].update({'addresses': networks[interface.network]['addresses']+(vm_config.count * args.environments|length)}) %}
 {%-      endfor %}
     }
   }
@@ -71,11 +87,13 @@ resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
 {%-    if vm_config.tags %}
 {%-      set tags = [] %}
 {%-      for tag in vm_config.tags %}
-{%-        set tag = 'vsphere_tag.'+tag|replace('-','_')+'.id' %}
-{%-        set _ = tags.append(tag) %}
+{%-        set tag_id = 'vsphere_tag.'+tag|replace('-','_')+'.id' %}
+{%-        set _ = tags.append(tag_id) %}
+{%-        set tag_id_env = 'vsphere_tag.'+tag|replace('-','_')+'_env.id' %}
+{%-        set _ = tags.append(tag_id_env) %}
 {%-      endfor %}
 
-  tags = {{ tags|replace('\'','"') }}
+  tags = {{ tags|replace('\'','') }}
 {%-    endif %}
 }
 {%-  endfor %}
