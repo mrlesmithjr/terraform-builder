@@ -1,3 +1,21 @@
+commit 4b158b87b23e768ec952aeec7783b99b3593c358
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Tue Apr 7 13:06:28 2020 -0400
+
+    Added lingering changes from docs, etc.
+
+commit 334bb70883b6ef724c7419eb92b70d84baa8b7c0
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Tue Apr 7 12:56:42 2020 -0400
+
+    Updated/Added vSphere example along with docs
+
+commit 16dbed9bb29e067af450036442d2bbaedc70874a
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Tue Apr 7 12:32:56 2020 -0400
+
+    Added initial vSphere example
+
 commit a8dd3f410b39a9ec26b9d124879fd7f9cb435451
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Sun Apr 5 14:57:26 2020 -0400

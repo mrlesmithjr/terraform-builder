@@ -43,6 +43,9 @@ environments:
         type: string
         description: Default AzureRM location/region
         default: West US
+      do_region:
+        default: nyc1
+        description: Defines DigitalOcean region
       vsphere_domain:
         type: string
         description: Domain to use for resources
@@ -65,6 +68,9 @@ environments:
         type: string
         description: Default AzureRM location/region
         default: East US
+      do_region:
+        default: sfo2
+        description: Defines DigitalOcean region
       vsphere_domain:
         type: string
         description: Domain to use for resources
@@ -87,6 +93,9 @@ environments:
         type: string
         description: Default AzureRM location/region
         default: Central US
+      do_region:
+        default: nyc3
+        description: Defines DigitalOcean region
       vsphere_domain:
         type: string
         description: Domain to use for resources
@@ -118,6 +127,12 @@ modules:
       azurerm_tenant_id:
         type: string
         description: AzureRM Tenant ID
+      do_domain:
+        default: example.org
+        description: Defines DigitalOcean domain
+      do_ssh_keys:
+        default: [12121212]
+        description: Defines DigitalOcean SSH Key(s)
       vsphere_allow_unverified_ssl:
         type: bool
         description: Boolean that can be set to true to disable SSL certificate verification
@@ -205,6 +220,7 @@ providers:
         description: Default admin username
   DigitalOcean:
     # Define resources, etc. only required in the project root.
+    # This needs to be revisited as it may not be needed.
     project_root:
       resources:
         domains:

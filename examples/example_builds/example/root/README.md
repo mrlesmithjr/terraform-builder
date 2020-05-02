@@ -21,6 +21,13 @@ root:
     azurerm_tenant_id:
       description: AzureRM Tenant ID
       type: string
+    do_domain:
+      default: example.org
+      description: Defines DigitalOcean domain
+    do_ssh_keys:
+      default:
+      - 12121212
+      description: Defines DigitalOcean SSH Key(s)
     vsphere_allow_unverified_ssl:
       default: 'false'
       description: Boolean that can be set to true to disable SSL certificate verification

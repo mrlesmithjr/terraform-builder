@@ -30,6 +30,9 @@ development:
       default: West US
       description: Default AzureRM location/region
       type: string
+    do_region:
+      default: nyc1
+      description: Defines DigitalOcean region
     vsphere_domain:
       default: example.org
       description: Domain to use for resources
@@ -52,6 +55,9 @@ production:
       default: East US
       description: Default AzureRM location/region
       type: string
+    do_region:
+      default: sfo2
+      description: Defines DigitalOcean region
     vsphere_domain:
       default: example.org
       description: Domain to use for resources
@@ -74,6 +80,9 @@ staging:
       default: Central US
       description: Default AzureRM location/region
       type: string
+    do_region:
+      default: nyc3
+      description: Defines DigitalOcean region
     vsphere_domain:
       default: example.org
       description: Domain to use for resources
@@ -428,6 +437,13 @@ root:
     azurerm_tenant_id:
       description: AzureRM Tenant ID
       type: string
+    do_domain:
+      default: example.org
+      description: Defines DigitalOcean domain
+    do_ssh_keys:
+      default:
+      - 12121212
+      description: Defines DigitalOcean SSH Key(s)
     vsphere_allow_unverified_ssl:
       default: 'false'
       description: Boolean that can be set to true to disable SSL certificate verification

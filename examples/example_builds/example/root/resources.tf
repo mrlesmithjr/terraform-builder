@@ -166,6 +166,14 @@ resource "digitalocean_droplet" "example_vm" {
   private_networking = true
   tags     = [digitalocean_tag.example_digitalocean.id, digitalocean_tag.example_digitalocean_env.id]
 }
+# Resource DigitalOcean default domain
+resource "digitalocean_domain" "default_env" {
+  name = format("%s.%s", var.environment, var.do_domain)
+}
+# Resource DigitalOcean default internal domain
+resource "digitalocean_domain" "default_env_internal" {
+  name = format("%s.%s.%s", "internal", var.environment, var.do_domain)
+}
 # Resource DigitalOcean internal DNS record
 resource "digitalocean_record" "example_vm_internal" {
   count  = 1
@@ -192,7 +200,7 @@ resource "digitalocean_project" "example" {
 }
 # Obtain list of project resources as local and use
 locals {
-  project_resources = [digitalocean_droplet.example_vm.*.urn]
+  project_resources = [digitalocean_domain.default_env.urn, digitalocean_domain.default_env_internal.urn, digitalocean_droplet.example_vm.*.urn]
 }
 # Resource vSphere datacenter
 resource "vsphere_datacenter" "example_dc" {

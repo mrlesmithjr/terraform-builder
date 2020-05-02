@@ -9,6 +9,8 @@ module "production-root" {
   azurerm_environment = "public"
   azurerm_subscription_id = ""
   azurerm_tenant_id = ""
+  do_domain = "example.org"
+  do_ssh_keys = [12121212]
   vsphere_allow_unverified_ssl = "false"
   vsphere_host_password = ""
   vsphere_host_username = ""
@@ -19,6 +21,7 @@ module "production-root" {
   azurerm_admin_public_key = var.azurerm_admin_public_key
   azurerm_admin_username = var.azurerm_admin_username
   azurerm_location = "East US"
+  do_region = "sfo2"
   vsphere_domain = "example.org"
 }
 # Module production-network config
@@ -30,6 +33,7 @@ module "production-network" {
   azurerm_admin_public_key = var.azurerm_admin_public_key
   azurerm_admin_username = var.azurerm_admin_username
   azurerm_location = "East US"
+  do_region = "sfo2"
   vsphere_domain = "example.org"
 }
 # Module production-services config
@@ -41,5 +45,6 @@ module "production-services" {
   azurerm_admin_public_key = var.azurerm_admin_public_key
   azurerm_admin_username = var.azurerm_admin_username
   azurerm_location = "East US"
+  do_region = "sfo2"
   vsphere_domain = "example.org"
 }
