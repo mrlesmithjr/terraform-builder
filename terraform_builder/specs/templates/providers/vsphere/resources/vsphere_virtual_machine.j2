@@ -92,6 +92,7 @@ resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
 {%-        set tag_id_env = 'vsphere_tag.'+tag|replace('-','_')+'_env.id' %}
 {%-        set _ = tags.append(tag_id_env) %}
 {%-      endfor %}
+{%-      set _ = tags.append('vsphere_tag.environment.id') %}
 
   tags = {{ tags|replace('\'','') }}
 {%-    endif %}

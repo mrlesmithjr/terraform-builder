@@ -323,7 +323,7 @@ vSphere:
                   network: example-pg
                 num_cpus: 1
                 tags:
-                - example-vsphere
+                - example1-vsphere
                 template: ''
               example-vm-from-template:
                 count: 1
@@ -333,7 +333,7 @@ vSphere:
                   network: example-pg
                 num_cpus: 1
                 tags:
-                - example-vsphere
+                - example1-vsphere
                 template: ubuntu1804_x64
               example-win-vm-from-template:
                 count: 1
@@ -343,7 +343,8 @@ vSphere:
                   network: example-pg
                 num_cpus: 1
                 tags:
-                - example-vsphere
+                - example1-vsphere
+                - example2-vsphere
                 template: windows2019_x64
         create: true
         module: root
@@ -387,7 +388,7 @@ vSphere:
             teaming_policy: loadbalance_srcid
             type: host
     tag_categories:
-      example-category:
+      example-category1:
         associable_types:
         - ClusterComputeResource
         - Datacenter
@@ -398,7 +399,19 @@ vSphere:
         create: true
         module: root
         tags:
-        - example-vsphere
+        - example1-vsphere
+      example-category2:
+        associable_types:
+        - ClusterComputeResource
+        - Datacenter
+        - Datastore
+        - HostSystem
+        - VirtualMachine
+        cardinality: MULTIPLE
+        create: true
+        module: root
+        tags:
+        - example2-vsphere
   variables:
     vsphere_domain:
       default: ''

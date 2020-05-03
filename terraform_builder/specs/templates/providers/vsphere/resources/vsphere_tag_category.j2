@@ -15,3 +15,29 @@ resource "vsphere_tag_category" "{{ tc|replace('-','_') }}" {
 {%-      endif %}
 {%-    endif %}
 {%-  endfor %}
+{%-  if module == 'root' %}
+# Resource {{ provider }} tag category
+resource "vsphere_tag_category" "environment" {
+  name        = format("%s", var.environment)
+  description = "Managed by Terraform"
+  cardinality = "SINGLE"
+
+  associable_types = ["VirtualMachines"]
+}
+# Resource {{ provider }} tag
+resource "vsphere_tag" "environment" {
+  name        = format("%s", var.environment)
+  category_id = vsphere_tag_category.environment.id
+  description = "Managed by Terraform"
+}
+{%-  else %}
+# Data {{ provider }} tag category
+data "vsphere_tag_category" "environment" {
+  name = format("%s", var.environment)
+}
+# Data {{ provider }} tag
+data "vsphere_tag" "environment" {
+  name        = format("%s", var.environment)
+  category_id = data.vsphere_tag_category.environment.id
+}
+{%-  endif %}

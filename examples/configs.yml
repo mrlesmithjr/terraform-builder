@@ -368,7 +368,7 @@ providers:
                       address_allocation: dynamic
                   num_cpus: 1
                   tags:
-                    - example-vsphere
+                    - example1-vsphere
                   template: ""
                 example-vm-from-template:
                   count: 1
@@ -380,7 +380,7 @@ providers:
                       address_allocation: static
                   num_cpus: 1
                   tags:
-                    - example-vsphere
+                    - example1-vsphere
                   template: ubuntu1804_x64
                 example-win-vm-from-template:
                   count: 1
@@ -390,7 +390,8 @@ providers:
                       address_allocation: dynamic
                   num_cpus: 1
                   tags:
-                    - example-vsphere
+                    - example1-vsphere
+                    - example2-vsphere
                   template: windows2019_x64
           module: root
           # Define existing networks to consume, not create
@@ -448,7 +449,7 @@ providers:
                 example-pg:
                   create: true
       tag_categories:
-        example-category:
+        example-category1:
           create: true
           associable_types:
             - ClusterComputeResource
@@ -459,7 +460,19 @@ providers:
           cardinality: SINGLE
           module: root
           tags:
-            - example-vsphere
+            - example1-vsphere
+        example-category2:
+          create: true
+          associable_types:
+            - ClusterComputeResource
+            - Datacenter
+            - Datastore
+            - HostSystem
+            - VirtualMachine
+          cardinality: MULTIPLE
+          module: root
+          tags:
+            - example2-vsphere
     variables:
       vsphere_domain:
         type: string

@@ -1,3 +1,28 @@
+commit 43986aab3bdbe782b5b4ef8eb4f6ff759db1cdfb
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sat May 2 10:39:48 2020 -0400
+
+    Added add'l DigitalOcean variable constructs
+
+commit ef1a9fe5a5623d3cab195d04644cd913f42762a8
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Fri May 1 11:07:59 2020 -0400
+
+    Resolved issues with vSphere tags, etc.
+    
+    After testing a bit more with vSphere and multiple environments, I've
+    ran into a few snags. These changes resolve these issues.
+    
+    Resolves #66
+
+commit 54dd3bf18e64cd8d27568655edcf3f293455da92
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Tue Apr 7 14:22:32 2020 -0400
+
+    Resolved issue with vars as integers
+    
+    Resolves #63
+
 commit 4b158b87b23e768ec952aeec7783b99b3593c358
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Tue Apr 7 13:06:28 2020 -0400

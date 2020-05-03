@@ -7,7 +7,7 @@ resource "vsphere_tag" "{{ tag|replace('-','_') }}" {
 }
 # Resource {{ provider }} tag
 resource "vsphere_tag" "{{ tag|replace('-','_')+'_env' }}" {
-  name = format("{{ tag }}-%s", var.environment)
+  name        = format("{{ tag }}-%s", var.environment)
   category_id = vsphere_tag_category.{{ tc|replace('-','_') }}.id
   description = "Managed by Terraform"
 }
