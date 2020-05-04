@@ -30,6 +30,9 @@ development:
       default: West US
       description: Default AzureRM location/region
       type: string
+    do_region:
+      default: nyc1
+      description: Defines DigitalOcean region
     vsphere_domain:
       default: example.org
       description: Domain to use for resources
@@ -52,6 +55,9 @@ production:
       default: East US
       description: Default AzureRM location/region
       type: string
+    do_region:
+      default: sfo2
+      description: Defines DigitalOcean region
     vsphere_domain:
       default: example.org
       description: Domain to use for resources
@@ -74,6 +80,9 @@ staging:
       default: Central US
       description: Default AzureRM location/region
       type: string
+    do_region:
+      default: nyc3
+      description: Defines DigitalOcean region
     vsphere_domain:
       default: example.org
       description: Domain to use for resources
@@ -314,7 +323,7 @@ vSphere:
                   network: example-pg
                 num_cpus: 1
                 tags:
-                - example-vsphere
+                - example1-vsphere
                 template: ''
               example-vm-from-template:
                 count: 1
@@ -324,7 +333,7 @@ vSphere:
                   network: example-pg
                 num_cpus: 1
                 tags:
-                - example-vsphere
+                - example1-vsphere
                 template: ubuntu1804_x64
               example-win-vm-from-template:
                 count: 1
@@ -334,7 +343,8 @@ vSphere:
                   network: example-pg
                 num_cpus: 1
                 tags:
-                - example-vsphere
+                - example1-vsphere
+                - example2-vsphere
                 template: windows2019_x64
         create: true
         module: root
@@ -378,7 +388,7 @@ vSphere:
             teaming_policy: loadbalance_srcid
             type: host
     tag_categories:
-      example-category:
+      example-category1:
         associable_types:
         - ClusterComputeResource
         - Datacenter
@@ -389,7 +399,19 @@ vSphere:
         create: true
         module: root
         tags:
-        - example-vsphere
+        - example1-vsphere
+      example-category2:
+        associable_types:
+        - ClusterComputeResource
+        - Datacenter
+        - Datastore
+        - HostSystem
+        - VirtualMachine
+        cardinality: MULTIPLE
+        create: true
+        module: root
+        tags:
+        - example2-vsphere
   variables:
     vsphere_domain:
       default: ''
@@ -428,6 +450,13 @@ root:
     azurerm_tenant_id:
       description: AzureRM Tenant ID
       type: string
+    do_domain:
+      default: example.org
+      description: Defines DigitalOcean domain
+    do_ssh_keys:
+      default:
+      - 12121212
+      description: Defines DigitalOcean SSH Key(s)
     vsphere_allow_unverified_ssl:
       default: 'false'
       description: Boolean that can be set to true to disable SSL certificate verification

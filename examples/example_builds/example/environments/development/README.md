@@ -21,6 +21,9 @@ development:
       default: West US
       description: Default AzureRM location/region
       type: string
+    do_region:
+      default: nyc1
+      description: Defines DigitalOcean region
     vsphere_domain:
       default: example.org
       description: Domain to use for resources
