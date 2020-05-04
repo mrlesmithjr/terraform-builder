@@ -22,7 +22,7 @@ resource "vsphere_tag_category" "environment" {
   description = "Managed by Terraform"
   cardinality = "SINGLE"
 
-  associable_types = ["VirtualMachines"]
+  associable_types = ["VirtualMachine"]
 }
 # Resource {{ provider }} tag
 resource "vsphere_tag" "environment" {
