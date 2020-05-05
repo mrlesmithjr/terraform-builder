@@ -362,6 +362,7 @@ providers:
               vms:
                 example-vm:
                   count: 1
+                  datastore: example-datastore
                   memory: 2048
                   network_interfaces:
                     - network: example-pg
@@ -372,6 +373,7 @@ providers:
                   template: ""
                 example-vm-from-template:
                   count: 1
+                  datastore: example-datastore
                   memory: 2048
                   # Need a way to decide how to select either data.vsphere_network
                   # or other
@@ -393,6 +395,9 @@ providers:
                     - example1-vsphere
                     - example2-vsphere
                   template: windows2019_x64
+          # Define existing datastores to consume, not create
+          datastores:
+            - example-datastore
           module: root
           # Define existing networks to consume, not create
           # Add subnet info associated with network

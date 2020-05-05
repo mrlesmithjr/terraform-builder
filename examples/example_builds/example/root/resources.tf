@@ -267,6 +267,7 @@ resource "vsphere_virtual_machine" "example_vm" {
   name     = format("example-vm-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
   num_cpus = 1
   memory   = 2048
+  datastore_id = data.vsphere_datastore.example_datastore.id
   network_interface {
     network_id = data.vsphere_network.example_pg.id
   }
@@ -280,6 +281,7 @@ resource "vsphere_virtual_machine" "example_vm_from_template" {
   name     = format("example-vm-from-template-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
   num_cpus = 1
   memory   = 2048
+  datastore_id = data.vsphere_datastore.example_datastore.id
   network_interface {
     network_id = data.vsphere_network.example_pg.id
   }
@@ -340,6 +342,11 @@ resource "vsphere_virtual_machine" "example_win_vm_from_template" {
 
   tags = [vsphere_tag.example1_vsphere.id, vsphere_tag.example1_vsphere_env.id, vsphere_tag.example2_vsphere.id, vsphere_tag.example2_vsphere_env.id, vsphere_tag.environment.id]
 }
+# Data vSphere datastore
+data "vsphere_datastore" "example_datastore" {
+  name          = "example-datastore"
+  datacenter_id = vsphere_datacenter.example_dc.id
+}
 # Resource vSphere tag category
 resource "vsphere_tag_category" "example_category1" {
   name        = format("example-category1-%s", var.environment)
@@ -386,7 +393,7 @@ resource "vsphere_tag_category" "environment" {
   description = "Managed by Terraform"
   cardinality = "SINGLE"
 
-  associable_types = ["VirtualMachines"]
+  associable_types = ["VirtualMachine"]
 }
 # Resource vSphere tag
 resource "vsphere_tag" "environment" {

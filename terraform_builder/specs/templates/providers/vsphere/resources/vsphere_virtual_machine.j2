@@ -7,6 +7,9 @@ resource "vsphere_virtual_machine" "{{ vm.split('.')[0]|replace('-','_') }}" {
   name     = format("{{ vm.split('.')[0] }}-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
   num_cpus = {{ cpus }}
   memory   = {{ memory }}
+{%-    if vm_config.datastore and vm_config.datastore in dc_config.datastores %}
+  datastore_id = {{ 'data.vsphere_datastore.'+vm_config.datastore|replace('-','_')+'.id' }}
+{%-    endif %}
 {%-    set dns_servers = [] %}
 {%-    for interface in vm_config.network_interfaces %}
 {%-      if interface.network in dc_config.networks %}

@@ -1,0 +1,11 @@
+{%- for datastore in dc_config.datastores %}
+# Data {{ provider }} datastore
+data "vsphere_datastore" "{{ datastore|replace('-','_') }}" {
+  name          = "{{ datastore }}"
+{%-   if dc_config.create %}
+  datacenter_id = {{ 'vsphere_datacenter.'+dc|replace('-','_')+'.id' }}
+{%-   else %}
+  datacenter_id = {{ 'data.vsphere_datacenter.'+dc|replace('-','_')+'.id' }}
+{%-   endif %}
+}
+{%- endfor %}
