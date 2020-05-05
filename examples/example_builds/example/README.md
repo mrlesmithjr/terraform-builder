@@ -317,6 +317,7 @@ vSphere:
             vms:
               example-vm:
                 count: 1
+                datastore: example-datastore
                 memory: 2048
                 network_interfaces:
                 - address_allocation: dynamic
@@ -327,6 +328,7 @@ vSphere:
                 template: ''
               example-vm-from-template:
                 count: 1
+                datastore: example-datastore
                 memory: 2048
                 network_interfaces:
                 - address_allocation: static
@@ -347,6 +349,8 @@ vSphere:
                 - example2-vsphere
                 template: windows2019_x64
         create: true
+        datastores:
+        - example-datastore
         module: root
         networks:
           example-pg:
