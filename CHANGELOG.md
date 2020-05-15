@@ -1,3 +1,29 @@
+commit f165fce874604dcc4dda1b36f53f8305c335fe5a
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Mon May 4 21:33:06 2020 -0400
+
+    Added initial datastore selection for vSphere
+    
+    This functionality will definitely expand in the future. For now, it is
+    very simplistic and works.
+    
+    Resolves #69
+
+commit f5b8c8f01f3a28320665b44acb013532f95ae466
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Mon May 4 10:16:30 2020 -0400
+
+    Fixed typo in VirtualMachine association
+
+commit 9768a47ecd20e6d556f11e56e0d0d783d8559eea
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Sun May 3 09:04:08 2020 -0400
+
+    Testing vSphere tagging enhancements
+    
+    - Multiple tag categories
+    - Adding environment tags automatically
+
 commit 43986aab3bdbe782b5b4ef8eb4f6ff759db1cdfb
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Sat May 2 10:39:48 2020 -0400

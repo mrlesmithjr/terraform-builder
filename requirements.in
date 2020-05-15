@@ -1,0 +1,5 @@
+# Python requirements for executing
+graphviz
+Jinja2
+pip-tools
+PyYAML
