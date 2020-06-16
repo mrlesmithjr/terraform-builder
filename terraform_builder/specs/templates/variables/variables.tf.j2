@@ -26,7 +26,7 @@ variable "{{ variable }}" {
     {{ key }} = {{ value }}
 {%-         else %}
 {%-           if value is iterable and value is not string and value is not mapping  %}
-    {{ key }} = {{ value }}
+    {{ key }} = {{ value|replace('\'', '\"') }}
 {%-           elif value is mapping %}
     {{ key }} = {{ value|replace('\'', '\"') }}
 {%-           else %}
