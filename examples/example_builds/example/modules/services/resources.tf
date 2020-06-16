@@ -5,7 +5,7 @@ resource "digitalocean_tag" "default_firewall" {
 }
 # Resource DigitalOcean tag
 resource "digitalocean_tag" "default_firewall_env" {
-  name = format("%s", var.environment)
+  name = format("default-firewall-%s", var.environment)
 }
 # Resource DigitalOcean tag
 resource "digitalocean_tag" "example_digitalocean" {
@@ -13,8 +13,13 @@ resource "digitalocean_tag" "example_digitalocean" {
 }
 # Resource DigitalOcean tag
 resource "digitalocean_tag" "example_digitalocean_env" {
+  name = format("example-digitalocean-%s", var.environment)
+}
+# Resource DigitalOcean tag
+resource "digitalocean_tag" "env" {
   name = format("%s", var.environment)
 }
+
 # Data vSphere tag category
 data "vsphere_tag_category" "environment" {
   name = format("%s", var.environment)

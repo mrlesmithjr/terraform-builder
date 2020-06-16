@@ -1,0 +1,12 @@
+{%- for vpc, vpc_config in provider_config.resources.vpcs.items() %}
+{%-   if module in vpc_config.modules %}
+# Resource {{ provider }} VPC
+resource "digitalocean_vpc" "{{ vpc|replace('-','_') }}" {
+  name     = format("{{ vpc }}-%s", var.environment)
+  region   = var.do_region
+{%-     if vpc_config.ip_range %}
+  ip_range = "{{ vpc_config.ip_range }}"
+{%-     endif %}
+}
+{%-   endif %}
+{%  endfor %}

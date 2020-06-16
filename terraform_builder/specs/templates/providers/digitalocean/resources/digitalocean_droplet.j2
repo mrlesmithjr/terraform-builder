@@ -4,22 +4,29 @@
 {%-    set cpus = (vm_config.num_cpus)|default(1)|string %}
 # Resource {{ provider }} virtual machine
 resource "digitalocean_droplet" "{{ vm.split('.')[0]|replace('-','_') }}" {
-  count    = {{ vm_config.count|default(1) }}
-  name     = format("{{ vm.split('.')[0] }}-%02s.%s.%s", count.index + 1, var.environment, var.do_domain)
-  image    = "{{ vm_config.image }}"
-  region   = var.do_region
-  size     = "{{ 's-'+cpus+'vcpu-'+memory+'gb' }}"
-  ssh_keys = var.do_ssh_keys
-  private_networking = {{ vm_config.private_networking|default(false)|lower }}
+  backups     = {{ vm_config.backups|default(false)|lower }}
+  count       = {{ vm_config.count|default(1) }}
+  name        = format("{{ vm.split('.')[0] }}-%02s.%s.%s", count.index + 1, var.environment, var.do_domain)
+  image       = "{{ vm_config.image }}"
+  monitoring  = {{ vm_config.backups|default(false)|lower }}
+  region      = var.do_region
+  size        = "{{ 's-'+cpus+'vcpu-'+memory+'gb' }}"
+  ssh_keys    = var.do_ssh_keys
 {%-    if vm_config.tags %}
 {%-      set tags = [] %}
+{%-      set _ = tags.append('digitalocean_tag.env.id') %}
 {%-      for tag in vm_config.tags %}
 {%-        set tag_id = 'digitalocean_tag.'+tag|replace('-','_')+'.id' %}
 {%-        set _ = tags.append(tag_id) %}
 {%-        set tag_id_env = 'digitalocean_tag.'+tag|replace('-','_')+'_env.id' %}
 {%-        set _ = tags.append(tag_id_env) %}
 {%-      endfor %}
-  tags     = {{ tags|replace('\'', '') }}
+  tags        = {{ tags|replace('\'', '') }}
+{%-    endif %}
+{%-    if vm_config.vpc %}
+  vpc_uuid    = digitalocean_vpc.{{ vm_config.vpc|replace('-','_') }}.id
+{%-    else %}
+  private_networking = {{ vm_config.private_networking|default(false)|lower }}
 {%-    endif %}
 }
 {%-   endif %}
