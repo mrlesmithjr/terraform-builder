@@ -145,7 +145,7 @@ resource "digitalocean_tag" "default_firewall" {
 }
 # Resource DigitalOcean tag
 resource "digitalocean_tag" "default_firewall_env" {
-  name = format("%s", var.environment)
+  name = format("default-firewall-%s", var.environment)
 }
 # Resource DigitalOcean tag
 resource "digitalocean_tag" "example_digitalocean" {
@@ -153,18 +153,24 @@ resource "digitalocean_tag" "example_digitalocean" {
 }
 # Resource DigitalOcean tag
 resource "digitalocean_tag" "example_digitalocean_env" {
+  name = format("example-digitalocean-%s", var.environment)
+}
+# Resource DigitalOcean tag
+resource "digitalocean_tag" "env" {
   name = format("%s", var.environment)
 }
 # Resource DigitalOcean virtual machine
 resource "digitalocean_droplet" "example_vm" {
-  count    = 1
-  name     = format("example-vm-%02s.%s.%s", count.index + 1, var.environment, var.do_domain)
-  image    = "ubuntu-18-04-x64"
-  region   = var.do_region
-  size     = "s-1vcpu-1gb"
-  ssh_keys = var.do_ssh_keys
-  private_networking = true
-  tags     = [digitalocean_tag.example_digitalocean.id, digitalocean_tag.example_digitalocean_env.id]
+  backups     = false
+  count       = 1
+  name        = format("example-vm-%02s.%s.%s", count.index + 1, var.environment, var.do_domain)
+  image       = "ubuntu-18-04-x64"
+  monitoring  = false
+  region      = var.do_region
+  size        = "s-1vcpu-1gb"
+  ssh_keys    = var.do_ssh_keys
+  tags        = [digitalocean_tag.env.id, digitalocean_tag.example_digitalocean.id, digitalocean_tag.example_digitalocean_env.id]
+  vpc_uuid    = digitalocean_vpc.example_vpc_01.id
 }
 # Resource DigitalOcean default domain
 resource "digitalocean_domain" "default_env" {
@@ -179,7 +185,7 @@ resource "digitalocean_record" "example_vm_internal" {
   count  = 1
   domain = format("%s.%s.%s", "internal", var.environment, var.do_domain)
   type   = "A"
-  name   = format("example_vm-%02s", count.index + 1)
+  name   = format("example-vm-%02s", count.index + 1)
   value  = digitalocean_droplet.example_vm[count.index].ipv4_address_private
 }
 # Resource DigitalOcean internal DNS record
@@ -202,6 +208,12 @@ resource "digitalocean_project" "example" {
 locals {
   project_resources = [digitalocean_domain.default_env.urn, digitalocean_domain.default_env_internal.urn, digitalocean_droplet.example_vm.*.urn]
 }
+# Resource DigitalOcean VPC
+resource "digitalocean_vpc" "example_vpc_01" {
+  name     = format("example-vpc-01-%s", var.environment)
+  region   = var.do_region
+}
+
 # Resource vSphere datacenter
 resource "vsphere_datacenter" "example_dc" {
   name = "example-dc"

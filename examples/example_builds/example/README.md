@@ -266,6 +266,7 @@ DigitalOcean:
     - example-digitalocean
     vms:
       example-vm:
+        backups: false
         count: 1
         dns_records:
         - name: portal
@@ -275,10 +276,16 @@ DigitalOcean:
         image: ubuntu-18-04-x64
         memory: 1024
         module: root
+        monitoring: false
         num_cpus: 1
         private_networking: true
         tags:
         - example-digitalocean
+        vpc: example-vpc-01
+    vpcs:
+      example-vpc-01:
+        modules:
+        - root
   variables:
     do_api_endpoint:
       default: https://api.digitalocean.com

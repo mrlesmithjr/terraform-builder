@@ -360,6 +360,7 @@ providers:
         # this to true, will also create an internal domain name if
         # modules[module]['do_domain'] is defined.
         example-vm:
+          backups: false
           count: 1
           # Example DNS record for each environment's internal URL.
           # Ensures that URL is contained internally only.
@@ -371,10 +372,17 @@ providers:
           image: ubuntu-18-04-x64
           memory: 1024
           module: root
+          monitoring: false
           num_cpus: 1
           private_networking: true
           tags:
             - example-digitalocean
+          vpc: example-vpc-01
+      vpcs:
+        example-vpc-01:
+          # ip_range: 10.0.1.0/24
+          modules:
+            - root
     variables:
       do_api_endpoint:
         type: string

@@ -1,24 +1,24 @@
-
-{%- for vm, vm_config in provider_config.resources.vms.items() %}
-{%-   if vm_config.module == module %}
-{%-     if vm_config.private_networking %}
+{%- if provider_config.resources.vms %}
+{%-   for vm, vm_config in provider_config.resources.vms.items() %}
+{%-     if vm_config.module == module %}
+{%-       if vm_config.private_networking %}
 # Resource {{ provider }} internal DNS record
 resource "digitalocean_record" "{{ (vm.split('.')[0]|replace('-','_'))+'_internal' }}" {
   count  = {{ vm_config.count }}
   domain = format("%s.%s.%s", "internal", var.environment, var.do_domain)
   type   = "A"
-  name   = format("{{ vm.split('.')[0]|replace('-','_') }}-%02s", count.index + 1)
+  name   = format("{{ vm.split('.')[0] }}-%02s", count.index + 1)
   value  = digitalocean_droplet.{{ vm.split('.')[0]|replace('-','_') }}[count.index].ipv4_address_private
 }
-{%-     endif %}
-{%-     if vm_config.dns_records %}
-{%-       for record in vm_config.dns_records %}
-{%-         if record.name == '@' %}
-{%-           set resource_name = vm.split('.')[0]|replace('-','_')+'_domain_default' %}
-{%-         else %}
-{%-           set resource_name = record.name %}
-{%-         endif %}
-{%-         if record.private %}
+{%-       endif %}
+{%-       if vm_config.dns_records %}
+{%-         for record in vm_config.dns_records %}
+{%-           if record.name == '@' %}
+{%-             set resource_name = vm.split('.')[0]|replace('-','_')+'_domain_default' %}
+{%-           else %}
+{%-             set resource_name = record.name %}
+{%-           endif %}
+{%-           if record.private %}
 # Resource {{ provider }} internal DNS record
 resource "digitalocean_record" "{{ resource_name+'_internal' }}" {
   count  = {{ vm_config.count }}
@@ -27,7 +27,7 @@ resource "digitalocean_record" "{{ resource_name+'_internal' }}" {
   name   = "{{ record.name }}"
   value  = digitalocean_droplet.{{ vm.split('.')[0]|replace('-','_') }}[count.index].ipv4_address_private
 }
-{%-         else %}
+{%-           else %}
 # Resource {{ provider }} DNS record
 resource "digitalocean_record" "{{ resource_name }}" {
   count  = {{ vm_config.count }}
@@ -36,8 +36,9 @@ resource "digitalocean_record" "{{ resource_name }}" {
   name   = "{{ record.name }}"
   value  = digitalocean_droplet.{{ vm.split('.')[0]|replace('-','_') }}[count.index].ipv4_address
 }
-{%-         endif %}
-{%-       endfor %}
+{%-           endif %}
+{%-         endfor %}
+{%-       endif %}
 {%-     endif %}
-{%-   endif %}
-{%- endfor %}
+{%-   endfor %}
+{%- endif %}
