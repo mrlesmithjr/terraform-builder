@@ -10,5 +10,7 @@ terraform {
 {%- else %}
 {%-   if args.backends.remote.consul %}
 {%-     include 'backends/consul.j2' %}
+{%-   elif args.backends.remote.terraform_cloud %}
+{%-     include 'backends/terraform_cloud.j2' %}
 {%-   endif %}
 {%- endif %}

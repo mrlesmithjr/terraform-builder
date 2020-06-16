@@ -1,0 +1,11 @@
+# Backend Terraform Cloud
+terraform {
+  backend "remote" {
+    hostname     = "app.terraform.io"
+    organization = "{{ args.backends.remote.terraform_cloud.organization }}"
+
+    workspaces {
+      name = "{{ args.backends.remote.terraform_cloud.workspace }}"
+    }
+  }
+}
