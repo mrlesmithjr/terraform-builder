@@ -1,3 +1,55 @@
+commit 3c9b731ed212e72e004fc1171683e3b6340698a6
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Wed Jun 17 11:03:14 2020 -0400
+
+    Fixing DigitalOcean Project Root Resources
+    
+    There should not be any resources defined in the project_root. Any
+    resources defined as project_root should reside in the root module. This
+    currently only applies to domain resources.
+
+commit d446f4a61598db58e9b5324cdb02a5153da847d1
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Wed Jun 17 00:13:08 2020 -0400
+
+    Added DigitalOcean External DNS Records
+    
+    This feature adds external DNS records for all droplets based on their
+    respective environment.
+
+commit 50e05bd2a00f48876ef0962e9fbdb4d39ca77167
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Tue Jun 16 16:25:48 2020 -0400
+
+    Fixed var list quotes
+    
+    When a var was defined as a list, the resulting configuration would be
+    single quoted rather than double quoted.
+
+commit 2ccaeef8a4b6f4d0926291c4e1fb59bd6602f7aa
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Tue Jun 16 14:24:48 2020 -0400
+
+    First addition of Terraform Cloud backend
+    
+    This is the first attempt at adding the initial functionality to provide
+    Terraform Cloud as a backend.
+
+commit 03c0deebb02a1b48b76651edda0b10e61107e938
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Tue Jun 16 09:33:54 2020 -0400
+
+    Added DigitalOcean VPCs and tweaks
+    
+    After doing a bit more testing with DigitalOcean VPCs, tags, etc. A few
+    tweaks were required.
+
+commit 464dc9a3baa60aba7470c9707708a35126576cae
+Author: Larry Smith Jr <mrlesmithjr@gmail.com>
+Date:   Thu May 14 21:03:31 2020 -0400
+
+    Switched to pip-tools to manage Python reqs
+
 commit f165fce874604dcc4dda1b36f53f8305c335fe5a
 Author: Larry Smith Jr <mrlesmithjr@gmail.com>
 Date:   Mon May 4 21:33:06 2020 -0400
