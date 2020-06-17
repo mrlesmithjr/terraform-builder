@@ -180,6 +180,25 @@ resource "digitalocean_domain" "default_env" {
 resource "digitalocean_domain" "default_env_internal" {
   name = format("%s.%s.%s", "internal", var.environment, var.do_domain)
 }
+# Resource DigitalOcean domain
+resource "digitalocean_domain" "example_org" {
+  name = "example.org"
+}
+# Resource DigitalOcean DNS record
+resource "digitalocean_record" "services_example_org" {
+  domain = digitalocean_domain.example_org.name
+  type   = "CNAME"
+  name   = "services"
+  value  = "production.services.example.org."
+}
+# Resource DigitalOcean External DNS record
+resource "digitalocean_record" "example_vm" {
+  count  = 1
+  domain = format("%s.%s", var.environment, var.do_domain)
+  type   = "A"
+  name   = format("example-vm-%02s", count.index + 1)
+  value  = digitalocean_droplet.example_vm[count.index].ipv4_address
+}
 # Resource DigitalOcean internal DNS record
 resource "digitalocean_record" "example_vm_internal" {
   count  = 1
@@ -206,7 +225,7 @@ resource "digitalocean_project" "example" {
 }
 # Obtain list of project resources as local and use
 locals {
-  project_resources = [digitalocean_domain.default_env.urn, digitalocean_domain.default_env_internal.urn, digitalocean_droplet.example_vm.*.urn]
+  project_resources = [digitalocean_domain.default_env.urn, digitalocean_domain.default_env_internal.urn, digitalocean_domain.example_org.urn, digitalocean_droplet.example_vm.*.urn]
 }
 # Resource DigitalOcean VPC
 resource "digitalocean_vpc" "example_vpc_01" {
