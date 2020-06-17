@@ -48,7 +48,7 @@ Now that Terraform Version Manager is installed, we can install Terraform by
 executing:
 
 ```bash
-TERRAFORM_VERSION="0.12.23"
+TERRAFORM_VERSION="0.12.26"
 echo $TERRAFORM_VERSION > $HOME/.terraform-version
 tfenv install
 tfenv list

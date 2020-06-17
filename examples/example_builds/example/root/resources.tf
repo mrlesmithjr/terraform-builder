@@ -180,6 +180,14 @@ resource "digitalocean_domain" "default_env" {
 resource "digitalocean_domain" "default_env_internal" {
   name = format("%s.%s.%s", "internal", var.environment, var.do_domain)
 }
+# Resource DigitalOcean External DNS record
+resource "digitalocean_record" "example_vm" {
+  count  = 1
+  domain = format("%s.%s", var.environment, var.do_domain)
+  type   = "A"
+  name   = format("example-vm-%02s", count.index + 1)
+  value  = digitalocean_droplet.example_vm[count.index].ipv4_address
+}
 # Resource DigitalOcean internal DNS record
 resource "digitalocean_record" "example_vm_internal" {
   count  = 1
