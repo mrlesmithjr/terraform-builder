@@ -20,7 +20,7 @@ resource "digitalocean_domain" "{{ domain|replace('.', '_') }}" {
   name = "{{ domain }}"
 }
 {%-         set domain_resource = 'digitalocean_domain.'+domain|replace('.', '_')+'.urn' %}
-{%-         set _ = project_resources.append(domain_resource) %}
+{%-         set _ = project_root_resources.append(domain_resource) %}
 {%-       endfor %}
 {%-     endif %}
 {%-     if provider_config.project_root.resources.dns_records %}

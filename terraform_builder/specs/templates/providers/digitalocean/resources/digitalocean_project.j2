@@ -1,8 +1,17 @@
 {%- for proj, proj_config in provider_config.resources.projects.items() %}
 {%-   if proj_config.module == module %}
 {%-     if proj_config.create %}
+{%-       if proj_config.module == 'root' %}
 # Resource {{ provider }} project
 resource "digitalocean_project" "{{ proj|replace('-','_') }}" {
+  name        = "{{ proj }}"
+  description = "{{ proj_config.description }}"
+  purpose     = "{{ proj_config.purpose }}"
+  resources   = [for resource in flatten(local.project_root_resources) : resource]
+}
+{%-       endif %}
+# Resource {{ provider }} project
+resource "digitalocean_project" "{{ proj|replace('-','_') }}_env" {
   name        = format("{{ proj }}-%s", var.environment)
   description = format("{{ proj_config.description }} - %s", var.environment)
   purpose     = format("{{ proj_config.purpose }} - %s", var.environment)
@@ -24,7 +33,8 @@ data "digitalocean_project" "{{ proj|replace('-','_') }}" {
 {%-     endif %}
 # Obtain list of project resources as local and use
 locals {
-  project_resources = {{ project_resources|replace('\'','') }}
+  project_resources      = {{ project_resources|replace('\'','') }}
+  project_root_resources = {{ project_root_resources|replace('\'','') }}
 }
 {%-   endif %}
 {%- endfor %}

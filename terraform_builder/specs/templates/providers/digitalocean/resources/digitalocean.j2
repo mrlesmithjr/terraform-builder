@@ -8,6 +8,7 @@
 {%-   include 'providers/digitalocean/resources/digitalocean_droplet.j2' %}
 {%- endif %}
 {%- set project_resources = [] %}
+{%- set project_root_resources = [] %}
 {%- include 'providers/digitalocean/resources/digitalocean_domain.j2' %}
 {%- include 'providers/digitalocean/resources/digitalocean_record.j2' %}
 {%- if provider_config.resources.projects %}

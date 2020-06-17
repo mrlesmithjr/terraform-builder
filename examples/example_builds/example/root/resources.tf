@@ -217,6 +217,13 @@ resource "digitalocean_record" "portal_internal" {
 }
 # Resource DigitalOcean project
 resource "digitalocean_project" "example" {
+  name        = "example"
+  description = "Example project"
+  purpose     = "Just to demonstrate an example project"
+  resources   = [for resource in flatten(local.project_root_resources) : resource]
+}
+# Resource DigitalOcean project
+resource "digitalocean_project" "example_env" {
   name        = format("example-%s", var.environment)
   description = format("Example project - %s", var.environment)
   purpose     = format("Just to demonstrate an example project - %s", var.environment)
@@ -225,7 +232,8 @@ resource "digitalocean_project" "example" {
 }
 # Obtain list of project resources as local and use
 locals {
-  project_resources = [digitalocean_domain.default_env.urn, digitalocean_domain.default_env_internal.urn, digitalocean_domain.example_org.urn, digitalocean_droplet.example_vm.*.urn]
+  project_resources      = [digitalocean_domain.default_env.urn, digitalocean_domain.default_env_internal.urn, digitalocean_droplet.example_vm.*.urn]
+  project_root_resources = [digitalocean_domain.example_org.urn]
 }
 # Resource DigitalOcean VPC
 resource "digitalocean_vpc" "example_vpc_01" {
