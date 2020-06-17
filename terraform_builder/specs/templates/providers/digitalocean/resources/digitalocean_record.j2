@@ -1,6 +1,14 @@
 {%- if provider_config.resources.vms %}
 {%-   for vm, vm_config in provider_config.resources.vms.items() %}
 {%-     if vm_config.module == module %}
+# Resource {{ provider }} External DNS record
+resource "digitalocean_record" "{{ (vm.split('.')[0]|replace('-','_')) }}" {
+  count  = {{ vm_config.count }}
+  domain = format("%s.%s", var.environment, var.do_domain)
+  type   = "A"
+  name   = format("{{ vm.split('.')[0] }}-%02s", count.index + 1)
+  value  = digitalocean_droplet.{{ vm.split('.')[0]|replace('-','_') }}[count.index].ipv4_address
+}
 {%-       if vm_config.private_networking %}
 # Resource {{ provider }} internal DNS record
 resource "digitalocean_record" "{{ (vm.split('.')[0]|replace('-','_'))+'_internal' }}" {
