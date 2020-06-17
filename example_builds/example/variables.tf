@@ -37,9 +37,8 @@ variable "do_api_endpoint" {
 }
 # Variable do_domain config
 variable "do_domain" {
-    type = string
-    description = "Default DigitalOcean domain for resources"
-    default = ""
+    default = "example.org"
+    description = "Defines DigitalOcean domain"
 }
 # Variable do_region config
 variable "do_region" {
@@ -49,8 +48,8 @@ variable "do_region" {
 }
 # Variable do_ssh_keys config
 variable "do_ssh_keys" {
-    description = "DigitalOcean SSH keys to deploy to new droplets"
-    default = []
+    default = [12121212]
+    description = "Defines DigitalOcean SSH Key(s)"
 }
 # Variable do_token config
 variable "do_token" {

@@ -145,7 +145,7 @@ resource "digitalocean_tag" "default_firewall" {
 }
 # Resource DigitalOcean tag
 resource "digitalocean_tag" "default_firewall_env" {
-  name = format("%s", var.environment)
+  name = format("default-firewall-%s", var.environment)
 }
 # Resource DigitalOcean tag
 resource "digitalocean_tag" "example_digitalocean" {
@@ -153,25 +153,39 @@ resource "digitalocean_tag" "example_digitalocean" {
 }
 # Resource DigitalOcean tag
 resource "digitalocean_tag" "example_digitalocean_env" {
+  name = format("example-digitalocean-%s", var.environment)
+}
+# Resource DigitalOcean tag
+resource "digitalocean_tag" "env" {
   name = format("%s", var.environment)
 }
 # Resource DigitalOcean virtual machine
 resource "digitalocean_droplet" "example_vm" {
-  count    = 1
-  name     = format("example-vm-%02s.%s.%s", count.index + 1, var.environment, var.do_domain)
-  image    = "ubuntu-18-04-x64"
-  region   = var.do_region
-  size     = "s-1vcpu-1gb"
-  ssh_keys = var.do_ssh_keys
-  private_networking = true
-  tags     = [digitalocean_tag.example_digitalocean.id, digitalocean_tag.example_digitalocean_env.id]
+  backups     = false
+  count       = 1
+  name        = format("example-vm-%02s.%s.%s", count.index + 1, var.environment, var.do_domain)
+  image       = "ubuntu-18-04-x64"
+  monitoring  = false
+  region      = var.do_region
+  size        = "s-1vcpu-1gb"
+  ssh_keys    = var.do_ssh_keys
+  tags        = [digitalocean_tag.env.id, digitalocean_tag.example_digitalocean.id, digitalocean_tag.example_digitalocean_env.id]
+  vpc_uuid    = digitalocean_vpc.example_vpc_01.id
+}
+# Resource DigitalOcean default domain
+resource "digitalocean_domain" "default_env" {
+  name = format("%s.%s", var.environment, var.do_domain)
+}
+# Resource DigitalOcean default internal domain
+resource "digitalocean_domain" "default_env_internal" {
+  name = format("%s.%s.%s", "internal", var.environment, var.do_domain)
 }
 # Resource DigitalOcean internal DNS record
 resource "digitalocean_record" "example_vm_internal" {
   count  = 1
   domain = format("%s.%s.%s", "internal", var.environment, var.do_domain)
   type   = "A"
-  name   = format("example_vm-%02s", count.index + 1)
+  name   = format("example-vm-%02s", count.index + 1)
   value  = digitalocean_droplet.example_vm[count.index].ipv4_address_private
 }
 # Resource DigitalOcean internal DNS record
@@ -192,8 +206,14 @@ resource "digitalocean_project" "example" {
 }
 # Obtain list of project resources as local and use
 locals {
-  project_resources = [digitalocean_droplet.example_vm.*.urn]
+  project_resources = [digitalocean_domain.default_env.urn, digitalocean_domain.default_env_internal.urn, digitalocean_droplet.example_vm.*.urn]
 }
+# Resource DigitalOcean VPC
+resource "digitalocean_vpc" "example_vpc_01" {
+  name     = format("example-vpc-01-%s", var.environment)
+  region   = var.do_region
+}
+
 # Resource vSphere datacenter
 resource "vsphere_datacenter" "example_dc" {
   name = "example-dc"
@@ -216,6 +236,11 @@ data "vsphere_virtual_machine" "windows2019_x64" {
 # Data vSphere network
 data "vsphere_network" "example_pg" {
   name          = "example-pg"
+  datacenter_id = vsphere_datacenter.example_dc.id
+}
+# Data vSphere network
+data "vsphere_network" "example_pg_with_start" {
+  name          = "example-pg-with-start"
   datacenter_id = vsphere_datacenter.example_dc.id
 }
 # Resource vSphere compute cluster
@@ -254,12 +279,13 @@ resource "vsphere_virtual_machine" "example_vm" {
   name     = format("example-vm-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
   num_cpus = 1
   memory   = 2048
+  datastore_id = data.vsphere_datastore.example_datastore.id
   network_interface {
     network_id = data.vsphere_network.example_pg.id
   }
   resource_pool_id = vsphere_compute_cluster.example_cluster.resource_pool_id
 
-  tags = ["vsphere_tag.example_vsphere.id"]
+  tags = [vsphere_tag.example1_vsphere.id, vsphere_tag.example1_vsphere_env.id, vsphere_tag.environment.id]
 }
 # Resource vSphere virtual machine
 resource "vsphere_virtual_machine" "example_vm_from_template" {
@@ -267,6 +293,7 @@ resource "vsphere_virtual_machine" "example_vm_from_template" {
   name     = format("example-vm-from-template-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
   num_cpus = 1
   memory   = 2048
+  datastore_id = data.vsphere_datastore.example_datastore.id
   network_interface {
     network_id = data.vsphere_network.example_pg.id
   }
@@ -275,9 +302,10 @@ resource "vsphere_virtual_machine" "example_vm_from_template" {
   clone {
     template_uuid = data.vsphere_virtual_machine.ubuntu1804_x64.id
     customize {
+      dns_server_list = ["192.168.250.10"]
       linux_options {
-      host_name = format("example-vm-from-template-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
-      domain    = var.vsphere_domain
+        host_name = format("example-vm-from-template-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
+        domain    = var.vsphere_domain
       }
       network_interface {
         ipv4_address = cidrhost("192.168.250.0/24", count.index + 1 + ((var.environment_index) * 1))
@@ -294,7 +322,7 @@ resource "vsphere_virtual_machine" "example_vm_from_template" {
     eagerly_scrub    = "0"
   }
 
-  tags = ["vsphere_tag.example_vsphere.id"]
+  tags = [vsphere_tag.example1_vsphere.id, vsphere_tag.example1_vsphere_env.id, vsphere_tag.environment.id]
 }
 # Resource vSphere virtual machine
 resource "vsphere_virtual_machine" "example_win_vm_from_template" {
@@ -313,6 +341,7 @@ resource "vsphere_virtual_machine" "example_win_vm_from_template" {
       windows_options {
         computer_name  = format("example-win-vm-from-template-%02s-%s", count.index + 1, substr(var.environment, 0, 4))
       }
+      network_interface {}
     }
   }
   # https://github.com/terraform-providers/terraform-provider-vsphere/issues/523
@@ -323,19 +352,64 @@ resource "vsphere_virtual_machine" "example_win_vm_from_template" {
     eagerly_scrub    = "0"
   }
 
-  tags = ["vsphere_tag.example_vsphere.id"]
+  tags = [vsphere_tag.example1_vsphere.id, vsphere_tag.example1_vsphere_env.id, vsphere_tag.example2_vsphere.id, vsphere_tag.example2_vsphere_env.id, vsphere_tag.environment.id]
+}
+# Data vSphere datastore
+data "vsphere_datastore" "example_datastore" {
+  name          = "example-datastore"
+  datacenter_id = vsphere_datacenter.example_dc.id
 }
 # Resource vSphere tag category
-resource "vsphere_tag_category" "example_category" {
-  name        = "example-category"
+resource "vsphere_tag_category" "example_category1" {
+  name        = format("example-category1-%s", var.environment)
   description = "Managed by Terraform"
   cardinality = "SINGLE"
 
   associable_types = ["ClusterComputeResource", "Datacenter", "Datastore", "HostSystem", "VirtualMachine"]
 }
 # Resource vSphere tag
-resource "vsphere_tag" "example_vsphere" {
-  name        = "example-vsphere"
-  category_id = vsphere_tag_category.example_category.id
+resource "vsphere_tag" "example1_vsphere" {
+  name        = "example1-vsphere"
+  category_id = vsphere_tag_category.example_category1.id
+  description = "Managed by Terraform"
+}
+# Resource vSphere tag
+resource "vsphere_tag" "example1_vsphere_env" {
+  name        = format("example1-vsphere-%s", var.environment)
+  category_id = vsphere_tag_category.example_category1.id
+  description = "Managed by Terraform"
+}
+# Resource vSphere tag category
+resource "vsphere_tag_category" "example_category2" {
+  name        = format("example-category2-%s", var.environment)
+  description = "Managed by Terraform"
+  cardinality = "MULTIPLE"
+
+  associable_types = ["ClusterComputeResource", "Datacenter", "Datastore", "HostSystem", "VirtualMachine"]
+}
+# Resource vSphere tag
+resource "vsphere_tag" "example2_vsphere" {
+  name        = "example2-vsphere"
+  category_id = vsphere_tag_category.example_category2.id
+  description = "Managed by Terraform"
+}
+# Resource vSphere tag
+resource "vsphere_tag" "example2_vsphere_env" {
+  name        = format("example2-vsphere-%s", var.environment)
+  category_id = vsphere_tag_category.example_category2.id
+  description = "Managed by Terraform"
+}
+# Resource vSphere tag category
+resource "vsphere_tag_category" "environment" {
+  name        = format("%s", var.environment)
+  description = "Managed by Terraform"
+  cardinality = "SINGLE"
+
+  associable_types = ["VirtualMachine"]
+}
+# Resource vSphere tag
+resource "vsphere_tag" "environment" {
+  name        = format("%s", var.environment)
+  category_id = vsphere_tag_category.environment.id
   description = "Managed by Terraform"
 }

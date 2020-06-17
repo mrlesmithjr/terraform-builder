@@ -9,6 +9,7 @@ module "development" {
   azurerm_admin_public_key = var.azurerm_admin_public_key
   azurerm_admin_username = var.azurerm_admin_username
   azurerm_location = "West US"
+  do_region = "nyc1"
   vsphere_domain = "example.org"
 }
 # Module production config
@@ -18,6 +19,7 @@ module "production" {
   azurerm_admin_public_key = var.azurerm_admin_public_key
   azurerm_admin_username = var.azurerm_admin_username
   azurerm_location = "East US"
+  do_region = "sfo2"
   vsphere_domain = "example.org"
 }
 # Module staging config
@@ -27,6 +29,7 @@ module "staging" {
   azurerm_admin_public_key = var.azurerm_admin_public_key
   azurerm_admin_username = var.azurerm_admin_username
   azurerm_location = "Central US"
+  do_region = "nyc3"
   vsphere_domain = "example.org"
 }
 # Generated using https://github.com/mrlesmithjr/terraform-builder
