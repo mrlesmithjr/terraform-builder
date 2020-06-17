@@ -11,3 +11,33 @@ resource "digitalocean_domain" "default_env_internal" {
 }
 {%- set _ = project_resources.append('digitalocean_domain.default_env_internal.urn') %}
 {%- endif %}
+{%- if module == 'root' %}
+{%-   if provider_config.project_root and provider_config.project_root.resources %}
+{%-     if provider_config.project_root.resources.domains %}
+{%-       for domain in provider_config.project_root.resources.domains %}
+# Resource {{ provider }} domain
+resource "digitalocean_domain" "{{ domain|replace('.', '_') }}" {
+  name = "{{ domain }}"
+}
+{%-         set domain_resource = 'digitalocean_domain.'+domain|replace('.', '_')+'.urn' %}
+{%-         set _ = project_resources.append(domain_resource) %}
+{%-       endfor %}
+{%-     endif %}
+{%-     if provider_config.project_root.resources.dns_records %}
+{%-       for record in provider_config.project_root.resources.dns_records %}
+{%-         if record.name == '@' %}
+{%-           set resource_name = 'default_'+record.domain|replace('.', '_') %}
+{%-         else %}
+{%-           set resource_name = record.name+'_'+record.domain|replace('.', '_') %}
+{%-         endif %}
+# Resource {{ provider }} DNS record
+resource "digitalocean_record" "{{ resource_name }}" {
+  domain = digitalocean_domain.{{ record.domain|replace('.', '_') }}.name
+  type   = "{{ record.type|upper }}"
+  name   = "{{ record.name }}"
+  value  = "{{ record.value }}"
+}
+{%-       endfor %}
+{%-     endif %}
+{%-   endif %}
+{%- endif %}
