@@ -1,6 +1,22 @@
+{%- set project_root_resources = [] %}
 {%- for provider, config in args.providers.items() %}
 {%-   if config != {} %}
 {%-     if provider == 'DigitalOcean' %}
+{%-       if module == 'root' %}
+{%-         for proj, proj_config in config.resources.projects.items() %}
+{%-           if proj_config.module == 'root' %}
+{%-             if proj_config.create %}
+# Resource {{ provider }} project
+resource "digitalocean_project" "{{ proj|replace('-','_') }}" {
+  name        = "{{ proj }}"
+  description = "{{ proj_config.description }}"
+  purpose     = "{{ proj_config.purpose }}"
+  resources   = [for resource in flatten(local.project_root_resources) : resource]
+}
+{%-             endif %}
+{%-           endif %}
+{%-         endfor %}
+{%-       endif %}
 {%-       if config.project_root and config.project_root.resources %}
 {%-         if config.project_root.resources.domains %}
 {%-           for domain in config.project_root.resources.domains %}
@@ -8,6 +24,7 @@
 resource "digitalocean_domain" "{{ domain|replace('.', '_') }}" {
   name = "{{ domain }}"
 }
+{%-             set _ = project_root_resources.append('digitalocean_domain.'+domain|replace('.', '_')+'.urn') %}
 {%-           endfor %}
 {%-         endif %}
 {%-         if config.project_root.resources.dns_records %}
@@ -30,3 +47,7 @@ resource "digitalocean_record" "{{ resource_name }}" {
 {%-     endif %}
 {%-   endif %}
 {%- endfor %}
+# Obtain list of project resources as local and use
+locals {
+  project_root_resources = {{ project_root_resources|replace('\'','') }}
+}

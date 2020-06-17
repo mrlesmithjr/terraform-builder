@@ -56,6 +56,13 @@ provider "vsphere" {
   vsphere_server       = var.vsphere_server
 }
 
+# Resource DigitalOcean project
+resource "digitalocean_project" "example" {
+  name        = "example"
+  description = "Example project"
+  purpose     = "Just to demonstrate an example project"
+  resources   = [for resource in flatten(local.project_root_resources) : resource]
+}
 # Resource DigitalOcean domain
 resource "digitalocean_domain" "example_org" {
   name = "example.org"
@@ -66,6 +73,10 @@ resource "digitalocean_record" "services_example_org" {
   type   = "CNAME"
   name   = "services"
   value  = "production.services.example.org."
+}
+# Obtain list of project resources as local and use
+locals {
+  project_root_resources = [digitalocean_domain.example_org.urn]
 }
 
 # Setting required Terraform version or greater
