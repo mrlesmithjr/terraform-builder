@@ -6,7 +6,7 @@ python:
   - 3.7
 
 env:
-  - TERRAFORM_VERSION="0.12.23" TFENV_DIR="$HOME/.tfenv"
+  - TERRAFORM_VERSION="0.12.26" TFENV_DIR="$HOME/.tfenv"
 
 before_script:
   - python --version
