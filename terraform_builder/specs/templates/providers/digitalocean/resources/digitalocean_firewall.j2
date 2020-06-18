@@ -23,11 +23,11 @@
 {%-     endif %}
 # Resource {{ provider }} firewall
 resource "digitalocean_firewall" "{{ fw|replace('-','_') }}" {
-  name = format("{{ fw_config.name+'-'+module }}-%s", var.environment)
+  name        = format("{{ fw_config.name+'-'+module }}-%s", var.environment)
 {%-     if fw_resources != [] %}
   droplet_ids = concat({{ fw_resources|join(', ') }})
 {%-     endif %}
-  tags     = {{ fw_tags|replace('\'', '') }}
+  tags        = {{ fw_tags|replace('\'', '') }}
 
 {%-     for rule in fw_config.rules %}
 {%-       if rule.direction == 'inbound' %}
