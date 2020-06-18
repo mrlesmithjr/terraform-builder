@@ -1,5 +1,4 @@
-{%- for tag in provider_config.resources.tags %}
-{%-   if tag not in do_tags %}
+{%- for tag in module_tags %}
 # Resource {{ provider }} tag
 resource "digitalocean_tag" "{{ tag|replace('-','_') }}" {
   name = "{{ tag }}"
@@ -8,8 +7,6 @@ resource "digitalocean_tag" "{{ tag|replace('-','_') }}" {
 resource "digitalocean_tag" "{{ tag|replace('-','_')+'_env' }}" {
   name = format("{{ tag }}-%s", var.environment)
 }
-{%-     set _ = do_tags.append(tag) %}
-{%-   endif %}
 {%- endfor %}
 # Resource {{ provider }} tag
 resource "digitalocean_tag" "env" {
