@@ -287,6 +287,27 @@ providers:
               port_range: 1-65535
               destination_addresses: ["0.0.0.0/0", "::/0"]
               direction: outbound
+      load_balancers:
+        example-lb:
+          # Define vm naming defined under vms
+          # Add tagging later
+          backend_resources: example-vm
+          configs:
+            - backend_port: 80
+              backend_protocol: http
+              frontend_port: 80
+              frontend_protocol: http
+            - backend_port: 80
+              backend_protocol: http
+              frontend_port: 443
+              frontend_protocol: https
+          healthcheck:
+            check_interval_seconds: 10
+            path: /
+            port: 80
+            protocol: http
+          module: root
+          vpc: example-vpc-01
       projects:
         example:
           create: true

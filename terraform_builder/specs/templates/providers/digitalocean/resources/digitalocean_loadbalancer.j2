@@ -1,0 +1,32 @@
+{%- for lb, lb_config in provider_config.resources.load_balancers.items() %}
+{%-   if lb_config.module == module %}
+# Resource {{ provider }} Load Balancer
+resource "digitalocean_loadbalancer" "{{ lb|replace('-','_') }}" {
+  name   = format("{{ lb+'-'+module }}-%s", var.environment)
+  region = var.do_region
+{%     for rule in lb_config.configs %}
+  forwarding_rule {
+    entry_port      = {{ rule.frontend_port }}
+    entry_protocol  = "{{ rule.frontend_protocol }}"
+
+    target_port     = {{ rule.backend_port }}
+    target_protocol = "{{ rule.backend_protocol }}"
+  }
+{%     endfor %}
+  droplet_ids = concat(digitalocean_droplet.{{ lb_config.backend_resources|replace('-','_') }}.*.id)
+  vpc_uuid    = digitalocean_vpc.{{ lb_config.vpc|replace('-','_') }}.id
+
+{%-     if lb_config.healthcheck %}
+  healthcheck {
+    check_interval_seconds = {{ lb_config.healthcheck.check_interval_seconds|default(10) }}
+    port                   = {{ lb_config.healthcheck.port }}
+    protocol               = "{{ lb_config.healthcheck.protocol }}"
+{%-       if lb_config.healthcheck.protocol == 'http' %}
+    path                   = "{{ lb_config.healthcheck.path|default('/') }}"
+{%-       endif %}
+  }
+{%-     endif %}
+
+}
+{%-   endif %}
+{%- endfor %}
