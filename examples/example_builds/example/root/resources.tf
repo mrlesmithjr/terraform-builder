@@ -82,9 +82,9 @@ resource "azurerm_linux_virtual_machine" "example_vm_root" {
 }
 # Resource DigitalOcean firewall
 resource "digitalocean_firewall" "default" {
-  name = format("default-server-rules-root-%s", var.environment)
+  name        = format("default-server-rules-root-%s", var.environment)
   droplet_ids = concat(digitalocean_droplet.example_vm.*.id)
-  tags     = [digitalocean_tag.default_firewall.id, digitalocean_tag.default_firewall_env.id]
+  tags        = [digitalocean_tag.default_firewall.id, digitalocean_tag.default_firewall_env.id]
   inbound_rule {
     protocol         = "tcp"
     port_range       = "22"
@@ -107,8 +107,8 @@ resource "digitalocean_firewall" "default" {
 }
 # Resource DigitalOcean firewall
 resource "digitalocean_firewall" "web" {
-  name = format("web-server-rules-root-%s", var.environment)
-  tags     = []
+  name        = format("web-server-rules-root-%s", var.environment)
+  tags        = []
   inbound_rule {
     protocol         = "tcp"
     port_range       = "22"
@@ -228,9 +228,10 @@ resource "digitalocean_loadbalancer" "example_lb" {
   droplet_ids = concat(digitalocean_droplet.example_vm.*.id)
   vpc_uuid    = digitalocean_vpc.example_vpc_01.id
   healthcheck {
-    port     = 80
-    protocol = "http"
-    path     = "/"
+    check_interval_seconds = 10
+    port                   = 80
+    protocol               = "http"
+    path                   = "/"
   }
 
 }

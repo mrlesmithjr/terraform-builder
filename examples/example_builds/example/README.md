@@ -268,6 +268,7 @@ DigitalOcean:
           frontend_port: 443
           frontend_protocol: https
         healthcheck:
+          check_interval_seconds: 10
           path: /
           port: 80
           protocol: http
