@@ -4,7 +4,9 @@
 {%-     if module in fw_config.modules %}
 {%-       if fw_config.tags %}
 {%-         for tag in fw_config.tags %}
-{%-           set _ = module_tags.append(tag) %}
+{%-           if tag not in module_tags %}
+{%-             set _ = module_tags.append(tag) %}
+{%-           endif %}
 {%-           set tag_id = 'digitalocean_tag.'+tag|replace('-','_')+'.id' %}
 {%-           set _ = fw_tags.append(tag_id) %}
 {%-           set tag_id_env = 'digitalocean_tag.'+tag|replace('-','_')+'_env.id' %}
