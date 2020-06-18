@@ -22,6 +22,13 @@ data "digitalocean_project" "{{ proj|replace('-','_') }}" {
 {%-         endif %}
 {%-       endfor %}
 {%-     endif %}
+{%-     if provider_config.resources.load_balancers %}
+{%-       for lb, lb_config in provider_config.resources.load_balancers.items() %}
+{%-         if lb_config.module == module %}
+{%-           set _ = project_resources.append('digitalocean_loadbalancer.'+lb|replace('-','_')+'.*.urn') %}
+{%-         endif %}
+{%-       endfor %}
+{%-     endif %}
 # Obtain list of project resources as local and use
 locals {
   project_resources = {{ project_resources|replace('\'','') }}

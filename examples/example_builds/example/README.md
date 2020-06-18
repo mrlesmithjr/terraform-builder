@@ -255,6 +255,24 @@ DigitalOcean:
           direction: outbound
           port_range: 1-65535
           protocol: udp
+    load_balancers:
+      example-lb:
+        backend_resources: example-vm
+        configs:
+        - backend_port: 80
+          backend_protocol: http
+          frontend_port: 80
+          frontend_protocol: http
+        - backend_port: 80
+          backend_protocol: http
+          frontend_port: 443
+          frontend_protocol: https
+        healthcheck:
+          path: /
+          port: 80
+          protocol: http
+        module: root
+        vpc: example-vpc-01
     projects:
       example:
         create: true

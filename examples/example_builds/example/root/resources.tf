@@ -204,6 +204,36 @@ resource "digitalocean_record" "portal_internal" {
   name   = "portal"
   value  = digitalocean_droplet.example_vm[count.index].ipv4_address_private
 }
+# Resource DigitalOcean Load Balancer
+resource "digitalocean_loadbalancer" "example_lb" {
+  name   = format("example-lb-root-%s", var.environment)
+  region = var.do_region
+
+  forwarding_rule {
+    entry_port      = 80
+    entry_protocol  = "http"
+
+    target_port     = 80
+    target_protocol = "http"
+  }
+
+  forwarding_rule {
+    entry_port      = 443
+    entry_protocol  = "https"
+
+    target_port     = 80
+    target_protocol = "http"
+  }
+
+  droplet_ids = concat(digitalocean_droplet.example_vm.*.id)
+  vpc_uuid    = digitalocean_vpc.example_vpc_01.id
+  healthcheck {
+    port     = 80
+    protocol = "http"
+    path     = "/"
+  }
+
+}
 # Resource DigitalOcean project
 resource "digitalocean_project" "example" {
   name        = format("example-%s", var.environment)
@@ -214,7 +244,7 @@ resource "digitalocean_project" "example" {
 }
 # Obtain list of project resources as local and use
 locals {
-  project_resources = [digitalocean_domain.default_env.urn, digitalocean_domain.default_env_internal.urn, digitalocean_droplet.example_vm.*.urn]
+  project_resources = [digitalocean_domain.default_env.urn, digitalocean_domain.default_env_internal.urn, digitalocean_droplet.example_vm.*.urn, digitalocean_loadbalancer.example_lb.*.urn]
 }
 # Resource DigitalOcean VPC
 resource "digitalocean_vpc" "example_vpc_01" {
