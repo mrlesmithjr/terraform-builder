@@ -139,26 +139,6 @@ resource "digitalocean_firewall" "web" {
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
 }
-# Resource DigitalOcean tag
-resource "digitalocean_tag" "default_firewall" {
-  name = "default-firewall"
-}
-# Resource DigitalOcean tag
-resource "digitalocean_tag" "default_firewall_env" {
-  name = format("default-firewall-%s", var.environment)
-}
-# Resource DigitalOcean tag
-resource "digitalocean_tag" "example_digitalocean" {
-  name = "example-digitalocean"
-}
-# Resource DigitalOcean tag
-resource "digitalocean_tag" "example_digitalocean_env" {
-  name = format("example-digitalocean-%s", var.environment)
-}
-# Resource DigitalOcean tag
-resource "digitalocean_tag" "env" {
-  name = format("%s", var.environment)
-}
 # Resource DigitalOcean virtual machine
 resource "digitalocean_droplet" "example_vm" {
   backups     = false
@@ -171,6 +151,11 @@ resource "digitalocean_droplet" "example_vm" {
   ssh_keys    = var.do_ssh_keys
   tags        = [digitalocean_tag.env.id, digitalocean_tag.example_digitalocean.id, digitalocean_tag.example_digitalocean_env.id]
   vpc_uuid    = digitalocean_vpc.example_vpc_01.id
+}
+# Resource DigitalOcean VPC
+resource "digitalocean_vpc" "example_vpc_01" {
+  name     = format("example-vpc-01-%s", var.environment)
+  region   = var.do_region
 }
 # Resource DigitalOcean default domain
 resource "digitalocean_domain" "default_env" {
@@ -233,7 +218,6 @@ resource "digitalocean_loadbalancer" "example_lb" {
     protocol               = "http"
     path                   = "/"
   }
-
 }
 # Resource DigitalOcean project
 resource "digitalocean_project" "example" {
@@ -247,12 +231,26 @@ resource "digitalocean_project" "example" {
 locals {
   project_resources = [digitalocean_domain.default_env.urn, digitalocean_domain.default_env_internal.urn, digitalocean_droplet.example_vm.*.urn, digitalocean_loadbalancer.example_lb.*.urn]
 }
-# Resource DigitalOcean VPC
-resource "digitalocean_vpc" "example_vpc_01" {
-  name     = format("example-vpc-01-%s", var.environment)
-  region   = var.do_region
+# Resource DigitalOcean tag
+resource "digitalocean_tag" "default_firewall" {
+  name = "default-firewall"
 }
-
+# Resource DigitalOcean tag
+resource "digitalocean_tag" "default_firewall_env" {
+  name = format("default-firewall-%s", var.environment)
+}
+# Resource DigitalOcean tag
+resource "digitalocean_tag" "example_digitalocean" {
+  name = "example-digitalocean"
+}
+# Resource DigitalOcean tag
+resource "digitalocean_tag" "example_digitalocean_env" {
+  name = format("example-digitalocean-%s", var.environment)
+}
+# Resource DigitalOcean tag
+resource "digitalocean_tag" "env" {
+  name = format("%s", var.environment)
+}
 # Resource vSphere datacenter
 resource "vsphere_datacenter" "example_dc" {
   name = "example-dc"

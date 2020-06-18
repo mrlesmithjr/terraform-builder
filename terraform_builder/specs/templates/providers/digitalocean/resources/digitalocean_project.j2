@@ -1,6 +1,7 @@
-{%- for proj, proj_config in provider_config.resources.projects.items() %}
-{%-   if proj_config.module == module %}
-{%-     if proj_config.create %}
+{%- if provider_config.resources.projects %}
+{%-   for proj, proj_config in provider_config.resources.projects.items() %}
+{%-     if proj_config.module == module %}
+{%-       if proj_config.create %}
 # Resource {{ provider }} project
 resource "digitalocean_project" "{{ proj|replace('-','_') }}" {
   name        = format("{{ proj }}-%s", var.environment)
@@ -9,29 +10,30 @@ resource "digitalocean_project" "{{ proj|replace('-','_') }}" {
   environment = var.environment
   resources   = [for resource in flatten(local.project_resources) : resource]
 }
-{%-     else %}
+{%-       else %}
 # Data {{ provider }} project
 data "digitalocean_project" "{{ proj|replace('-','_') }}" {
   name        = format("{{ proj }}-%s", var.environment)
 }
-{%-     endif %}
-{%-     if provider_config.resources.vms %}
-{%-       for vm, vm_config in provider_config.resources.vms.items() %}
-{%-         if vm_config.module == module %}
-{%-           set _ = project_resources.append('digitalocean_droplet.'+vm.split('.')[0]|replace('-','_')+'.*.urn') %}
-{%-         endif %}
-{%-       endfor %}
-{%-     endif %}
-{%-     if provider_config.resources.load_balancers %}
-{%-       for lb, lb_config in provider_config.resources.load_balancers.items() %}
-{%-         if lb_config.module == module %}
-{%-           set _ = project_resources.append('digitalocean_loadbalancer.'+lb|replace('-','_')+'.*.urn') %}
-{%-         endif %}
-{%-       endfor %}
-{%-     endif %}
+{%-       endif %}
+{%-       if provider_config.resources.vms %}
+{%-         for vm, vm_config in provider_config.resources.vms.items() %}
+{%-           if vm_config.module == module %}
+{%-             set _ = project_resources.append('digitalocean_droplet.'+vm.split('.')[0]|replace('-','_')+'.*.urn') %}
+{%-           endif %}
+{%-         endfor %}
+{%-       endif %}
+{%-       if provider_config.resources.load_balancers %}
+{%-         for lb, lb_config in provider_config.resources.load_balancers.items() %}
+{%-           if lb_config.module == module %}
+{%-             set _ = project_resources.append('digitalocean_loadbalancer.'+lb|replace('-','_')+'.*.urn') %}
+{%-           endif %}
+{%-         endfor %}
+{%-       endif %}
 # Obtain list of project resources as local and use
 locals {
   project_resources = {{ project_resources|replace('\'','') }}
 }
-{%-   endif %}
-{%- endfor %}
+{%-     endif %}
+{%-   endfor %}
+{%- endif %}

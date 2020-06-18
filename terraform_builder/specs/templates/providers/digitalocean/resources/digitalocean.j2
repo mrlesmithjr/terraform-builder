@@ -1,21 +1,10 @@
-{%- if provider_config.resources.firewalls %}
-{%-   include 'providers/digitalocean/resources/digitalocean_firewall.j2' %}
-{%- endif %}
-{%- if provider_config.resources.tags %}
-{%-   include 'providers/digitalocean/resources/digitalocean_tag.j2' %}
-{%- endif %}
-{%- if provider_config.resources.vms %}
-{%-   include 'providers/digitalocean/resources/digitalocean_droplet.j2' %}
-{%- endif %}
+{%- set module_tags = [] %}
 {%- set project_resources = [] %}
+{%- include 'providers/digitalocean/resources/digitalocean_firewall.j2' %}
+{%- include 'providers/digitalocean/resources/digitalocean_droplet.j2' %}
+{%- include 'providers/digitalocean/resources/digitalocean_vpc.j2' %}
 {%- include 'providers/digitalocean/resources/digitalocean_domain.j2' %}
 {%- include 'providers/digitalocean/resources/digitalocean_record.j2' %}
-{%- if provider_config.resources.load_balancers %}
-{%-   include 'providers/digitalocean/resources/digitalocean_loadbalancer.j2' %}
-{%- endif %}
-{%- if provider_config.resources.projects %}
-{%-   include 'providers/digitalocean/resources/digitalocean_project.j2' %}
-{%- endif %}
-{%- if provider_config.resources.vpcs %}
-{%-   include 'providers/digitalocean/resources/digitalocean_vpc.j2' %}
-{%- endif %}
+{%- include 'providers/digitalocean/resources/digitalocean_loadbalancer.j2' %}
+{%- include 'providers/digitalocean/resources/digitalocean_project.j2' %}
+{%- include 'providers/digitalocean/resources/digitalocean_tag.j2' %}

@@ -1,13 +1,12 @@
-
 {%- if args.modules[module]['variables']['do_domain'] %}
 # Resource {{ provider }} default domain
 resource "digitalocean_domain" "default_env" {
   name = format("%s.%s", var.environment, var.do_domain)
 }
-{%- set _ = project_resources.append('digitalocean_domain.default_env.urn') %}
+{%-   set _ = project_resources.append('digitalocean_domain.default_env.urn') %}
 # Resource {{ provider }} default internal domain
 resource "digitalocean_domain" "default_env_internal" {
   name = format("%s.%s.%s", "internal", var.environment, var.do_domain)
 }
-{%- set _ = project_resources.append('digitalocean_domain.default_env_internal.urn') %}
+{%-   set _ = project_resources.append('digitalocean_domain.default_env_internal.urn') %}
 {%- endif %}

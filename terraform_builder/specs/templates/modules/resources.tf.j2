@@ -1,13 +1,12 @@
 # Generated using https://github.com/mrlesmithjr/terraform-builder
-{%-  for provider, provider_config in args.providers.items() %}
-{%-    if provider_config.resources %}
-{%-      if provider == 'AzureRM' %}
-{%-        include 'providers/azurerm/resources/azurerm.j2' %}
+{%- for provider, provider_config in args.providers.items() %}
+{%-   if provider_config.resources %}
+{%-     if provider == 'AzureRM' %}
+{%-       include 'providers/azurerm/resources/azurerm.j2' %}
 {%-     elif provider == 'DigitalOcean' %}
-{%-        set do_tags = [] %}
-{%-        include 'providers/digitalocean/resources/digitalocean.j2' %}
+{%-       include 'providers/digitalocean/resources/digitalocean.j2' %}
 {%-     elif provider == 'vSphere' %}
-{%-        include 'providers/vsphere/resources/vsphere.j2' %}
-{%-      endif %}
-{%-    endif %}
-{%-  endfor %}
+{%-       include 'providers/vsphere/resources/vsphere.j2' %}
+{%-     endif %}
+{%-   endif %}
+{%- endfor %}
