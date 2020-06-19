@@ -280,9 +280,6 @@ DigitalOcean:
         description: Example project
         module: root
         purpose: Just to demonstrate an example project
-    tags:
-    - default-firewall
-    - example-digitalocean
     vms:
       example-vm:
         backups: false

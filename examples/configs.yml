@@ -314,15 +314,6 @@ providers:
           description: Example project
           module: root
           purpose: Just to demonstrate an example project
-      # Define tags that need to be available across all modules. Then you can
-      # define the applicable tags to the respective resources. An additional
-      # tag will be created that will append each environment to the tag name.
-      # Ex. example-digitalocean-development, example-digitalocean-production,
-      # example-digitalocean-staging. Resources with tags defined will also be
-      # add to the tag with the environment as well.
-      tags:
-        - default-firewall
-        - example-digitalocean
       vms:
         # Define firewall to apply, if applicable.
         # Define project to add VM to, if applicable.
